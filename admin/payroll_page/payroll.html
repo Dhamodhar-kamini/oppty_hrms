@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPPTY HRMS</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/opptylogo2.png">
+    
+    <!-- Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons: FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="payroll.css">
+    <link rel="stylesheet" href="../admin_page/admin.css">
+</head>
+<body>
+    <div class="dashboard-container">
+      <!-- PRELOADER START -->
+<div id="page-preloader">
+  <div class="loader-content">
+    <!-- Spinning Rings -->
+    <div class="loader-circle"></div>
+    <div class="loader-circle-inner"></div>
+    
+    <!-- Branding Text -->
+    <div class="loader-text">
+      <span class="brand-dark"><img src="../assets/opptylogo.png" alt="logo" style="height: 50px;"></span><span class="brand-orange">HRMS</span>
+    </div>
+    
+  </div>
+</div>
+<!-- PRELOADER END -->
+      <!-- 1. Sidebar Navigation (Detailed based on image) -->
+       <aside class="sidebar">
+        <div class="logo">
+          <!-- <i class="fas fa-chart-line"></i> -->
+          <!-- <span>OPPTY</span> -->
+          <img
+            class="opptyLogo"
+            src="../assets/opptylogo.png"
+            alt="OPPTY HRMS Logo"
+          />
+        </div>
+
+        <div class="sidebar-content">
+          <div class="menu-section main-menu">
+            <p class="menu-header">MAIN MENU</p>
+            <div class="menu-section main-menu">
+              <!-- Dashboard Parent -->
+              <a
+                href="javascript:void(0)"
+                class="menu-item has-submenu"
+                id="dashboardMenu"
+              >
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+
+              <!-- Submenu Items -->
+              <div class="submenu" id="dashboardSubmenu">
+                <a href="../admin_page/admin.html" class="menu-item"
+                  ><i class="fas fa-user-tie"></i><span>Admin Dashboard</span></a
+                >
+                <a href="../employeedashb/employee.html" class="menu-item"
+                  ><i class="fas fa-user"></i><span>Employee Dashboard</span></a
+                >
+                <a href="../approval/approval.html" class="menu-item"
+                  ><i class="fas fa-check-circle"></i><span>Approval</span></a
+                >
+                
+                
+                <a href="../payroll_page/payroll.html" class="menu-item active"
+                  ><i class="fas fa-money-bill-wave"></i
+                  ><span>Payroll Dashboard</span
+                  ></a
+                >
+                <a href="../recruitment/recruitment.html" class="menu-item"
+                  ><i class="fas fa-search"></i
+                  ><span>Recruitment Dashboard</span
+                  ></a
+                >
+                <a href="../assertAllocation/assertAllocation.html" class="menu-item"
+                  ><i class="fas fa-boxes"></i><span>Asset Allocation</span
+                  ></a
+                >
+                
+                <a href="../helpdesk/helpdesk.html" class="menu-item"
+                  ><i class="fas fa-headset"></i><span>Help Desk Dashboard</span
+                  ></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 2. Main Content Area -->
+      <main class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search in HRMS" />
+            <span>CTRL + /</span>
+          </div>
+          <div class="header-icons">
+    <!-- Existing Icons -->
+    
+    <!-- Notification Container -->
+<div class="nt-container">
+    
+    <!-- Bell Icon & Badge -->
+    <div class="nt-bell-wrapper" id="ntBellBtn">
+        <i class="fas fa-bell nt-icon"></i>
+        <!-- Counter Badge (JS will update this) -->
+        <span class="nt-badge" id="ntBadge">0</span>
+    </div>
+
+    <!-- Dropdown Popup -->
+    <div class="nt-dropdown" id="ntDropdown">
+        
+        <!-- Header -->
+        <div class="nt-header">
+            <span class="nt-title">Notifications</span>
+            <button class="nt-mark-read" id="ntMarkAllRead">Mark all read</button>
+        </div>
+
+        <!-- List of Items -->
+        <div class="nt-body" id="ntList">
+            <!-- JS will inject items here -->
+        </div>
+
+        <!-- Footer -->
+        <div class="nt-footer">
+            <a href="#">View all activity</a>
+        </div>
+    </div>
+
+</div>
+    
+
+    <!-- MODIFIED PROFILE SECTION -->
+    <!-- Profile Wrapper (Existing) -->
+<div class="hdr-profile-wrapper">
+  <!-- Profile Image (Clickable) -->
+  <div class="user-profile" onclick="hdr_toggleProfilePopup()">
+    <!-- Update src to your actual image path -->
+    <img src="../assets/profiledp.jpeg" alt="User Avatar" />
+  </div>
+
+  <!-- The Popup Menu -->
+  <div class="hdr-popup-menu" id="hdrProfileDropdown">
+    <!-- Optional Header info -->
+    <div class="hdr-popup-header">
+      <p><strong>Employee Profile</strong></p>
+      <span class="hdr-email-text">user@example.com</span>
+    </div>
+
+    <!-- Logout Button (Triggers Popup) -->
+    <button class="hdr-logout-btn" onclick="hdr_showLogoutModal()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- NEW: Logout Confirmation Modal Structure -->
+<!-- ========================================= -->
+<div id="hdrLogoutModal" class="hdr-modal-overlay">
+  <div class="hdr-modal-content">
+    <div class="hdr-modal-icon">
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to log out of your account?</p>
+    <div class="hdr-modal-actions">
+      <button class="hdr-btn-cancel" onclick="hdr_hideLogoutModal()">Cancel</button>
+      <button class="hdr-btn-confirm" onclick="hdr_confirmLogout()">Logout</button>
+    </div>
+  </div>
+</div>
+</div>
+        </header>
+
+    
+    <!-- Main Container -->
+    <div class="container" style="margin-top: 50px; margin-left: 30px;">
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 style="font-size: 28px;">Payroll Dashboard</h1>
+                <div class="breadcrumbs">
+                    <i class="fa-solid fa-house"></i>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span><a href="../admin_page/admin.html">Dashboard</a></span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span class="active" style="color: #666;">Payroll Dashboard</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn-white"><i class="fa-regular fa-file-lines"></i> Monthly Report <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="btn-white"><i class="fa-regular fa-calendar"></i> Feb 2026</button>
+                <button class="btn-white icon-only"><i class="fa-solid fa-chevron-up"></i></button>
+            </div>
+        </header>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-info">
+                <span class="status-dot"></span>
+                <span class="label">Payroll Status:</span>
+                <!-- <span class="badge badge-success">Processing</span> -->
+                <span class="divider">|</span>
+                <span class="label">Payroll Date: </span>
+                <span class="divider">|</span>
+                <span class="label">Payment Date: Dec 31, 2024</span>
+            </div>
+            <a class="payslip_navg" href="../payslip/payslip.html"><button class="btn-primary"><i class="fa-solid fa-bolt"></i> Run Payroll</button></a>
+            
+        </div>
+
+
+        <div class="dashboard-card">
+
+    <div class="card-header">
+    <div class="header-text">
+        <h2>Annual Salary Distribution</h2>
+        <p>Revenue breakdown per month for selected fiscal year</p>
+    </div>
+
+    <!-- YEAR SELECTOR -->
+    <div class="year-selector-container">
+        <select id="yearPicker" class="custom-select">
+            <!-- JS will populate years -->
+        </select>
+    </div>
+</div>
+
+    <div class="stats-grid">
+        <div class="stat-item">
+            <span class="stat-label">Total Annual Payout</span>
+            <div class="stat-value" id="totalPayout">₹0</div>
+        </div>
+
+        <div class="stat-item">
+            <span class="stat-label">Avg. Monthly Salary</span>
+            <div class="stat-value" id="avgPayout">₹0</div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="payrollChart"></canvas>
+    </div>
+
+    <div class="card-footer">
+        <div class="legend-item">
+            <span class="legend-dot"></span>
+            Salary Revenue (INR)
+        </div>
+    </div>
+
+</div>
+
+
+        
+        </main>
+    </div>
+
+    <!-- Chart Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script src="payroll.js"></script>
+    <script src="../admin_page/admin.js"></script>
+
+</body>
+</html>

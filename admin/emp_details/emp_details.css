@@ -1,0 +1,842 @@
+:root {
+  --brand-orange: #ff5b1e;
+  --brand-dark: #1e1e1e;
+  --bg-body: #ffffff;
+  --bg-box: #f8f9fa;
+  --text-main: #333333;
+  --text-light: #6c757d;
+  --border-color: #e9ecef;
+  --status-green-bg: #d1fae5;
+  --status-green-text: #065f46;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  padding-bottom: 50px;
+}
+
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* --- Header & Nav --- */
+.top-nav {
+  margin-bottom: 20px;
+}
+.back-link {
+  text-decoration: none;
+  color: var(--text-light);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.2s;
+}
+.back-link:hover {
+  color: var(--brand-orange);
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.avatar-circle {
+  width: 70px;
+  height: 70px;
+  background-color: var(--brand-orange);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 600;
+}
+.profile-text h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.profile-text p {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.btn-primary {
+  background-color: var(--brand-orange);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.2s;
+}
+.btn-primary:hover {
+  background-color: #e04a14;
+}
+
+/* --- Tabs --- */
+.tabs-container {
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 30px;
+  overflow-x: auto;
+}
+.nav-tabs {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  min-width: max-content;
+}
+.tab-item {
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-light);
+  cursor: pointer;
+  position: relative;
+}
+.tab-item:hover {
+  color: var(--brand-orange);
+}
+.tab-item.active {
+  color: var(--brand-orange);
+  font-weight: 600;
+}
+.tab-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--brand-orange);
+  border-radius: 3px 3px 0 0;
+}
+
+/* --- Overview Styles --- */
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 25px 0 15px 0;
+  color: var(--text-main);
+}
+.data-box {
+  background-color: var(--bg-box);
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+  border: 1px solid transparent;
+  transition: 0.2s;
+}
+.data-box:hover {
+  border-color: #ddd;
+}
+.data-box label {
+  font-size: 12px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+.data-box .value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.row-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.row-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+.row-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 10px;
+}
+
+.status-badge {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+/* --- Table Styles (Attendance/Leave) --- */
+.table-responsive {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+.simple-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+.simple-table th {
+  text-align: left;
+  padding: 15px 20px;
+  color: var(--text-light);
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+}
+.simple-table td {
+  padding: 15px 20px;
+  color: var(--text-main);
+  font-size: 14px;
+  border-bottom: 1px solid #f2f2f2;
+}
+.simple-table tr:last-child td {
+  border-bottom: none;
+}
+
+.status-pill {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+}
+.status-pill.present,
+.status-pill.approved {
+  background-color: #dcfce7;
+  color: #166534;
+}
+.status-pill.absent,
+.status-pill.rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+.status-pill.late {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+.status-pill.pending {
+  background-color: #fff7ed;
+  color: #c2410c;
+}
+
+/* --- Payroll Styles --- */
+.salary-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+}
+.salary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.salary-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.status-badge.paid {
+  background-color: #dcfce7;
+  color: #166534;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.salary-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px 20px;
+}
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.detail-item label {
+  font-size: 13px;
+  color: var(--text-light);
+  font-weight: 400;
+}
+.detail-item .amount {
+  font-size: 15px;
+  color: var(--text-main);
+  font-weight: 500;
+}
+.detail-item.highlight .amount {
+  font-weight: 700;
+  color: #000;
+}
+
+/* --- Documents Styles --- */
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.doc-card {
+  background-color: #f8f9fa;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+.doc-card:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+.doc-icon {
+  font-size: 28px;
+  color: var(--text-light);
+}
+.file-size {
+  font-size: 12px;
+  color: var(--text-light);
+}
+.doc-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 15px;
+  color: var(--text-main);
+  font-weight: 600;
+}
+.doc-type {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-light);
+}
+.upload-date {
+  margin: 5px 0 0 0;
+  font-size: 12px;
+  color: #999;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .row-grid-5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .salary-details {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .header-actions,
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+  .row-grid-3,
+  .row-split,
+  .row-grid-5 {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .salary-details {
+    grid-template-columns: 1fr;
+  }
+  .salary-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+/* download profile section */
+/* Download Modal Specific Styles */
+.download-modal {
+  width: 400px;
+  max-width: 90%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.download-options {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+
+.option-card:hover {
+  background-color: #f8fafc;
+  border-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.icon-box.pdf {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.icon-box.csv {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+
+.text-box {
+  flex: 1;
+}
+
+.text-box h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.text-box p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.arrow {
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.option-card:hover .arrow {
+  color: #2563eb;
+}
+
+/* --- MODAL OVERLAY (The Fix) --- */
+.modal-overlay {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stays in place when scrolling */
+  z-index: 9999; /* Sits on top of everything */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+  backdrop-filter: blur(4px); /* Blurs the background */
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Helper class to show modal via JS */
+.modal-overlay.active {
+  display: flex;
+}
+
+/* --- MODAL CARD --- */
+.download-modal {
+  background: #fff;
+  width: 450px;
+  max-width: 90%;
+  border-radius: 16px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 0;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.close-btn {
+  font-size: 24px;
+  color: #94a3b8;
+  cursor: pointer;
+  line-height: 1;
+}
+.close-btn:hover {
+  color: #ef4444;
+}
+
+/* --- DOWNLOAD OPTIONS --- */
+.download-options {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+
+.option-card:hover {
+  background-color: #f8fafc;
+  border-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1);
+}
+
+.icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-right: 16px;
+}
+
+.icon-box.pdf {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+.icon-box.csv {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+
+.text-box {
+  flex: 1;
+}
+.text-box h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  color: #0f172a;
+  font-weight: 600;
+}
+.text-box p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.arrow {
+  color: #cbd5e1;
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+.option-card:hover .arrow {
+  color: #2563eb;
+  transform: translateX(3px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* admin action buttons */
+/* --- Admin Action Grid (adm-) --- */
+.adm-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+  width: 20px;
+}
+
+.adm-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: white;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.adm-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.adm-btn:active {
+  transform: scale(0.98);
+}
+
+/* Specific Button Colors */
+.adm-btn-salary {
+  background: linear-gradient(135deg, #eea82e, #f48c15);
+} /* Amber */
+.adm-btn-login {
+  background: linear-gradient(135deg, #7793ba, #677fa0);
+} /* Slate */
+.adm-btn-dismiss {
+  background: linear-gradient(135deg, #f97316, #eb7e44);
+} /* Orange */
+.adm-btn-delete {
+  background: linear-gradient(135deg, #ef4444, #eb5a5a);
+} /* Red */
+
+/* --- Modal Styling (adm-) --- */
+.adm-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.adm-modal-overlay.adm-show {
+  display: flex;
+  opacity: 1;
+}
+
+.adm-modal-card {
+  background: white;
+  width: 400px;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: scale(0.9);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.adm-modal-overlay.adm-show .adm-modal-card {
+  transform: scale(1);
+}
+
+/* Modal Icons */
+.adm-icon-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+.adm-icon-circle.adm-warning {
+  background: #fef3c7;
+  color: #d97706;
+}
+.adm-icon-circle.adm-dark {
+  background: #f1f5f9;
+  color: #334155;
+}
+.adm-icon-circle.adm-orange {
+  background: #ffedd5;
+  color: #ea580c;
+}
+.adm-icon-circle.adm-red {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.adm-modal-card h3 {
+  margin: 0 0 10px;
+  color: #1e293b;
+  font-size: 20px;
+}
+.adm-modal-card p {
+  margin: 0 0 25px;
+  color: #64748b;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* Modal Buttons */
+.adm-modal-btns {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.adm-btn-cancel {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.adm-btn-cancel:hover {
+  background: #f8fafc;
+}
+
+.adm-btn-confirm {
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.adm-btn-confirm.adm-warning {
+  background: #d97706;
+}
+.adm-btn-confirm.adm-dark {
+  background: #334155;
+}
+.adm-btn-confirm.adm-orange {
+  background: #ea580c;
+}
+.adm-btn-confirm.adm-red {
+  background: #dc2626;
+}
+
+/* Visual States for Salary Held (Applied via JS) */
+.adm-salary-held {
+  position: relative;
+  opacity: 0.6;
+  pointer-events: none;
+  filter: grayscale(100%);
+}
+.adm-salary-held::after {
+  content: "HOLD";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: #dc2626;
+  color: white;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+/* Visual State for Salary Held */
+.adm-salary-held {
+  position: relative;
+  opacity: 0.5; /* Make it faded */
+  pointer-events: none; /* Prevent clicking/copying */
+  filter: grayscale(100%); /* Remove color */
+  user-select: none;
+  background-color: #f3f4f6; /* Light gray background */
+}
+
+/* The "HOLD" Stamp */
+.adm-salary-held::after {
+  content: "ON HOLD";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  border: 2px solid #dc2626;
+  color: #dc2626;
+  font-weight: 900;
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  opacity: 1;
+  z-index: 10;
+  letter-spacing: 1px;
+}

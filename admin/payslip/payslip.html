@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPPTY HRMS</title>
+    
+    <!-- Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons: FontAwesome -->
+     <link rel="icon" type="image/png" sizes="32x32" href="../assets/opptylogo2.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./payslip.css">
+    <link rel="stylesheet" href="../admin_page/admin.css">
+</head>
+<body>
+    <div class="dashboard-container">
+      <!-- 1. Sidebar Navigation (Detailed based on image) -->
+       <aside class="sidebar">
+        <div class="logo">
+          <!-- <i class="fas fa-chart-line"></i> -->
+          <!-- <span>OPPTY</span> -->
+          <img
+            class="opptyLogo"
+            src="../assets/opptylogo.png"
+            alt="OPPTY HRMS Logo"
+          />
+        </div>
+
+        <div class="sidebar-content">
+          <div class="menu-section main-menu">
+            <p class="menu-header">MAIN MENU</p>
+            <div class="menu-section main-menu">
+              <!-- Dashboard Parent -->
+              <a
+                href="javascript:void(0)"
+                class="menu-item has-submenu"
+                id="dashboardMenu"
+              >
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+
+              <!-- Submenu Items -->
+              <div class="submenu" id="dashboardSubmenu">
+                <a href="../admin_page/admin.html" class="menu-item"
+                  ><i class="fas fa-user-tie"></i><span>Admin Dashboard</span></a
+                >
+                <a href="../employeedashb/employee.html" class="menu-item"
+                  ><i class="fas fa-user"></i><span>Employee Dashboard</span></a
+                >
+                <a href="../approval/approval.html" class="menu-item"
+                  ><i class="fas fa-check-circle"></i><span>Approval</span></a
+                >
+                
+                
+                <a href="../payroll_page/payroll.html" class="menu-item"
+                  ><i class="fas fa-money-bill-wave"></i
+                  ><span>Payroll Dashboard</span
+                  ></a
+                >
+                <a href="../recruitment/recruitment.html" class="menu-item"
+                  ><i class="fas fa-search"></i
+                  ><span>Recruitment Dashboard</span
+                  ></a
+                >
+                <a href="../assertAllocation/assertAllocation.html" class="menu-item"
+                  ><i class="fas fa-boxes"></i><span>Asset Allocation</span
+                  ></a
+                >
+                
+                <a href="../helpdesk/helpdesk.html" class="menu-item"
+                  ><i class="fas fa-headset"></i><span>Help Desk Dashboard</span
+                  ></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 2. Main Content Area -->
+      <main class="main-content">
+        <!-- Top Bar -->
+        
+
+    <div class="container">
+        <header class="page-header">
+            <div class="header-left">
+                <div class="breadcrumbs">
+                    <i class="fa-solid fa-house"></i> 
+                    <i class="fa-solid fa-chevron-right"></i> Admin 
+                    <i class="fa-solid fa-chevron-right"></i> Payroll
+                </div>
+                <h1>Generate Payslip</h1>
+            </div>
+            <div class="header-right">
+                <div class="date-badge">
+                    <i class="fa-regular fa-calendar-check"></i> <span id="systemDate">Loading...</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid-container">
+            
+            <!-- LEFT: Calculation Form -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Salary Details</span>
+                    
+                    <div class="toggle-wrapper">
+                        <span class="toggle-label" id="modeLabel">Auto-Calculate (CTC)</span>
+                        <label class="switch">
+                            <input type="checkbox" id="calcModeToggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-body">
+                    <div class="form-group">
+                        <label>Select Employee</label>
+                        <select class="form-control" id="empSelect">
+                            <!-- <option value="EMP-001">Dhamodhar (149)</option>
+                            <option value="EMP-002">Saleem (161)</option>
+                            <option value="EMP-003">Siddartha (111)</option> -->
+                        </select>
+                    </div>
+
+                    <!-- Dynamic Date Selection -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Payslip Month</label>
+                            <!-- Options populated by JS -->
+                            <select class="form-control" id="monthSelect"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Payslip Year</label>
+                            <!-- Options populated by JS -->
+                            <select class="form-control" id="yearSelect"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="ctcGroup">
+                        <label>Annual CTC (LPA) <span style="color:var(--danger)">*</span></label>
+                        <div class="input-with-icon">
+                            <input type="number" id="ctcInput" class="form-control" value="420000">
+                            <span class="input-hint">₹ / Year</span>
+                        </div>
+                    </div>
+
+                    <div class="divider-text">Earnings (Monthly)</div>
+                    
+                    <div class="form-group">
+                        <label>Basic Salary</label>
+                        <input type="number" id="basicSalary" class="form-control" value="0">
+                    </div>
+
+                    <div class="divider-text danger">Deductions & LOP</div>
+
+                    <div class="form-row" style="background: #FFF5F5; padding: 10px; border-radius: 6px; border: 1px dashed var(--danger);">
+                        <div class="form-group">
+                            <label>Loss of Pay Days</label>
+                            <input type="number" id="lopDays" class="form-control" value="0" min="0" max="31">
+                        </div>
+                        <div class="form-group">
+                            <label>LOP Deduction</label>
+                            <div class="input-with-icon">
+                                <input type="number" id="lopAmount" class="form-control" value="0" readonly style="background: #eee;">
+                                <span class="input-hint">Auto</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Provident Fund (PF)</label>
+                            <div class="input-with-icon">
+                                <input type="number" id="pfAmount" class="form-control" value="0">
+                                <span class="input-hint" id="pfHint">12%</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Professional Tax</label>
+                            <input type="number" id="taxAmount" class="form-control" value="200">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-white"  id="resetBtn">Reset</button>
+                        <button class="btn btn-primary btn-block" id="generateBtn">
+                            <i class="fa-solid fa-paper-plane"></i> Generate & Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUCCESS POPUP MODAL -->
+<div class="popup-overlay" id="successPopup">
+    <div class="popup-content">
+        <div class="success-icon-box">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <h3>Payslip Sent Successfully!</h3>
+        <p>The payslip has been generated and emailed to <span id="sentEmpName" style="font-weight: 600; color: #333;">Employee</span>.</p>
+        
+        <div class="popup-actions">
+            <button class="btn-popup-primary" onclick="closePopup()">Done</button>
+            <button class="btn-popup-secondary" onclick="viewPayslip()">View PDF</button>
+        </div>
+    </div>
+</div>
+
+            <!-- RIGHT: Live Preview Ticket -->
+            <div class="card preview-card">
+                <div class="card-header">
+                    <span class="card-title">Preview</span>
+                    <span class="badge badge-warning">Draft Mode</span>
+                </div>
+                
+                <div class="payslip-ticket">
+                    <div class="ticket-top">
+                        <div class="logo-area"><img style="height: 30px; width: 100px; " src="../assets/opptylogo.png" alt="logo"></div>
+                        <div class="payslip-month" id="prevMonthYear">...</div>
+                    </div>
+                    
+                    <div class="employee-summary">
+                        <div>
+                            <span class="lbl">Employee</span>
+                            <span class="val" id="prevName">    </span>
+                        </div>
+                        <div class="text-right">
+                            <span class="lbl">Paid Days</span>
+                            <span class="val" id="prevDays">30</span>
+                        </div>
+                    </div>
+
+                    <div class="calc-table">
+                        <div class="ct-row head">
+                            <span>Description</span>
+                            <span>Amount</span>
+                        </div>
+                        <div class="ct-row"><span>Basic Salary</span> <span id="prevBasic">₹0</span></div>
+                        <div class="ct-row subtotal"><span>Gross Salary</span> <span id="prevGross">₹0</span></div>
+                        
+                        <div class="ct-divider"></div>
+                        <div class="ct-row deduct"><span>PF (12% of Basic)</span> <span id="prevPf">-₹0</span></div>
+                        <div class="ct-row deduct"><span>Professional Tax</span> <span id="prevTax">-₹0</span></div>
+                        <div class="ct-row deduct" style="font-weight: 600;"><span>LOP (<span id="prevLopDays">0</span> Days)</span> <span id="prevLop">-₹0</span></div>
+                        
+                        <div class="ct-divider-total"></div>
+                        
+                        <div class="ct-row total-pay">
+                            <span>Net Payable</span>
+                            <span id="prevNet">₹0</span>
+                        </div>
+                        <div style="font-size: 10px; color: #999; margin-top: 5px;">(In Words: <span id="amountWords">Zero Only</span>)</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="payslip.js"></script>
+    <script src="../admin_page/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+/* General Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container & Card */
+.login-container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.login-card {
+    background-color: white;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+/* Logo & Headers */
+.logo-wrapper {
+    margin-bottom: 25px;
+}
+
+.logo {
+    max-width: 160px;
+    height: auto;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: #777;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+/* Form Inputs */
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #444;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #f47c33; /* Oppty Orange */
+    box-shadow: 0 0 0 3px rgba(244, 124, 51, 0.1);
+}
+
+/* Footer Options */
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+}
+
+.forgot-pass {
+    color: #f47c33;
+    text-decoration: none;
+}
+
+.forgot-pass:hover {
+    text-decoration: underline;
+}
+
+/* Button */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background-color: #f47c33; /* Oppty Orange */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #d96520;
+}
+
+/* Error Message */
+.error-msg {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 15px;
+    display: none; /* Hidden by default */
+    background: #fde8e7;
+    padding: 10px;
+    border-radius: 4px;
+}

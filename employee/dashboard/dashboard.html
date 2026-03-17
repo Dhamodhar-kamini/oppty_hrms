@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPPTY EMPLOYEE HRMS</title>
+    <link rel="icon" type="image/png" href="../assets/opptylogo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./dashboard.css">
+    <link rel="stylesheet" href="../employee_page/employee.css">
+</head>
+<body>
+    <div class="app-layout">
+
+
+        <!-- PRELOADER START -->
+<div id="page-preloader">
+  <div class="loader-content">
+    <!-- Spinning Rings -->
+    <div class="loader-circle"></div>
+    <div class="loader-circle-inner"></div>
+    
+    <!-- Branding Text -->
+    <div class="loader-text">
+      <span class="brand-dark"><img src="../assets/opptylogo.png" alt="companyLogo" style="width: 50%;"></span><span class="brand-orange">HRMS</span>
+    </div>
+    <!-- <p class="loading-status">Loading...</p> -->
+  </div>
+</div>
+<!-- PRELOADER END -->
+        
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  
+  <!-- Sidebar Header -->
+  <div class="sidebar-header"> 
+    
+    <!-- 1. NEW LOGO SECTION -->
+    <div class="sidebar-logo">
+      <!-- Replace src with your actual logo URL -->
+      <img src="../assets/opptylogo.png"  alt="Company Logo">
+    </div>
+
+    <!-- User Profile -->
+    <div class="header-profile">
+      <div class="user-name" id="name" ></div>
+      <div class="user-role" id="role"></div>
+    </div>
+    
+    <!-- Toggle Button -->
+    <!-- <button id="sidebarToggle" class="sidebar-toggle">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button> -->
+  </div>
+
+  <div class="sidebar-content">
+    <ul class="sidebar-menu">
+      
+      <!-- Dashboard -->
+      <li class="menu-item active">
+        <a href="#" class="menu-link">
+          <div class="link-left">
+            <i class="fa-solid fa-table-columns"></i>
+            <span>Dashboard</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- Employees -->
+      <li class="menu-item">
+        <a href="../employee_page/employee.html" class="menu-link">
+          <div class="link-left">
+            <i class="fa-regular fa-user"></i>
+            <span>Employees</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- Attendance -->
+      <li class="menu-item">
+        <a href="../attendance/attendance.html" class="menu-link">
+          <div class="link-left">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Attendance</span>
+          </div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link">
+          <div class="link-left">
+            <i class="fa-solid fa-file-signature"></i>
+            <span>Apply Leave</span>
+          </div>
+        </a>
+      </li>
+
+      
+
+      <!-- Payslip -->
+      <li class="menu-item">
+        <a href="../payslips/payslip.html" class="menu-link">
+          <div class="link-left">
+            <i class="fa-regular fa-credit-card"></i>
+            <span>Payslip</span>
+          </div>
+        </a>
+      </li>
+
+      
+
+      <!-- Asset Allocation -->
+      <li class="menu-item">
+        <a href="../asset_allocation/assetallocation.html" class="menu-link">
+          <div class="link-left">
+            <i class="fa-solid fa-phone"></i>
+            <span>Asset Request</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- Documents -->
+      <li class="menu-item">
+        <a href="../documents/documents.html" class="menu-link">
+          <div class="link-left">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Documents</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- help desk -->
+             <li class="menu-item">
+              <a href="../help_desk/help_desk.html" class="menu-link">
+                <div class="link-left">
+                 <i class="fa-solid fa-headset"></i>
+                  <span>Help Desk</span>
+                </div>
+              </a>
+            </li>
+
+    </ul>
+  </div>
+</aside>
+<main class="main-content" id="mainContent">
+            
+            <div class="container ">
+                <!-- Header -->
+                <header class="page-header" style="width: 100%; justify-content: space-between; align-items: center;">
+                    <div class="flex items-center gap-10">
+                        <!-- Mobile Menu Button -->
+                        <button id="mobileMenuBtn" class="mobile-menu-btn">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        
+                        <div class="page-title">
+                            <h1>Employee Dashboard</h1>
+                            <div class="breadcrumbs">
+                                <i class="fa-solid fa-house"></i> > Dashboard > Employee Dashboard
+                            </div>
+                        </div>
+                        </div>
+
+                        
+
+                    
+
+
+                    <!-- Notification and Profile Section -->
+    
+
+        <!-- 1. NOTIFICATION COMPONENT -->
+         <div style="width: auto; display: flex; justify-content: flex-end; align-items: center; gap: 20px;">
+        <div class="db-widget-wrapper">
+            <button class="db-icon-btn db-notif-trigger-btn" onclick="db_toggleNotifications()">
+                <i class="fa-regular fa-bell"></i>
+                <span class="db-notif-badge">3</span>
+            </button>
+
+            <!-- Unique ID for Notification Dropdown -->
+            <div class="db-dropdown-card db-notif-card" id="db-notification-menu">
+                <div class="db-card-header">Notifications</div>
+                <div id="db-notif-list">
+                    <p style="padding: 20px; text-align: center;">Loading...</p>
+                </div>
+                
+                <!-- <div class="db-notif-item">
+                    <div class="db-notif-symbol"><i class="fa-solid fa-check"></i></div>
+                    <div class="db-notif-text">
+                        <h4>Leave Approved</h4>
+                        <p>Your leave request was approved.</p>
+                        <span class="db-time-ago">Just now</span>
+                    </div>
+                </div> -->
+
+                <!-- <div class="db-notif-item">
+                    <div class="db-notif-symbol db-symbol-alert">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="db-notif-text">
+                        <h4>Attendance Alert</h4>
+                        <p>You forgot to punch out.</p>
+                        <span class="db-time-ago">2 hours ago</span>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+
+        <!-- 2. PROFILE COMPONENT -->
+<div class="db-widget-wrapper">
+    <!-- Profile Image Button (Trigger) -->
+    <button class="db-profile-trigger-btn" onclick="db_toggleProfile()">
+        <!-- Container for Small Avatar (Image or Initials) -->
+        <div id="db-trigger-avatar-box" class="db-avatar-box sm">
+            <img src="" alt="User" id="db-trigger-img" style="display: none;">
+        </div>
+        <span class="db-online-dot"></span>
+    </button>
+
+    <!-- Dropdown Card -->
+    <div class="db-dropdown-card db-profile-card" id="db-profile-menu">
+        <!-- User Info Header -->
+        <div class="db-profile-header-info">
+            <!-- Container for Large Avatar (Image or Initials) -->
+            <div id="db-header-avatar-box" class="db-user-avatar-lg">
+                <img src="" alt="User" id="db-header-img" style="display: none;">
+            </div>
+            
+            <div class="db-user-info-text">
+                <h3 id="db-user-name">Loading...</h3>
+                <p>Employee ID: <span id="db-employee-id">...</span></p>
+            </div>
+        </div>
+
+        <!-- Menu Links -->
+        <ul class="db-profile-nav-list">
+            <li><a href="../dashboard/dashboard.html"><i class="fa-regular fa-user"></i> My Profile</a></li>
+        </ul>
+
+        <!-- Logout Section -->
+        <div class="db-logout-footer">
+            <button class="db-logout-action-btn" onclick="db_logoutUser()">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Logout Confirmation Modal -->
+<div id="logout-confirm-modal" class="logout-modal-overlay">
+    <div class="logout-modal-card">
+        <div class="logout-icon-box">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </div>
+        <h3>Log Out?</h3>
+        <p>Are you sure you want to end your session? You will need to sign in again to access the dashboard.</p>
+        
+        <div class="logout-modal-actions">
+            <button class="btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+            <button class="btn-confirm" onclick="performLogout()">Yes, Log Out</button>
+        </div>
+    </div>
+</div>
+
+
+         </div>
+        
+
+    
+                     
+                    
+                </header>
+
+                
+
+
+<!-- Details Card -->
+<div class="details-card">
+    <div class="card-header">
+        <h2>Profile Details</h2>
+        <button id="openEditModalBtn" class="edit-link-btn">
+            <i class="fa-solid fa-pen"></i> Edit
+        </button>
+    </div>
+
+    <!-- Grid Layout -->
+    <div class="details-grid">
+        
+        <!-- Full Name -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-regular fa-user"></i></div>
+            <div class="info-content">
+                <span class="label">Name</span>
+                <div class="value editable" id="display_name"></div>
+            </div>
+        </div>
+
+        <!-- Email (Read Only - usually not edited directly in profile) -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-regular fa-envelope"></i></div>
+            <div class="info-content">
+                <span class="label">Email</span>
+                <div class="value" id="email">
+                    
+                    <span class="badge"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-regular fa-calendar"></i></div>
+            <div class="info-content">
+                <span class="label">Date of birth</span>
+                <div class="value editable" id="display_dob"></div>
+            </div>
+        </div>
+
+        <!-- Username -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-user-tag"></i></div>
+            <div class="info-content">
+                <span class="label">Marital Status</span>
+                <div class="value editable" id="display_marital"></div>
+            </div>
+        </div>
+
+        <!-- Number (UPDATED) -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+            <div class="info-content">
+                <span class="label">Mobile Number</span>
+                <div class="value">
+                    <!-- Wrapped text in span so badge is not deleted on edit -->
+                    <span id="display_number" ></span>
+                    <span class="badge"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Designation (UPDATED) -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-id-badge"></i></div>
+            <div class="info-content">
+                <span class="label">Designation</span>
+                <div class="value editable" id="display_role"></div>
+            </div>
+        </div>
+
+        <!-- Salary -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+            <div class="info-content">
+                <span class="label">Salary</span>
+                <div class="value editable" id="display_salary" ></div>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="info-content">
+                <span class="label">Address</span>
+                <div class="value editable" id="display_address"></div>
+            </div>
+        </div>
+
+        <!-- City -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-regular fa-building"></i></div>
+            <div class="info-content">
+                <span class="label">City</span>
+                <div class="value editable" id="display_city"></div>
+            </div>
+        </div>
+
+    </div>
+</div> 
+<!--edit profile popup -->
+<div class="edit-modal-overlay" id="editProfileModal">
+    <div class="edit-modal-box">
+        <div class="edit-modal-header">
+            <h3>Edit Profile Details</h3>
+            <button class="close-modal-btn" id="closeEditModal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <form id="editProfileForm">
+            <div class="edit-modal-body">
+                
+                <!-- Row 1 -->
+                <div class="form-row">
+                    <!-- <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="input_name" class="modal-input" required>
+                    </div> -->
+                    <!-- <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="input_username" class="modal-input">
+                    </div> -->
+                </div>
+
+                <!-- Row 2 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="text" id="input_number" class="modal-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="input_dob" class="modal-input">
+                    </div>
+                </div>
+
+                <!-- Row 3 -->
+                <!-- <div class="form-row">
+                    <div class="form-group">
+                        <label>Designation</label>
+                        <input type="text" id="input_designation" class="modal-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Salary</label>
+                        <input type="text" id="input_salary" class="modal-input">
+                    </div>
+                </div> -->
+
+                <!-- Address Section -->
+                 <div class="form-group">
+                    <label>Marital Status</label>
+                    <select id="input_other_marital" class="modal-input">
+                        <option value="married">Married</option>
+                        <option value="unmarried">Unmarried</option>
+                        
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="input_address" class="modal-input">
+                </div>
+
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="input_city" class="modal-input">
+                </div>
+
+            </div>
+
+            <div class="edit-modal-footer">
+                <button type="button" class="btn-cancel" id="cancelEditBtn">Cancel</button>
+                <button type="submit" class="btn-save">Save Details</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- SUCCESS TOAST NOTIFICATION -->
+<div id="successToast" class="toast-notification">
+    <div class="toast-content">
+        <i class="fa-solid fa-circle-check toast-icon"></i>
+        <div class="toast-message">
+            <span class="toast-title">Success</span>
+            <span class="toast-text">Profile details saved successfully!</span>
+        </div>
+    </div>
+    <button class="toast-close" onclick="closeToast()"><i class="fa-solid fa-xmark"></i></button>
+</div>
+
+
+
+
+        <!-- bank details -->
+        <div class="details-card" style="margin-top: 20px;">
+            <div class="card-header">
+                <h2>Payment Information</h2>
+                <!-- <a href="#" class="edit-link" id="toggleEditBtn">
+                    <i class="fa-solid fa-pen"></i> Edit
+                </a> -->
+            </div>
+
+            <!-- Grid Layout -->
+            <div class="details-grid">
+                
+                <!-- Full Name -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-building-columns"></i></div>
+                    <div class="info-content">
+                        <span class="label">Bank Name</span>
+                        <div class="value editable" id="bankname"></div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-building-columns"></i>   <!-- Bank --></div>
+                    <div class="info-content">
+                        <span class="label">Account Number</span>
+                        <div class="value" id="accno">
+                            
+                            <span class="badge"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-hashtag"></i>  <!-- Code / IFSC number --></div>
+                    <div class="info-content">
+                        <span class="label">IFSC Code</span>
+                        <div class="value editable" id="ifsccode">
+                             <span class="badge"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Username -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-id-card"></i></div>
+                    <div class="info-content">
+                        <span class="label">Account Holder Name</span>
+                        <div class="value editable" id="accholdername"></div>
+                    </div>
+                </div>
+
+                <!-- Number -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+                    <div class="info-content">
+                        <span class="label">Number</span>
+                        <div class="value" id="number">
+                        
+                            <span class="badge"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                
+                <!--bank details-->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-regular fa-building"></i></div>
+                    <div class="info-content">
+                        <span class="label"></span>
+                        <div class="value editable" id="branch"></div>
+                    </div>
+                </div>
+
+                
+
+            </div>
+        </div>
+        <!-- statutory information -->
+        <div class="details-card" style="margin-top: 20px;">
+            <div class="card-header">
+                <h2>Statutory Information</h2>
+                <!-- <a href="#" class="edit-link" id="toggleEditBtn">
+                    <i class="fa-solid fa-pen"></i> Edit
+                </a> -->
+            </div>
+
+            <!-- Grid Layout -->
+            <div class="details-grid">
+                
+                <!-- Full Name -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-id-card"></i></div>
+                    <div class="info-content">
+                        <span class="label">PAN</span>
+                        <div class="value editable" id="pan"></div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-id-card"></i></div>
+                    <div class="info-content">
+                        <span class="label">PF UAN</span>
+                        <div class="value" id="uan">
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+                    <div class="info-content">
+                        <span class="label">Professional Tax</span>
+                        <div class="value editable" id="tax">
+                             
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Username -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+                    <div class="info-content">
+                        <span class="label">LWF Status</span>
+                        <div class="value editable" id="lwf status"></div>
+                    </div>
+                </div>
+
+                <!-- Number -->
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-file-medical"></i></div>
+                    <div class="info-content">
+                        <span class="label">ESIC Status</span>
+                        <div class="value" id="esic">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon"><i class="fa-solid fa-id-card"></i></div>
+                    <div class="info-content">
+                        <span class="label">ESIC IP Number</span>
+                        <div class="value" id="ip number">
+                            -NA-
+                        </div>
+                    </div>
+                </div>
+
+                 
+    
+
+            </div>
+        </div>
+
+        <!-- other details -->
+        <div class="details-card" style="margin-top: 20px;">
+    <div class="card-header">
+        <h2>Other Information</h2>
+        <!-- Unique ID for this button -->
+        <button id="openOtherEditBtn" class="edit-link-btn">
+            <i class="fa-solid fa-pen"></i> Edit
+        </button>
+    </div>
+
+    <div class="details-grid">
+        
+        <!-- Phone Number -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-phone-volume"></i></div>
+            <div class="info-content">
+                <span class="label">Phone Number</span>
+                <div class="value editable" id="display_other_phone"></div>
+            </div>
+        </div>
+
+        <!-- WhatsApp (Read Only - Complex verification usually handled elsewhere) -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-brands fa-whatsapp" style="color:#25D366;"></i></div>
+            <div class="info-content">
+                <span class="label">WhatsApp Integration</span>
+                <div class="value">
+                    Enabled
+                    <span class="badge"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gender -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-venus-mars"></i></div>
+            <div class="info-content">
+                <span class="label" id="gender"></span>
+                <div class="value editable" id="display_other_gender"></div>
+            </div>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="info-item">
+            <div class="info-icon"><i class="fa-solid fa-cake-candles"></i></div>
+            <div class="info-content">
+                <span class="label">Date of Birth</span>
+                <div class="value editable" id="display_other_dob"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- other details edit modal -->
+ <div class="edit-modal-overlay" id="editOtherModal">
+    <div class="edit-modal-box">
+        <div class="edit-modal-header">
+            <h3>Edit Other Information</h3>
+            <button class="close-modal-btn" id="closeOtherModal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <form id="editOtherForm">
+            <div class="edit-modal-body">
+                
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="input_other_phone" class="modal-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="input_other_gender" class="modal-input">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <!-- Using text type so you can write "7th July" format, change to type="date" if you prefer -->
+                    <input type="text" id="input_other_dob" class="modal-input" placeholder="FORMAT:YYYY-MM-DD">
+                </div>
+
+            </div>
+
+            <div class="edit-modal-footer">
+                <button type="button" class="btn-cancel" id="cancelOtherBtn">Cancel</button>
+                <button type="submit" class="btn-save">Save Details</button>
+            </div>
+        </form>
+    </div>
+</div>
+    </div>
+
+
+
+    <!-- footer section -->
+
+<footer class="db-footer">
+    <!-- Left Side -->
+    <div class="footer-left">
+        2025 &copy; <span class="brand-text">Oppty</span>
+    </div>
+
+    <!-- Right Side -->
+    <div class="footer-right">
+        Designed & Developed By <a href="#" class="brand-link">Oppty</a>
+    </div>
+</footer>
+
+            </div>
+</main> 
+
+<!-- CHAT WIDGET STRUCTURE -->
+
+<!-- 1. Floating Trigger Button -->
+<button id="chat-trigger-btn" class="chat-trigger" onclick="toggleChat()">
+    <i class="fa-solid fa-comments"></i>
+    <span class="chat-notify-badge">1</span>
+</button>
+
+<!-- 2. Chat Window -->
+<div id="chat-window" class="chat-window-container">
+    
+    <!-- Header -->
+    <div class="chat-header">
+        <div class="chat-header-info">
+            <div class="chat-avatar">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+                <h4>IT & HR Assistant</h4>
+                <span class="chat-status"><span class="status-dot"></span> Online</span>
+            </div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleChat()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <!-- Messages Body -->
+    <div id="chat-body" class="chat-body">
+        <!-- Messages will appear here dynamically -->
+    </div>
+
+    <!-- Input Area -->
+    <div class="chat-footer">
+        <input type="text" id="chat-input" placeholder="Type your message..." onkeypress="handleEnter(event)">
+        <button id="chat-send-btn" onclick="sendMessage()">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+
+
+
+<script src="./dashboard.js"></script>
+</body>
+</html>

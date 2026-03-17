@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Requirements - OPTPY HRMS</title>
+    <link rel="icon" type="image/png" href="../assets/opptylogo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./requirement.css">
+    <link rel="stylesheet" href="../employee_page/employee.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- PRELOADER START -->
+        <div id="page-preloader">
+            <div class="loader-content">
+                <div class="loader-circle"></div>
+                <div class="loader-circle-inner"></div>
+                <div class="loader-text">
+                    <span class="brand-dark"><img src="../assets/opptylogo.png" alt="companyLogo" style="width: 50%;"></span><span class="brand-orange">HRMS</span>
+                </div>
+            </div>
+        </div>
+        <!-- PRELOADER END -->
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="../assets/opptylogo.png" alt="Company Logo">
+                </div>
+                <div class="header-profile">
+                    <div class="user-name" id="name"></div>
+                    <div class="user-role" id="role"></div>
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <ul class="sidebar-menu">
+                    <!-- Dashboard -->
+                    <li class="menu-item">
+                        <a href="../dashboard/dashboard.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-table-columns"></i>
+                                <span>Dashboard</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- My Requirements - New -->
+                    <li class="menu-item active">
+                        <a href="#" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                                <span>My Requirements</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Employees -->
+                    <li class="menu-item">
+                        <a href="../employee_page/employee.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-regular fa-user"></i>
+                                <span>Employees</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Attendance -->
+                    <li class="menu-item">
+                        <a href="../attendance/attendance.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-calendar-days"></i>
+                                <span>Attendance</span>
+                            </div>
+                        </a>
+                    </li>
+                    
+                    <!-- Apply Leave -->
+                    <li class="menu-item">
+                        <a href="../apply_leave/leave.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-file-signature"></i>
+                                <span>Apply Leave</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Payslip -->
+                    <li class="menu-item">
+                        <a href="../payslips/payslip.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-regular fa-credit-card"></i>
+                                <span>Payslip</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Asset Allocation -->
+                    <li class="menu-item">
+                        <a href="../asset_allocation/assetallocation.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-desktop"></i>
+                                <span>Asset Request</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Documents -->
+                    <li class="menu-item">
+                        <a href="../documents/documents.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-file-lines"></i>
+                                <span>Documents</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Help Desk -->
+                    <li class="menu-item">
+                        <a href="../help_desk/help_desk.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-headset"></i>
+                                <span>Help Desk</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content" id="mainContent">
+            <div class="container">
+                <!-- Header -->
+                <header class="page-header" style="width: 100%; justify-content: space-between; align-items: center;">
+                    <div class="flex items-center gap-10">
+                        <button id="mobileMenuBtn" class="mobile-menu-btn">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <div class="page-title">
+                            <h1>My Requirements</h1>
+                            <div class="breadcrumbs">
+                                <i class="fa-solid fa-house"></i> > Dashboard > My Requirements
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notification and Profile Section -->
+                    <div style="width: auto; display: flex; justify-content: flex-end; align-items: center; gap: 20px;">
+                        <div class="db-widget-wrapper">
+                            <button class="db-icon-btn db-notif-trigger-btn" onclick="db_toggleNotifications()">
+                                <i class="fa-regular fa-bell"></i>
+                                <span class="db-notif-badge">3</span>
+                            </button>
+                            <div class="db-dropdown-card db-notif-card" id="db-notification-menu">
+                                <div class="db-card-header">Notifications</div>
+                                <div class="db-notif-item">
+                                    <div class="db-notif-symbol"><i class="fa-solid fa-check"></i></div>
+                                    <div class="db-notif-text">
+                                        <h4>Leave Approved</h4>
+                                        <p>Your leave request was approved.</p>
+                                        <span class="db-time-ago">Just now</span>
+                                    </div>
+                                </div>
+                                <div class="db-notif-item">
+                                    <div class="db-notif-symbol db-symbol-alert">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                    <div class="db-notif-text">
+                                        <h4>Attendance Alert</h4>
+                                        <p>You forgot to punch out.</p>
+                                        <span class="db-time-ago">2 hours ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="db-widget-wrapper">
+                            <button class="db-profile-trigger-btn" onclick="db_toggleProfile()">
+                                <div id="db-trigger-avatar-box" class="db-avatar-box sm">
+                                    <img src="" alt="User" id="db-trigger-img" style="display: none;">
+                                </div>
+                                <span class="db-online-dot"></span>
+                            </button>
+                            <div class="db-dropdown-card db-profile-card" id="db-profile-menu">
+                                <div class="db-profile-header-info">
+                                    <div id="db-header-avatar-box" class="db-user-avatar-lg">
+                                        <img src="" alt="User" id="db-header-img" style="display: none;">
+                                    </div>
+                                    <div class="db-user-info-text">
+                                        <h3 id="db-user-name">Loading...</h3>
+                                        <p>Employee ID: <span id="db-employee-id">...</span></p>
+                                    </div>
+                                </div>
+                                <ul class="db-profile-nav-list">
+                                    <li><a href="../dashboard/dashboard.html"><i class="fa-regular fa-user"></i> My Profile</a></li>
+                                </ul>
+                                <div class="db-logout-footer">
+                                    <button class="db-logout-action-btn" onclick="db_logoutUser()">
+                                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Logout Modal -->
+                <div id="logout-confirm-modal" class="logout-modal-overlay">
+                    <div class="logout-modal-card">
+                        <div class="logout-icon-box">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        </div>
+                        <h3>Log Out?</h3>
+                        <p>Are you sure you want to end your session? You will need to sign in again to access the dashboard.</p>
+                        <div class="logout-modal-actions">
+                            <button class="btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+                            <button class="btn-confirm" onclick="performLogout()">Yes, Log Out</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="req-container">
+                    <!-- Progress Overview Card -->
+                    <div class="req-progress-card">
+                        <div class="req-progress-header">
+                            <h2><i class="fa-solid fa-chart-pie"></i> Onboarding Progress</h2>
+                            <span class="req-percentage" id="overallProgress">0%</span>
+                        </div>
+                        <div class="req-progress-bar-container">
+                            <div class="req-progress-bar" id="progressBar"></div>
+                        </div>
+                        <p class="req-progress-text" id="progressText">Track your onboarding process completion status</p>
+                    </div>
+
+                    <!-- Requirements List -->
+                    <div class="req-grid">
+                        <!-- Document Submission -->
+                        <div class="req-card" id="card-documents">
+                            <div class="req-card-header">
+                                <div class="req-icon doc-icon">
+                                    <i class="fa-solid fa-file-upload"></i>
+                                </div>
+                                <div class="req-status" id="status-documents">
+                                    <span class="status-badge pending">Pending</span>
+                                </div>
+                            </div>
+                            <div class="req-card-body">
+                                <h3>Document Submission</h3>
+                                <p>Submit your identification and address proofs</p>
+                                <ul class="req-item-list">
+                                    <li><i class="fa-solid fa-circle-check"></i> Aadhaar Card</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> PAN Card</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Bank Passbook</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Photo</li>
+                                </ul>
+                            </div>
+                            <div class="req-card-footer">
+                                <button class="req-action-btn" onclick="openRequirement('documents')">
+                                    <i class="fa-solid fa-arrow-right"></i> Complete Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Profile Completion -->
+                        <div class="req-card" id="card-profile">
+                            <div class="req-card-header">
+                                <div class="req-icon profile-icon">
+                                    <i class="fa-solid fa-user-edit"></i>
+                                </div>
+                                <div class="req-status" id="status-profile">
+                                    <span class="status-badge pending">Pending</span>
+                                </div>
+                            </div>
+                            <div class="req-card-body">
+                                <h3>Profile Completion</h3>
+                                <p>Complete your employee profile details</p>
+                                <ul class="req-item-list">
+                                    <li><i class="fa-solid fa-circle-check"></i> Personal Information</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Contact Details</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Emergency Contact</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Bank Details</li>
+                                </ul>
+                            </div>
+                            <div class="req-card-footer">
+                                <button class="req-action-btn" onclick="openRequirement('profile')">
+                                    <i class="fa-solid fa-arrow-right"></i> Complete Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Asset Allocation -->
+                        <div class="req-card" id="card-asset">
+                            <div class="req-card-header">
+                                <div class="req-icon asset-icon">
+                                    <i class="fa-solid fa-laptop"></i>
+                                </div>
+                                <div class="req-status" id="status-asset">
+                                    <span class="status-badge pending">Pending</span>
+                                </div>
+                            </div>
+                            <div class="req-card-body">
+                                <h3>Asset Request</h3>
+                                <p>Request your work equipment and assets</p>
+                                <ul class="req-item-list">
+                                    <li><i class="fa-solid fa-circle-check"></i> Laptop/Desktop</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Access Badge</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Email Setup</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Software Access</li>
+                                </ul>
+                            </div>
+                            <div class="req-card-footer">
+                                <button class="req-action-btn" onclick="openRequirement('asset')">
+                                    <i class="fa-solid fa-arrow-right"></i> Request Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Training & Induction -->
+                        <div class="req-card" id="card-training">
+                            <div class="req-card-header">
+                                <div class="req-icon training-icon">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <div class="req-status" id="status-training">
+                                    <span class="status-badge pending">Pending</span>
+                                </div>
+                            </div>
+                            <div class="req-card-body">
+                                <h3>Training & Induction</h3>
+                                <p>Complete mandatory training sessions</p>
+                                <ul class="req-item-list">
+                                    <li><i class="fa-solid fa-circle-check"></i> Company Orientation</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> HR Policies</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> IT Security</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Safety Guidelines</li>
+                                </ul>
+                            </div>
+                            <div class="req-card-footer">
+                                <button class="req-action-btn" onclick="openRequirement('training')">
+                                    <i class="fa-solid fa-arrow-right"></i> Start Training
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Attendance Setup -->
+                        <div class="req-card" id="card-attendance">
+                            <div class="req-card-header">
+                                <div class="req-icon attendance-icon">
+                                    <i class="fa-solid fa-clock"></i>
+                                </div>
+                                <div class="req-status" id="status-attendance">
+                                    <span class="status-badge pending">Pending</span>
+                                </div>
+                            </div>
+                            <div class="req-card-body">
+                                <h3>Attendance Setup</h3>
+                                <p>Set up your attendance and leave preferences</p>
+                                <ul class="req-item-list">
+                                    <li><i class="fa-solid fa-circle-check"></i> Shift Timing</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Work Location</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Leave Policy</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Holiday Calendar</li>
+                                </ul>
+                            </div>
+                            <div class="req-card-footer">
+                                <button class="req-action-btn" onclick="openRequirement('attendance')">
+                                    <i class="fa-solid fa-arrow-right"></i> Configure Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Salary & Benefits -->
+                        <div class="req-card" id="card-salary">
+                            <div class="req-card-header">
+                                <div class="req-icon salary-icon">
+                                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                                </div>
+                                <div class="req-status" id="status-salary">
+                                    <span class="status-badge pending">Pending</span>
+                                </div>
+                            </div>
+                            <div class="req-card-body">
+                                <h3>Salary & Benefits</h3>
+                                <p>Review and confirm your salary structure</p>
+                                <ul class="req-item-list">
+                                    <li><i class="fa-solid fa-circle-check"></i> Salary Breakup</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Deductions</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Benefits Overview</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Payslip Access</li>
+                                </ul>
+                            </div>
+                            <div class="req-card-footer">
+                                <button class="req-action-btn" onclick="openRequirement('salary')">
+                                    <i class="fa-solid fa-arrow-right"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline View -->
+                    <div class="req-timeline-card">
+                        <div class="req-timeline-header">
+                            <h2><i class="fa-solid fa-list-check"></i> Onboarding Timeline</h2>
+                        </div>
+                        <div class="req-timeline" id="timeline">
+                            <div class="timeline-item" data-step="1">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h4>Offer Letter Accepted</h4>
+                                    <p>You have accepted the offer letter</p>
+                                    <span class="timeline-date" id="date-offer">-</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-step="2">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h4>Document Verification</h4>
+                                    <p>Submit and verify your documents</p>
+                                    <span class="timeline-date" id="date-documents">-</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-step="3">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h4>Profile Completion</h4>
+                                    <p>Complete your employee profile</p>
+                                    <span class="timeline-date" id="date-profile">-</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-step="4">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h4>Asset Allocation</h4>
+                                    <p>Receive your work equipment</p>
+                                    <span class="timeline-date" id="date-asset">-</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-step="5">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h4>Training Completed</h4>
+                                    <p>Complete all training modules</p>
+                                    <span class="timeline-date" id="date-training">-</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-step="6">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h4>Onboarding Complete</h4>
+                                    <p>All requirements fulfilled</p>
+                                    <span class="timeline-date" id="date-complete">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="./requirement.js"></script>
+</body>
+</html>

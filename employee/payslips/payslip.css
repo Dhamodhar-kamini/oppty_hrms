@@ -1,0 +1,367 @@
+
+.payslip-grid {
+  display: grid;
+  /* 200px Sub-nav | Flexible Content | 300px Widgets */
+  grid-template-columns: 200px 1fr 300px;
+  gap: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* A. Sub Sidebar (Internal) */
+.sub-brand h3 {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  border-left: 3px solid var(--accent-orange);
+}
+
+.sub-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sub-link {
+  text-decoration: none;
+  color: var(--text-muted);
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.sub-link:hover {
+  color: var(--text-main);
+  background: var(--bg-hover);
+}
+.sub-link.active {
+  background: var(--accent-dim);
+  color: var(--accent-orange);
+  font-weight: 500;
+}
+
+/* B. Data Panel (Center) */
+.data-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 25px;
+}
+
+.panel-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+/* Controls */
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.select-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+#yearSelect {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 10px;
+  width: 200px;
+  border-radius: 4px;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--accent-orange);
+  color: var(--accent-orange);
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.btn-outline:hover {
+  background: var(--accent-orange);
+  color: #000;
+}
+
+.info-text {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 15px;
+}
+
+/* Table */
+.table-container {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+
+th {
+  background: var(--bg-card);
+  text-align: left;
+  padding: 12px 15px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+td {
+  border-top: 1px solid var(--border);
+  padding: 15px;
+  font-size: 0.9rem;
+}
+
+.date-link {
+  color: var(--accent-orange);
+  text-decoration: none;
+}
+.date-link:hover {
+  text-decoration: underline;
+}
+
+.btn-text-only {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  margin-bottom: 25px;
+}
+
+/* Chart */
+.chart-container {
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+.legend-box .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: var(--accent-orange);
+  margin-right: 5px;
+}
+.canvas-wrapper {
+  height: 250px;
+  width: 100%;
+}
+
+/* C. Widgets (Right) */
+.widget-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.widget-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.w-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.w-head h3 {
+  font-size: 1rem;
+}
+.w-head i {
+  color: var(--accent-orange);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.widget-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* === RESPONSIVE === */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 1200px) {
+  .payslip-grid {
+    grid-template-columns: 200px 1fr; /* Drop Right widget col */
+  }
+  .widget-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .payslip-grid {
+    grid-template-columns: 1fr; /* Stack everything */
+  }
+  .sub-sidebar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .sub-nav {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-sidebar {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    height: 100%;
+  }
+  .app-sidebar.show {
+    display: flex;
+  }
+  .mobile-menu-btn {
+    display: block;
+    margin-right: 15px;
+  }
+  .page-header {
+    padding: 0 15px;
+  }
+  .search-box-wrapper {
+    display: none; /* Hide search on mobile for space */
+  }
+  .content-scroll {
+    padding: 15px;
+  }
+}
+
+.preview-card {
+  background: #f2f2f2;
+  border: none;
+}
+.payslip-ticket {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  border-top: 4px solid var(--primary);
+}
+.ticket-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.logo-area {
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.logo-area i {
+  color: var(--primary);
+}
+.employee-summary {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.lbl {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.ct-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.ct-row.head {
+  color: var(--text-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.ct-row.subtotal {
+  font-weight: 600;
+  color: var(--dark);
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid var(--border);
+}
+.ct-row.deduct {
+  color: var(--danger);
+}
+.ct-divider {
+  border-bottom: 1px dashed var(--border);
+  margin: 5px 0;
+}
+.ct-divider-total {
+  border-bottom: 2px solid var(--dark);
+  margin: 10px 0;
+}
+.total-pay {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark);
+}
+.ticket-footer-note {
+  margin-top: 20px;
+  font-size: 10px;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.badge-warning {
+  background: #fff8dd;
+  color: #ffc700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+}
+

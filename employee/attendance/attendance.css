@@ -1,0 +1,1307 @@
+/* --- Attendance Timer Circle --- */
+
+
+.edit-modal-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:10000;
+}
+
+.edit-modal-overlay.show{
+  display:flex;
+}
+
+.edit-modal-box{
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  width:300px;
+  position:relative;
+}
+
+.edit-form{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:10px;
+}
+
+.edit-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:15px;
+}
+.edit-actions .btn-secondary2{
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  background:var(--primary-orange);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .2s;
+  border: none; 
+}
+
+.edit-actions .btn-secondary2:hover{
+  color: white;
+  background-color: var(--primary-orange-hover);
+}
+.edit-actions .btn-primary{
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  background: transparent;
+  color: black;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+  border: none; 
+}
+
+.edit-actions .btn-primary:hover{
+  background: transparent;
+  color: red;
+}
+
+.edit-form label{
+  font-size:13px;
+  font-weight:500;
+}
+/* Inputs */
+.edit-form input,
+.edit-form select{
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+  transition: border .2s;
+}
+
+.edit-form input:focus,
+.edit-form select:focus{
+  border-color: #ff6b00;
+  outline: none;
+}
+.edit-modal-overlay{
+  z-index:999999;
+}
+
+/* Add this to your CSS file */
+.edit-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px; /* Spacing between fields */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.edit-form select:focus {
+    border-color: orangered; /* Matches your theme */
+    outline: none;
+}
+:root {
+  --primary-orange: #ff6b00;
+  --primary-orange-hover: #e65100;
+  --card-bg: #1e1e1e; /* Dark Card Background */
+  --modal-bg: #252525;
+  --text-white: #ffffff;
+  --text-muted: #a0a0a0;
+  --border-color: #333;}
+
+
+
+.timer-circle {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin-top: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring {
+  position: absolute;
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: #f3f4f6;
+  stroke-width: 10;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke: #129134;
+  stroke-width: 10;
+  stroke-linecap: round;
+
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+
+  transition: stroke-dashoffset 0.4s linear;
+}
+.timer-content {
+  position: absolute;
+  text-align: center;
+}
+.timer-label{
+  font-size:12px;
+  color:#888;
+}
+
+/* Optional: Animation to make it spin when active */
+.timer-circle.active-spin {
+  animation: spin 2s linear infinite;
+}
+
+/* Keeps the text upright and centered */
+.timer-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.bm-timer-circle-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+/* FIX: Chart Color Orange */
+.bm-timer-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 6px solid #f1f1f1; /* Grey Ring */
+  border-top-color: #ff5b1e; /* Orange Top */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--bm-white);
+}
+
+.bm-timer-text {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--bm-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.bm-timer-label {
+  font-size: 12px;
+  color: var(--bm-text-muted);
+}
+
+.bm-warning-box {
+  background: #fff4f4;
+  color: var(--bm-danger);
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 12px;
+  border: 1px dashed var(--bm-danger);
+}
+
+/* --- 1. View Attendance Button Style --- */
+.btn-view-attendance {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background-color: orangered; /* Uses your Primary Color */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-view-attendance:hover {
+  background-color: #e65100; /* Darker Orange */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
+}
+
+/* --- 2. Modal Overlay --- */
+.att-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: none; /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+}
+
+.att-modal-overlay.active {
+  display: flex;
+}
+
+/* --- 3. Modal Box --- */
+.att-modal-box {
+  background: white;
+  width: 900px; /* Wide for table */
+  max-width: 95%;
+  max-height: 90vh; /* Prevents overflow on small screens */
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* --- Header --- */
+.att-modal-header {
+  padding: 20px 25px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #f8f9fa;
+}
+
+.att-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+.att-subtitle {
+  margin: 5px 0 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.att-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+  padding: 5px;
+}
+.att-close-btn:hover {
+  color: #dc3545;
+}
+
+/* --- Body & Table --- */
+.att-modal-body {
+  padding: 0;
+  flex: 1;
+  overflow-y: auto; /* Scrollable vertically */
+}
+
+.att-table-wrapper {
+  width: 100%;
+  overflow-x: auto; /* Scrollable horizontally on mobile */
+}
+
+.att-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 700px; /* Ensures table doesn't squish too much */
+}
+
+.att-table th {
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  padding: 15px 20px;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+}
+
+.att-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid #f1f1f1;
+  color: #333;
+  vertical-align: middle;
+}
+
+.att-table tr:hover {
+  background-color: #fafafa;
+}
+
+/* --- Status Badges --- */
+.badge-status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-present {
+  background: #d1fae5;
+  color: #065f46;
+} /* Green */
+.badge-absent {
+  background: #fee2e2;
+  color: #991b1b;
+} /* Red */
+.badge-holiday {
+  background: #fff7ed;
+  color: #9a3412;
+} /* Orange */
+.badge-empty {
+  color: #ccc;
+}
+
+/* --- Icons & Edit --- */
+.icon-loc {
+  color: #3b82f6;
+  margin-right: 5px;
+  font-size: 12px;
+}
+.btn-edit-row {
+  background: none;
+  border: 1px solid #e2e8f0;
+  color: #3b82f6;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-edit-row:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+.text-center {
+  text-align: center;
+}
+
+/* --- Footer --- */
+.att-modal-footer {
+  padding: 15px 25px;
+  border-top: 1px solid #eee;
+  background: #fff;
+  text-align: right;
+}
+
+.att-btn-close-secondary {
+  padding: 8px 20px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  color: #666;
+  cursor: pointer;
+  font-weight: 500;
+}
+.att-btn-close-secondary:hover {
+  background: #f8f9fa;
+}
+
+/* Punch Button (Main Card) */
+.btn-punch {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: rgb(252, 67, 0);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+  margin-top: 6px;
+}
+
+.btn-punch:hover {
+  background-color: var(--primary-orange-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(255, 107, 0, 0.3);
+}
+
+.btn-punch.mode-out {
+  background-color: orangered; /* Red for Punch Out state */
+  box-shadow: 0 4px 10px rgba(211, 47, 47, 0.2);
+}
+.btn-punch.mode-out:hover {
+  background-color: #ff6b00;
+}
+
+/* View History Button (Calendar Card) */
+.btn-full-orange {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--primary-orange);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 15px;
+  display: block;
+}
+
+.btn-full-orange:hover {
+  background-color: var(--primary-orange-hover);
+}
+
+/* =========================================
+   2. PROFESSIONAL MODAL STYLES
+   ========================================= */
+
+/* Overlay */
+.att-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px); /* Modern blur effect */
+  z-index: 9999;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.att-modal-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+/* Modal Box */
+.att-modal-box {
+  background: var(--bg-dark-panel, #252525);
+  width: 600px;
+  max-width: 90%;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh; /* Prevents modal from being too tall */
+}
+
+.att-modal-overlay.show .att-modal-box {
+  transform: translateY(0);
+}
+
+/* Header */
+.att-modal-header {
+  padding: 20px 25px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.att-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text-white);
+}
+
+.modal-subtitle {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.att-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: 0.2s;
+}
+
+.att-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(243, 129, 88, 0.717)
+}
+
+/* Body & Table */
+.att-modal-body {
+  padding: 0;
+  overflow-y: auto; /* Internal scrolling */
+  flex: 1;
+}
+
+.att-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.att-table th {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  padding: 15px 25px;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(5px);
+}
+
+.att-table td {
+  padding: 15px 25px;
+  color: var(--text-white);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.att-table tr:last-child td {
+  border-bottom: none;
+}
+
+.att-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.status-present {
+  background: rgba(76, 175, 80, 0.15);
+  color: #66bb6a;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.status-absent {
+  background: rgba(244, 67, 54, 0.15);
+  color: #ef5350;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* Footer */
+.att-modal-footer {
+  padding: 15px 25px;
+  border-top: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.02);
+  text-align: right;
+}
+
+.btn-secondary {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-white);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Scrollbar Styling for Webkit */
+.att-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+.att-modal-body::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+.att-modal-body::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
+}
+
+
+
+/* === CARD LAYOUT === */
+.grid-attend {
+  display: flex;
+  gap: 24px;
+  align-items: stretch; /* Makes both cards equal height */
+  flex-wrap: wrap;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 16px; /* Smoother corners */
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); /* Subtle shadow */
+  display: flex;
+  flex-direction: column;
+}
+
+.attendance-card {
+  flex: 0 0 320px;
+  text-align: center;
+}
+.calendar-card {
+  flex: 1;
+  min-width: 350px;
+}
+
+/* === ATTENDANCE CARD TWEAKS === */
+.card-header-text {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+}
+.current-date {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 17px;
+  margin-bottom: 17px;
+}
+.production-badge{
+  /* border: 2px solid green; */
+  margin: 20px;
+}
+.status-msg{
+  margin-bottom: 20px;
+}
+
+/* Punch Button - Strong Orange */
+.btn-punch {
+  width: 100%;
+  padding: 14px;
+  background: orangered;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
+  transition: all 0.2s;
+  /* margin-top: 90px;  */
+}
+.btn-punch:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 107, 0, 0.3);
+}
+
+/* Shift Completed State (Disabled) */
+.btn-punch:disabled {
+  background-color: #d5846c; /* Faded Orange */
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* === CALENDAR CARD (THE FIX) === */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.calendar-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+/* Navigation Controls */
+.cal-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.nav-btn {
+  background: white;
+  border: 1px solid var(--border-light);
+  color: var(--text-dark);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.nav-btn:hover {
+  background: var(--hover-bg);
+  border-color: #ddd;
+}
+
+.month-year-label {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-dark); /* Fixed: Black Text */
+  min-width: 130px;
+  text-align: center;
+}
+
+/* Grid Headers (S M T W...) */
+.calendar-grid-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 10px;
+}
+.calendar-grid-header div {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+
+/* attendance calender section */
+/* --- CUSTOM MONTH PICKER STYLE --- */
+.custom-month-picker {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8f9fa;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+#pickerLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    min-width: 100px; /* Prevents jumping when text changes */
+}
+
+.picker-icon-wrapper {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.picker-icon-wrapper:hover {
+    background: #e9ecef;
+}
+
+.picker-icon-wrapper i {
+    font-size: 16px;
+    color: #120a05; /* Orange Icon */
+    pointer-events: none; /* Let clicks pass through to input */
+}
+
+/* The Secret Sauce: Invisible Input covering the icon */
+.hidden-month-input {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0; /* Invisible */
+    cursor: pointer;
+    z-index: 10; /* On Top */
+}
+
+/* --- CUSTOM NAV CONTROLS --- */
+/* --- CUSTOM DUAL DROPDOWNS --- */
+.custom-cal-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.nav-select {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: 0.2s;
+    appearance: none; /* Removes default arrow in some browsers for cleaner look */
+}
+
+/* Hover Effect */
+.nav-select:hover {
+    background: #e9ecef;
+}
+
+/* Specific styling for Year to stand out */
+.year-select {
+    color: #0d0703; /* Orange */
+    font-weight: 700;
+}
+
+/* Add a subtle separator if needed */
+.month-select {
+    border-right: 1px solid #e0e0e0;
+    padding-right: 12px;
+}
+
+
+/* The Days Grid */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px; /* Space between cells */
+  margin-bottom: 20px;
+}
+
+.day-cell {
+  height: 40px; /* Fixed height for consistency */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark); /* Fixed: Dark Text */
+  border-radius: 8px;
+  cursor: default;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.day-cell:hover:not(.faded) {
+  background-color: var(--hover-bg);
+}
+.day-cell.faded {
+  opacity: 0;
+  pointer-events: none;
+} /* Hide empty cells completely */
+
+/* Today Marker */
+.day-cell.today {
+  background-color: #fff3e0; /* Light Orange BG */
+  color: var(--primary-orange);
+  border: 1px solid var(--primary-orange);
+  font-weight: 700;
+}
+
+/* Green Dot for Present */
+.day-cell.present::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  width: 5px;
+  height: 5px;
+  background-color: #2ecc71;
+  border-radius: 50%;
+}
+
+/* Footer & Legend */
+.cal-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border-light);
+  padding-top: 20px;
+}
+.legend-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dot-present {
+  width: 8px;
+  height: 8px;
+  background: #2ecc71;
+  border-radius: 50%;
+}
+.dot-absent {
+  width: 8px;
+  height: 8px;
+  background: #e74c3c;
+  border-radius: 50%;
+}
+
+/* View History Button */
+.btn-view-history {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-orange);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.2s;
+}
+.btn-view-history:hover {
+  background: var(--primary-orange-hover);
+}
+
+/* === MODAL (Light Theme) === */
+.att-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.att-modal-overlay.show {
+  display: flex;
+}
+
+.att-modal-box {
+  background: white;
+  width: 900px;
+    max-width: 95%;
+    height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+    animation: slideUp 0.3s ease-out;
+    overflow-y: auto;
+}
+
+.att-modal-header {
+  padding: 20px 25px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.att-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text-dark);
+}
+.header-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 4px;
+}
+
+.att-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.att-table th {
+  background: #f8f9fa;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 15px 25px;
+  text-align: left;
+}
+.att-table td {
+  padding: 15px 25px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-dark);
+}
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.status-present {
+  background: #e8f5e9;
+  color: #2e7d32;
+} /* Light Green */
+.status-absent {
+  background: #ffebee;
+  color: #c62828;
+} /* Light Red */
+
+.att-modal-footer .att-btn-close-secondary {
+  padding: 8px 20px;
+  border: 1px solid #d5490d;
+  background: white;
+  border-radius: 6px;
+  color: #666;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.att-modal-footer .att-btn-close-secondary:hover {
+  background: #cc410a;
+}
+
+
+/* Metrics */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.icon-sq {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.lbl {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.orange {
+  background: var(--orange-light);
+  color: var(--orange);
+}
+.blue {
+  background: var(--blue-light);
+  color: var(--blue);
+}
+.purple {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+.yellow {
+  background: var(--yellow-light);
+  color: var(--yellow);
+}
+.value-group {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.val {
+  font-size: 22px;
+  font-weight: 700;
+}
+.target {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.mini-progress-bg {
+  width: 100%;
+  height: 4px;
+  background: #f1f5f9;
+  border-radius: 2px;
+}
+.mini-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+.orange-fill {
+  background: var(--orange);
+}
+.yellow-fill {
+  background: var(--yellow);
+}
+.blue-fill {
+  background: var(--blue);
+}
+.purple-fill {
+  background: var(--purple);
+}
+
+/* ======================================================== */
+/* --- UPDATED TIMELINE & DOT STYLES --- */
+/* ======================================================== */
+.timeline-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 20px;
+}
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.legend-group {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  align-items: center;
+}
+
+/* Legend Dots (Fixed colors and sizes) */
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.dot.green {
+  background-color: #4caf50 !important;
+}
+.dot.yellow {
+  background-color: #ffb300 !important;
+}
+
+/* Timeline Track */
+.timeline-track {
+  width: 100%;
+  height: 32px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+/* Timeline Active Segments (Fixed transition & background) */
+.timeline-segment {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  border-radius: 4px;
+  transition: width 0.5s linear;
+}
+.timeline-segment.green {
+  background-color: #4caf50 !important;
+}
+.timeline-segment.yellow {
+  background-color: #ffb300 !important;
+}
+
+/* Timeline Labels (Fixed mathematical alignment) */
+.time-axis {
+  position: relative;
+  height: 20px;
+  width: 100%;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 5px;
+}
+.time-axis span {
+  position: absolute;
+  transform: translateX(-50%); /* Centers the text perfectly over the tick */
+}
+/* Aligns 10:00, 12:00, 14:00, 16:00, 18:00, 19:00 */
+.time-axis span:nth-child(1) { left: 0%; transform: translateX(0); }
+.time-axis span:nth-child(2) { left: 22.22%; }
+.time-axis span:nth-child(3) { left: 44.44%; }
+.time-axis span:nth-child(4) { left: 66.66%; }
+.time-axis span:nth-child(5) { left: 88.88%; }
+.time-axis span:nth-child(6) { left: 100%; transform: translateX(-100%); }
+
+/* Logs */
+.log-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 20px;
+}
+.log-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.log-table th {
+  text-align: left;
+  color: var(--text-secondary);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.log-table td {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+  color: var(--text-primary);
+}

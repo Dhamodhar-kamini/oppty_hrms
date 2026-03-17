@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPPTY EMPLOYEE HRMS</title>
+    <link rel="icon" type="image/png" href="../assets/opptylogo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="./attendance.css" />
+    <link rel="stylesheet" href="../employee_page/employee.css" />
+    <link rel="stylesheet" href="../dashboard/dashboard.css" />
+</head>
+
+<body>
+    <div class="app-layout">
+
+        <!-- PRELOADER START -->
+<div id="page-preloader">
+  <div class="loader-content">
+    <!-- Spinning Rings -->
+    <div class="loader-circle"></div>
+    <div class="loader-circle-inner"></div>
+    
+    <!-- Branding Text -->
+    <div class="loader-text">
+      <span class="brand-dark"><img src="../assets/opptylogo.png" alt="companyLogo" style="width: 50%;"></span><span class="brand-orange">HRMS</span>
+    </div>
+    <!-- <p class="loading-status">Loading...</p> -->
+  </div>
+</div>
+<!-- PRELOADER END -->
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <!-- 1. NEW LOGO SECTION -->
+                <div class="sidebar-logo">
+                    <!-- Replace src with your actual logo URL -->
+                    <img src="../assets/opptylogo.png" alt="Company Logo" />
+                </div>
+
+                <!-- User Profile -->
+                <div class="header-profile">
+                    <div class="user-name" id="name"></div>
+                    <div class="user-role" id="role"></div>
+                </div>
+
+                <!-- Toggle Button -->
+                <button id="sidebarToggle" class="sidebar-toggle">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-content">
+                <ul class="sidebar-menu">
+                    <!-- Dashboard -->
+                    <li class="menu-item">
+                        <a href="../dashboard/dashboard.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-table-columns"></i>
+                                <span>Dashboard</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Employees -->
+                    <li class="menu-item">
+                        <a href="../employee_page/employee.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-regular fa-user"></i>
+                                <span>Employees</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Attendance -->
+                    <li class="menu-item active">
+                        <a href="../attendance/attendance.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-calendar-days"></i>
+                                <span>Attendance</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="../apply_leave/leave.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-file-signature"></i>
+                                <span>Apply Leave</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Payslip -->
+                    <li class="menu-item">
+                        <a href="../payslips/payslip.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-regular fa-credit-card"></i>
+                                <span>Payslip</span>
+                            </div>
+                        </a>
+                    </li>
+
+
+                    <!-- Asset Allocation -->
+                    <li class="menu-item">
+                        <a href="../asset_allocation/assetallocation.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-phone"></i>
+                                <span>Asset Request</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Documents -->
+                    <li class="menu-item">
+                        <a href="../documents/documents.html" class="menu-link">
+                            <div class="link-left">
+                                <i class="fa-solid fa-file-lines"></i>
+                                <span>Documents</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        <main class="main-content" id="mainContent">
+            <div class="container">
+                <!-- Header -->
+                <header class="page-header">
+                    <div class="flex items-center gap-10">
+                        <!-- Mobile Menu Button -->
+                        <button id="mobileMenuBtn" class="mobile-menu-btn">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+
+                        <div class="page-title">
+                            <h1>Employee Attendance</h1>
+                            <div class="breadcrumbs">
+                                <i class="fa-solid fa-house"></i> > Dashboard > Employee
+                                Attendance
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 1. NOTIFICATION COMPONENT -->
+                    <div style="width: auto; display: flex; justify-content: flex-end; align-items: center; gap: 20px;">
+                        <div class="db-widget-wrapper">
+                            <button class="db-icon-btn db-notif-trigger-btn" onclick="db_toggleNotifications()">
+                                <i class="fa-regular fa-bell"></i>
+                                <span class="db-notif-badge">3</span>
+                            </button>
+
+                            <!-- Unique ID for Notification Dropdown -->
+                            <div class="db-dropdown-card db-notif-card" id="db-notification-menu">
+                                <div class="db-card-header">Notifications</div>
+                                <div id="db-notif-list" style="max-height: 350px; overflow-y: auto;">
+        </div>
+
+                                <!-- <div class="db-notif-item">
+                                    <div class="db-notif-symbol"><i class="fa-solid fa-check"></i></div>
+                                    <div class="db-notif-text">
+                                        <h4>Leave Approved</h4>
+                                        <p>Your leave request was approved.</p>
+                                        <span class="db-time-ago">Just now</span>
+                                    </div>
+                                </div> -->
+
+                                <!-- <div class="db-notif-item">
+                                    <div class="db-notif-symbol db-symbol-alert">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                    <div class="db-notif-text">
+                                        <h4>Attendance Alert</h4>
+                                        <p>You forgot to punch out.</p>
+                                        <span class="db-time-ago">2 hours ago</span>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+
+                        <!-- 2. PROFILE COMPONENT -->
+                        <div class="db-widget-wrapper">
+                            <!-- Profile Image Button -->
+                            <button class="db-profile-trigger-btn" onclick="db_toggleProfile()">
+                                 <div id="db-trigger-avatar-box" class="db-avatar-box sm">
+                                    <img src="" alt="User" id="db-trigger-img" style="display: none;">
+                                 </div>
+                                <span class="db-online-dot"></span>
+                            </button>
+
+                            <!-- Unique ID for Profile Dropdown -->
+                            <div class="db-dropdown-card db-profile-card" id="db-profile-menu">
+                                <!-- User Info Header -->
+                                <div class="db-profile-header-info">
+                                   <div id="db-header-avatar-box" class="db-user-avatar-lg">
+                                        <img src="" alt="User" id="db-header-img" style="display: none;">
+                                    </div>
+                                    <div class="db-user-info-text">
+                                        <h3 id="pname"></h3>
+                                        <p>Employee ID: <span id="employee_id"></span></p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Menu Links -->
+                                <ul class="db-profile-nav-list">
+                                    <li><a href="../dashboard/dashboard.html"><i class="fa-regular fa-user"></i> My
+                                            Profile</a></li>
+
+                                </ul>
+
+                                <!-- Logout Section -->
+                                <div class="db-logout-footer">
+                                    <button class="db-logout-action-btn" onclick="db_logoutUser()">
+                                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Logout Confirmation Modal -->
+<div id="logout-confirm-modal" class="logout-modal-overlay">
+    <div class="logout-modal-card">
+        <div class="logout-icon-box">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </div>
+        <h3>Log Out?</h3>
+        <p>Are you sure you want to end your session? You will need to sign in again to access the dashboard.</p>
+        
+        <div class="logout-modal-actions">
+            <button class="btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+            <button class="btn-confirm" onclick="performLogout()">Yes, Log Out</button>
+        </div>
+    </div>
+</div>
+
+                    </div>
+                </header>
+            </div>
+
+            <!--attendance content -->
+            <div class="grid-row grid-attend">
+
+                <!-- 1. ATTENDANCE CARD (Left Side) -->
+                <div class="card attendance-card">
+                    <div class="card-header-text">Attendance</div>
+                    <div class="current-date" id="currentDateDisplay">--:-- --, -- --- ----</div>
+
+                    <div class="timer-wrapper">
+
+                        <div class="timer-circle">
+
+                            <svg width="160" height="160" class="progress-ring">
+
+                                <circle class="progress-ring-bg" cx="80" cy="80" r="70" />
+
+                                <circle class="progress-ring-fill" id="timerProgress" cx="80" cy="80" r="70" />
+
+                            </svg>
+
+                            <div class="timer-content">
+                                <span class="timer-label">Total Hours</span>
+                                <div id="timerDisplay" class="timer-digits">00:00:00</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="productionDisplay" class="production-badge">
+                        Active : 0.00 hrs
+                    </div>
+
+                    <div id="punchStatusMsg" class="status-msg">
+                        <i class="fa-solid fa-fingerprint"></i> Not punched in yet
+                    </div>
+
+                    <button id="punchBtn" class="btn-punch">Punch In</button>
+                </div>
+
+                <!-- 2. CALENDAR CARD (Right Side - Fixed Alignment) -->
+                <div class="card calendar-card">
+                    <div class="calendar-header">
+                        <h3>Attendance Log</h3>
+                        <div class="cal-controls">
+                            <button id="prevMonth" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                            <div id="calMonthYear" class="month-year-label"></div>
+                            <button id="nextMonth" class="nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Weekdays Header -->
+                    <div class="calendar-grid-header">
+                        <div>S</div>
+                        <div>M</div>
+                        <div>T</div>
+                        <div>W</div>
+                        <div>T</div>
+                        <div>F</div>
+                        <div>S</div>
+                    </div>
+
+                    <!-- Days Grid -->
+                    <div class="days-grid" id="daysGrid"></div>
+
+                    <!-- Footer -->
+                    <div class="cal-footer">
+                        <div class="legend-container">
+                            <div class="legend"><span class="dot-present"></span> Present</div>
+                            <div class="legend"><span class="dot-absent"></span> Absent</div>
+                        </div>
+                        <button id="viewAttBtn" class="btn-view-history">
+                            View Full History <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 3. MODAL POPUP (Professional Design) -->
+            <div class="att-modal-overlay" id="attModal">
+                <div class="att-modal-box">
+                    <div class="att-modal-header">
+                        <div class="header-content">
+                            <h3>Attendance Records</h3>
+                            <span class="header-subtitle">Detailed log of punch-in & punch-out timings</span>
+                        </div>
+
+                        <!-- DUAL DROPDOWN CONTROLS -->
+                        <div class="custom-cal-nav">
+                            <!-- Month Dropdown -->
+                            <select id="navMonthSelect" class="nav-select month-select"></select>
+
+                            <!-- Year Dropdown -->
+                            <select id="navYearSelect" class="nav-select year-select"></select>
+                        </div>
+
+                        <button class="att-close-btn" id="attCloseBtn">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div class="att-modal-body">
+                        <div class="table-container">
+                            <table class="att-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>In Time</th>
+                                        <th>Out Time</th>
+                                        <th>Duration</th>
+                                        <th>Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attTableBody">
+                                    <!-- JS injects rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- breakmanagement section -->
+            <div class="bm-main-container">
+                <!-- Main Content Grid -->
+                <div class="bm-grid-layout">
+
+                    <!-- Left Column: Timer Control -->
+                    <div class="bm-card bm-timer-card">
+                        <div class="bm-card-header">
+                            <span class="bm-card-title">Current Session</span>
+                            <span class="bm-badge bm-badge-light" id="bmStatusBadge">Not Active</span>
+                        </div>
+
+                        <div class="bm-timer-body">
+                            <div class="bm-select-wrapper">
+                                <label class="bm-label">Select Break Type</label>
+                                <select id="bmBreakTypeSelect" class="bm-form-control">
+                                    <option value="lunch">🍽️ Lunch Break (45 Mins)</option>
+                                    <option value="normal">☕ Normal Break (15 Mins)</option>
+                                </select>
+                            </div>
+
+                            <!-- Timer Circle -->
+                            <div class="bm-timer-circle-wrap">
+                                <div class="bm-timer-circle">
+                                    <div class="bm-timer-text" id="bmTimerDisplay">00:00:00</div>
+                                    <div class="bm-timer-label">Duration</div>
+                                </div>
+                            </div>
+
+                            <!-- Warning Message -->
+                            <div id="bmLimitWarning" class="bm-warning-box" style="display: none;">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Time Limit Exceeded!
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="bm-timer-controls">
+                                <button id="bmBtnIn" class="bm-btn bm-btn-primary bm-btn-block">
+                                    <i class="fa-solid fa-mug-hot"></i> Break In
+                                </button>
+                                <button id="bmBtnOut" class="bm-btn bm-btn-dark bm-btn-block" style="display: none;">
+                                    <i class="fa-solid fa-person-walking-arrow-right"></i> Break Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Stats -->
+                    <div class="bm-stats-column">
+
+                        <!-- Usage Limits Card -->
+                        <div class="bm-card">
+                            <div class="bm-card-header">
+                                <span class="bm-card-title">Daily Usage Limits</span>
+                            </div>
+                            <div class="bm-stats-body">
+
+                                <!-- Lunch Progress -->
+                                <div class="bm-skill-item">
+                                    <div class="bm-skill-info">
+                                        <span class="bm-skill-name">Lunch Break</span>
+                                        <span class="bm-skill-val"><span id="bmLunchUsed">0</span> / 45 mins</span>
+                                    </div>
+                                    <div class="bm-progress-bg">
+                                        <div class="bm-progress-fill" id="bmLunchBar"
+                                            style="width: 0%; background-color: #FF5B1E;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Normal Break Progress -->
+                                <div class="bm-skill-item">
+                                    <div class="bm-skill-info">
+                                        <span class="bm-skill-name">Normal Break</span>
+                                        <span class="bm-skill-val"><span id="bmNormalUsed">0</span> / 15 mins</span>
+                                    </div>
+                                    <div class="bm-progress-bg">
+                                        <div class="bm-progress-fill" id="bmNormalBar"
+                                            style="width: 0%; background-color: #00C853;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Summary Dots -->
+                                <div class="bm-total-summary">
+                                    <div class="bm-summary-box">
+                                        <span class="bm-dot bm-dot-orange"></span>
+                                        <span class="bm-lbl">Total Break</span>
+                                        <span class="bm-val" id="bmTotalTime">00h 00m</span>
+                                    </div>
+                                    <div class="bm-summary-box">
+                                        <span class="bm-dot bm-dot-green"></span>
+                                        <span class="bm-lbl">Remaining</span>
+                                        <span class="bm-val" id="bmRemainingTime">60m</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Policy Card -->
+                        <div class="bm-card bm-highlight-card">
+                            <div class="bm-highlight-content">
+                                <h3>Break Policy</h3>
+                                <p>Lunch break is limited to 45 minutes, and short breaks are limited to 15 minutes
+                                    each. Employees are expected to return to work within these allowed time limits. If
+                                    the break duration exceeds the permitted time, the extra time will be added to the
+                                    employee’s working hours, and their workday will be extended accordingly. Repeated
+                                    violations may be subject to review by management.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Bottom Section: History Log -->
+                <div class="bm-card bm-history-card">
+                    <div class="bm-card-header">
+                        <span class="bm-card-title">Today's Activity Log</span>
+                        <button class="bm-btn bm-btn-white bm-btn-sm">Filter <i
+                                class="fa-solid fa-chevron-down"></i></button>
+                    </div>
+                    <!-- Scrollable Table Container -->
+                    <div class="bm-table-responsive">
+                        <table class="bm-custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bmLogTableBody">
+                                <!-- JS will insert rows here -->
+                                <tr id="bmEmptyState">
+                                    <td colspan="5" style="text-align: center; color: #B5B5C3; padding: 20px;">
+                                        No breaks taken yet today.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <!-- Right Side: Stats & Timeline -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="card-top">
+                        <div class="icon-sq orange"><i class="fa-regular fa-clock"></i></div> <span class="lbl">Work
+                            Today</span>
+                    </div>
+                    <div class="value-group"><span class="val" id="todayVal">0.00</span> <span class="target">/
+                            8h</span></div>
+                    <div class="mini-progress-bg">
+                        <div class="mini-progress-fill orange-fill" id="barToday" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="card-top">
+                        <div class="icon-sq yellow"><i class="fa-solid fa-utensils"></i></div> <span class="lbl">Break
+                            Time</span>
+                    </div>
+                    <div class="value-group"><span class="val" id="breakVal">0m</span> <span class="target">/ 60m</span>
+                    </div>
+                    <div class="mini-progress-bg">
+                        <div class="mini-progress-fill yellow-fill" id="barBreak" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="card-top">
+                        <div class="icon-sq blue"><i class="fa-solid fa-calendar-week"></i></div> <span
+                            class="lbl">Weekly</span>
+                    </div>
+                    <div class="value-group"><span class="val" id="weekVal">0</span> <span class="target">h</span></div>
+                    <div class="mini-progress-bg">
+                        <div class="mini-progress-fill blue-fill" style="width: 40%"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="card-top">
+                        <div class="icon-sq purple"><i class="fa-solid fa-calendar-days"></i></div> <span
+                            class="lbl">Monthly</span>
+                    </div>
+                    <div class="value-group"><span class="val" id="monthVal">0</span> <span class="target">h</span>
+                    </div>
+                    <div class="mini-progress-bg">
+                        <div class="mini-progress-fill purple-fill" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="timeline-panel">
+                <div class="timeline-header">
+                    <h3>Activity Timeline (10:00 - 19:00)</h3>
+                    <div class="legend-group">
+                        <div class="legend-item"><span class="dot green"></span> Work</div>
+                        <div class="legend-item"><span class="dot yellow"></span> Lunch/Tea</div>
+                    </div>
+                </div>
+                <div class="timeline-track-container">
+                    <div class="timeline-track" id="timelineTrack"></div>
+                    <div class="time-axis">
+                        <!-- Adjusted for 10am start -->
+                        <span>10:00</span>
+                        <span>12:00</span>
+                        <span>14:00</span>
+                        <span>16:00</span>
+                        <span>18:00</span>
+                        <span>19:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs -->
+            <div class="log-panel">
+                <h3>Logs</h3>
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logTableBody"></tbody>
+                </table>
+            </div>
+
+
+            <!-- footer section -->
+
+<footer class="db-footer" style="margin-top: 40px;">
+    <!-- Left Side -->
+    <div class="footer-left">
+        2025 &copy; <span class="brand-text">Oppty</span>
+    </div>
+
+    <!-- Right Side -->
+    <div class="footer-right">
+        Designed & Developed By <a href="#" class="brand-link">Oppty</a>
+    </div>
+</footer>
+
+    </div>
+
+
+
+
+    </main>
+    </div>
+        <div class="edit-modal-overlay" id="editModal">
+        <div class="edit-modal-box">
+
+            <h3>Edit Attendance</h3>
+
+            <div class="edit-form">
+                <label>Status</label>
+                <select id="editStatus" class="form-input">
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                    <option value="Half Day">Half Day</option>
+                    <option value="Unpaid">Unpaid</option>
+                    <option value="Paid">Paid</option>
+                </select>
+
+                <label>In Time</label>
+                <div class="time-input-wrapper">
+                    <!-- Just the input, removed the confusing select -->
+                    <input type="time" id="editInTime" class="form-input"> 
+                </div>
+
+                <label>Out Time</label>
+                <div class="time-input-wrapper">
+                    <input type="time" id="editOutTime" class="form-input">
+                </div>
+                
+                <label>Reason for Change</label>
+                <textarea id="editReason" class="form-input" rows="2" placeholder="e.g. Forgot to punch out"></textarea>
+            </div>
+
+            <div class="edit-actions">
+                <button id="saveEditBtn" class="btn-secondary2">Update</button>
+                <button id="cancelEditBtn" class="btn-primary">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+              
+
+    <!-- CHAT WIDGET STRUCTURE -->
+
+<!-- 1. Floating Trigger Button -->
+<button id="chat-trigger-btn" class="chat-trigger" onclick="toggleChat()">
+    <i class="fa-solid fa-comments"></i>
+    <span class="chat-notify-badge">1</span>
+</button>
+
+<!-- 2. Chat Window -->
+<div id="chat-window" class="chat-window-container">
+    
+    <!-- Header -->
+    <div class="chat-header">
+        <div class="chat-header-info">
+            <div class="chat-avatar">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+                <h4>IT & HR Assistant</h4>
+                <span class="chat-status"><span class="status-dot"></span> Online</span>
+            </div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleChat()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <!-- Messages Body -->
+    <div id="chat-body" class="chat-body">
+        <!-- Messages will appear here dynamically -->
+    </div>
+
+    <!-- Input Area -->
+    <div class="chat-footer">
+        <input type="text" id="chat-input" placeholder="Type your message..." onkeypress="handleEnter(event)">
+        <button id="chat-send-btn" onclick="sendMessage()">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+    <!-- <script src="../employee_page/employee.js"></script> -->
+    <script src="../dashboard/dashboard.js"></script>
+    <script src="./attendance.js"></script>
+</body>
+
+</html>

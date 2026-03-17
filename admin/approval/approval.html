@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPPTY HRMS</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/opptylogo2.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="approval.css" />
+  <link rel="stylesheet" href="../admin_page/admin.css" />
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- PRELOADER START -->
+<div id="page-preloader">
+  <div class="loader-content">
+    <!-- Spinning Rings -->
+    <div class="loader-circle"></div>
+    <div class="loader-circle-inner"></div>
+    
+    <!-- Branding Text -->
+    <div class="loader-text">
+      <span class="brand-dark"><img src="../assets/opptylogo.png" alt="logo" style="height: 50px;"></span><span class="brand-orange">HRMS</span>
+    </div>
+    
+  </div>
+</div>
+<!-- PRELOADER END -->
+    <!-- SIDEBAR -->
+    <div class="dashboard-container">
+      <!-- 1. Sidebar Navigation (Detailed based on image) -->
+      <aside class="sidebar">
+        <div class="logo">
+          <!-- <i class="fas fa-chart-line"></i> -->
+          <!-- <span>OPPTY</span> -->
+          <img class="opptyLogo" src="../assets/opptylogo.png" alt="OPPTY HRMS Logo" />
+        </div>
+
+        <div class="sidebar-content">
+          <div class="menu-section main-menu">
+            <p class="menu-header">MAIN MENU</p>
+            <div class="menu-section main-menu">
+              <!-- Dashboard Parent -->
+              <a href="javascript:void(0)" class="menu-item has-submenu" id="dashboardMenu">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+
+              <!-- Submenu Items -->
+              <div class="submenu" id="dashboardSubmenu">
+                <a href="../admin_page/admin.html" class="menu-item"><i class="fas fa-user-tie"></i><span>Admin
+                    Dashboard</span></a>
+                <a href="../employeedashb/employee.html" class="menu-item"><i class="fas fa-user"></i><span>Employee
+                    Dashboard</span></a>
+                <a href="../approval/approval.html" class="menu-item active "><i
+                    class="fas fa-check-circle"></i><span>Approval</span></a>
+
+                <a href="../payroll_page/payroll.html" class="menu-item"><i
+                    class="fas fa-money-bill-wave"></i><span>Payroll Dashboard</span></a>
+                <a href="../recruitment/recruitment.html" class="menu-item"><i
+                    class="fas fa-search"></i><span>Recruitment Dashboard</span></a>
+                <a href="../assertAllocation/assertAllocation.html" class="menu-item"><i
+                    class="fas fa-boxes"></i><span>Asset Allocation</span></a>
+
+                <a href="../helpdesk/helpdesk.html" class="menu-item"><i class="fas fa-headset"></i><span>Help Desk
+                    Dashboard</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="top-bar">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search in HRMS" />
+          <span>CTRL + /</span>
+        </div>
+        <div class="header-icons">
+          <!-- Existing Icons -->
+
+          <!-- Notification Container -->
+          <div class="nt-container">
+
+            <!-- Bell Icon & Badge -->
+            <div class="nt-bell-wrapper" id="ntBellBtn">
+              <i class="fas fa-bell nt-icon"></i>
+              <!-- Counter Badge (JS will update this) -->
+              <span class="nt-badge" id="ntBadge">0</span>
+            </div>
+
+            <!-- Dropdown Popup -->
+            <div class="nt-dropdown" id="ntDropdown">
+
+              <!-- Header -->
+              <div class="nt-header">
+                <span class="nt-title">Notifications</span>
+                <button class="nt-mark-read" id="ntMarkAllRead">Mark all read</button>
+              </div>
+
+              <!-- List of Items -->
+              <div class="nt-body" id="ntList">
+                <!-- JS will inject items here -->
+              </div>
+
+              <!-- Footer -->
+              <div class="nt-footer">
+                <a href="#">View all activity</a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- MODIFIED PROFILE SECTION -->
+          <!-- Profile Wrapper (Existing) -->
+<div class="hdr-profile-wrapper">
+  <!-- Profile Image (Clickable) -->
+  <div class="user-profile" onclick="hdr_toggleProfilePopup()">
+    <!-- Update src to your actual image path -->
+    <img src="../assets/profiledp.jpeg" alt="User Avatar" />
+  </div>
+
+  <!-- The Popup Menu -->
+  <div class="hdr-popup-menu" id="hdrProfileDropdown">
+    <!-- Optional Header info -->
+    <div class="hdr-popup-header">
+      <p><strong>Employee Profile</strong></p>
+      <span class="hdr-email-text">user@example.com</span>
+    </div>
+
+    <!-- Logout Button (Triggers Popup) -->
+    <button class="hdr-logout-btn" onclick="hdr_showLogoutModal()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- NEW: Logout Confirmation Modal Structure -->
+<!-- ========================================= -->
+<div id="hdrLogoutModal" class="hdr-modal-overlay">
+  <div class="hdr-modal-content">
+    <div class="hdr-modal-icon">
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to log out of your account?</p>
+    <div class="hdr-modal-actions">
+      <button class="hdr-btn-cancel" onclick="hdr_hideLogoutModal()">Cancel</button>
+      <button class="hdr-btn-confirm" onclick="hdr_confirmLogout()">Logout</button>
+    </div>
+  </div>
+</div>
+        </div>
+      </header>
+
+      <!-- Top Header -->
+      <!-- <header class="top-header">
+          <div class="page-title">
+            <h1>Time Off Requests</h1>
+            <ul class="breadcrumb">
+              <li><a href="../admin_page/admin.html">Dashboard</a></li>
+              <li>/</li>
+              <li class="active">Leave Requests</li>
+            </ul>
+          </div>
+           <div class="user-profile">
+                    <div class="icon-btn"><i class="fa-regular fa-bell"></i><span class="dot"></span></div>
+                    <img src="https://i.pravatar.cc/150?img=12" alt="Admin">
+                </div> -->
+      <!-- </header> -->
+      <!-- Page Header -->
+      <header class="page-header" style="margin-top: 50px; margin-left: 30px;">
+        <h1 class="page-title" id="pageTitle">Leaves</h1>
+
+        <div class="breadcrumb">
+          <i class="fa-solid fa-house"></i>
+          <i class="fa-solid fa-chevron-right"></i>
+          Dashboard <i class="fa-solid fa-chevron-right"></i>
+          <span id="breadcrumbActive">Leave Requests</span>
+        </div>
+      </header>
+
+
+      <!-- Tabs -->
+      <div class="tabs-nav" style="margin-left: 30px;">
+
+        <button class="tab-btn active" onclick="switchTab('leave', this)">
+          <i class="ph ph-calendar-blank"></i> Leaves
+        </button>
+
+        <button class="tab-btn" onclick="switchTab('attendance', this)">
+          <i class="ph ph-clock"></i> Attendance
+        </button>
+
+        <button class="tab-btn" onclick="switchTab('assets', this)">
+          <i class="ph ph-laptop"></i> Assets
+        </button>
+
+      </div>
+
+
+      <!-- Main Card -->
+      <div class="card fade-in" style="margin-left: 30px;">
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+
+          <div class="toolbar-group">
+            <div class="search-wrapper">
+              <i class="ph ph-magnifying-glass"></i>
+              <input type="text"   id="searchInput" placeholder="Search by employee or ID...">
+            </div>
+
+            <button class="filter-btn" id="calendarBtn">
+              <i class="ph ph-calendar"></i> This Month
+            </button>
+            <input type="date" id="calendarInput">
+
+
+          </div>
+
+          <div class="toolbar-group">
+
+
+            <button class="btn-primary" id="approveAllBtn">
+              <i class="ph ph-check-circle"></i> Approve All
+            </button>
+
+          </div>
+        </div>
+
+
+        <!-- LEAVES TABLE -->
+        <div id="leave-section" class="table-responsive">
+          <table class="leave-table">
+
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>Duration</th>
+                <th>Reason</th>
+                <th>No of Days</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="leaveTableBody">
+            </tbody>
+
+          </table>
+        </div>
+
+
+        <!-- ATTENDANCE TABLE -->
+        <div id="attendance-section" class="table-responsive hidden">
+          <table class="leave-table">
+
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Request Type</th>
+                <th>Date</th>
+                <th>Log Details</th>
+                <th>Reason</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="attendanceTableBody">
+            </tbody>
+
+          </table>
+        </div>
+
+
+        <!-- ASSETS TABLE -->
+        <div id="assets-section" class="table-responsive hidden">
+          <table class="leave-table">
+
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Asset</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Model</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="assetsTableBody">
+            </tbody>
+
+          </table>
+        </div>
+
+      </div>
+    </main>
+
+  <div id="toast">
+    <i class="ph ph-check-circle" style="margin-right:8px;color:#4ade80;font-size:18px;"></i>
+
+    <span id="toastMsg">Action Successful</span>
+  </div>
+
+  <script src="approval.js"></script>
+  <!-- <script src="../admin_page/admin.js"></script> -->
+</body>
+
+</html>
