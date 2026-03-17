@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateDashboard(currentYear);
     
     // --- 5. API FETCH ---
-    fetch(`http://13.51.167.95:8000/api/salary`)
+    fetch(`https://theoppty.com/api/salary`)
         .then(res => res.json())
         .then(data => {
             console.log('API Data:', data);

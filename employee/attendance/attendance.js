@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const emp_id = localStorage.getItem('employee_id');
     
     // --- ENSURE THIS POINTS TO YOUR LIVE BACKEND ---
-    const API_BASE_URL = "http://13.51.167.95:8000";
+    const API_BASE_URL = "https://theoppty.com";
 
     // 1. CONFIGURATION & STATE
     fetch(`${API_BASE_URL}/api/employee/dashboard/${emp_id}/`)

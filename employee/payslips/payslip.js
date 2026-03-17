@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let payslipsData = [];
 
     // ✅ Fetch employee info
-    fetch(`http://13.51.167.95:8000/api/employee/dashboard/${empId}/`)
+    fetch(`https://theoppty.com/api/employee/dashboard/${empId}/`)
         .then(res => res.json())
         .then(data => {
             document.getElementById("name").innerText = data.name || "-";
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ✅ Fetch payslips
-    fetch(`http://13.51.167.95:8000/api/employee-payslips/${empId}/`)
+    fetch(`https://theoppty.com/api/employee-payslips/${empId}/`)
         .then(res => res.json())
         .then(data => {
 

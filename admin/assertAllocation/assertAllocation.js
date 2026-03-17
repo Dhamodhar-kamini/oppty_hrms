@@ -111,7 +111,7 @@ function showSuccessPopup() {
 // Fetch Assets from API
 async function loadAssets() {
     try {
-        const response = await fetch("http://13.51.167.95:8000/api/assets/");
+        const response = await fetch("https://theoppty.com/api/assets/");
         if (response.ok) {
             const data = await response.json();
             hraAssets = data;
@@ -216,7 +216,7 @@ function hraCloseModal() {
 // Fetch Return Assets from API + DUMMY DATA FALLBACK
 async function loadReturnAssets() {
     try {
-        const response = await fetch("http://13.51.167.95:8000/api/return-assets/");
+        const response = await fetch("https://theoppty.com/api/return-assets/");
 
         if (response.ok) {
             const data = await response.json();
@@ -415,12 +415,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
 
-            let url = "http://13.51.167.95:8000/api/assets/save/";
+            let url = "https://theoppty.com/api/assets/save/";
             let method = "POST";
 
             // If editing → update instead of create
             if(currentEditingDatabaseId){
-                    url = `http://13.51.167.95:8000/api/assets/${currentEditingDatabaseId}/`;
+                    url = `https://theoppty.com/api/assets/${currentEditingDatabaseId}/`;
                     method = "PATCH";
                 }
 
@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if(confirm("Are you sure you want to delete this asset?")) {
 
-        const response = await fetch(`http://13.51.167.95:8000/api/assets/${dbId}/`,{
+        const response = await fetch(`https://theoppty.com/api/assets/${dbId}/`,{
             method:"DELETE"
         });
 
@@ -532,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
  // 1️⃣ Mark Received (Green Tick)
 if (button.classList.contains('hra-return-confirm-btn')) {
 
-    const response = await fetch(`http://13.51.167.95:8000/api/return-status/${returnId}/`, {
+    const response = await fetch(`https://theoppty.com/api/return-status/${returnId}/`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -554,7 +554,7 @@ if (button.classList.contains('hra-return-confirm-btn')) {
 // 2️⃣ Mark Not Received (Red Cross)
 if (button.classList.contains('hra-return-reject-btn')) {
 
-    const response = await fetch(`http://13.51.167.95:8000/api/return-status/${returnId}/`, {
+    const response = await fetch(`https://theoppty.com/api/return-status/${returnId}/`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -575,7 +575,7 @@ if (button.classList.contains('hra-return-reject-btn')) {
 
     if(confirm("Delete this return record?")) {
 
-        const response = await fetch(`http://13.51.167.95:8000/api/return-assets/${returnId}/`,{
+        const response = await fetch(`https://theoppty.com/api/return-assets/${returnId}/`,{
             method:"DELETE"
         });
 

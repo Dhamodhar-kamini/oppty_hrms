@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 1. CONFIG & GLOBAL VARS
    
     const emp_id = localStorage.getItem("employee_id");
-    const API_BASE = "http://13.51.167.95:8000/api/employee";
+    const API_BASE = "https://theoppty.com/api/employee";
 
     // Redirect if no ID found
     if (!emp_id) {

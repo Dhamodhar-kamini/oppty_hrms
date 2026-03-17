@@ -19,7 +19,7 @@ window.addEventListener("load", function () {
 // ==========================================
 // API CONFIGURATION
 // ==========================================
-const API_BASE_URL = "http://13.51.167.95:8000"; // Make sure this is your active backend URL
+const API_BASE_URL = "https://theoppty.com"; // Make sure this is your active backend URL
 
 document.addEventListener("DOMContentLoaded", function () {
 

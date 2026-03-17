@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================
     // 2. FETCH REAL USER DATA FROM BACKEND
     // ==========================================
-    fetch(`http://13.51.167.95:8000/api/employee/dashboard/${emp_id}/`)
+    fetch(`https://theoppty.com/api/employee/dashboard/${emp_id}/`)
         .then(res => res.json())
         .then(data => {
             console.log("Employee Data:", data);
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let profileImageUrl = "";
             if (data.profile_pic) {
                 // Construct full URL using your server IP
-                profileImageUrl = `http://13.51.167.95:8000${data.profile_pic}`;
+                profileImageUrl = `https://theoppty.com${data.profile_pic}`;
             }
             loadUserProfile({
                 firstName: fName,
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 city: document.getElementById('input_city') ? document.getElementById('input_city').value : ""
             };
 
-            fetch(`http://13.51.167.95:8000/api/update-employee/${emp_id}/`, {
+            fetch(`https://theoppty.com/api/update-employee/${emp_id}/`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(profileData)
@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 dob: document.getElementById('input_other_dob') ? document.getElementById('input_other_dob').value : "",
             };
 
-            fetch(`http://13.51.167.95:8000/api/update-employee/${emp_id}/`, {
+            fetch(`https://theoppty.com/api/update-employee/${emp_id}/`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(profileData)
@@ -383,7 +383,7 @@ async function fetchNotifications() {
     if (!emp_id || !notifList) return;
 
     try {
-        const res = await fetch(`http://13.51.167.95:8000/api/notofications/${emp_id}/`);
+        const res = await fetch(`https://theoppty.com/api/notofications/${emp_id}/`);
         const data = await res.json();
 
         // Update Badge Count
