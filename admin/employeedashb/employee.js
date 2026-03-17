@@ -577,7 +577,7 @@ function hdr_hideLogoutModal() {
 function hdr_confirmLogout() {
     sessionStorage.clear();
     localStorage.clear();
-    window.location.href = "../adminlogin/adminlogin.html";
+    window.location.href = "../../index.html";
 }
 
 window.onclick = function(event) {

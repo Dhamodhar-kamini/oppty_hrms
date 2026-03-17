@@ -1322,7 +1322,7 @@ function hdr_confirmLogout() {
     localStorage.clear();
 
     // 2. Redirect to Login Page
-    window.location.href = "../index.html";
+    window.location.href = "../../index.html";
 }
 
 window.addEventListener('click', function(event) {

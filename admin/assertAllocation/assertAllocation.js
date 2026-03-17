@@ -621,3 +621,45 @@ if (button.classList.contains('hra-return-reject-btn')) {
         }
     });
 });
+
+
+// ==========================================
+// LOGOUT SECTION
+// ==========================================
+function hdr_toggleProfilePopup() {
+  const dropdown = document.getElementById("hdrProfileDropdown");
+  if (dropdown) dropdown.classList.toggle("show");
+}
+
+function hdr_showLogoutModal() {
+  const dropdown = document.getElementById("hdrProfileDropdown");
+  if (dropdown) dropdown.classList.remove("show");
+
+  const modal = document.getElementById("hdrLogoutModal");
+  if (modal) modal.classList.add("show-modal");
+}
+
+function hdr_hideLogoutModal() {
+  const modal = document.getElementById("hdrLogoutModal");
+  if (modal) modal.classList.remove("show-modal");
+}
+
+function hdr_confirmLogout() {
+  sessionStorage.clear();
+  localStorage.clear();
+  window.location.href = "../../index.html";
+}
+
+window.onclick = function (event) {
+  if (!event.target.closest(".hdr-profile-wrapper")) {
+    const dropdown = document.getElementById("hdrProfileDropdown");
+    if (dropdown && dropdown.classList.contains("show")) {
+      dropdown.classList.remove("show");
+    }
+  }
+
+  const modal = document.getElementById("hdrLogoutModal");
+  if (event.target === modal) {
+    hdr_hideLogoutModal();
+  }
+};

@@ -500,7 +500,7 @@ function performLogout() {
     localStorage.removeItem('profileImage');
     
     // Redirect to Login Page
-    window.location.href = '../index.html';
+    window.location.href = '../../index.html';
 }
 
 // --- 4. CLOSE ON OUTSIDE CLICK ---

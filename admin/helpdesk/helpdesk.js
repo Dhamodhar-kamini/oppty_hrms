@@ -254,7 +254,7 @@ function hdr_confirmLogout() {
     localStorage.clear();
 
     // 2. Redirect to Login Page
-    window.location.href = "../adminlogin/adminlogin.html";
+    window.location.href = "../../index.html";
 }
 
 /* --- Close Dropdown when clicking outside --- */
