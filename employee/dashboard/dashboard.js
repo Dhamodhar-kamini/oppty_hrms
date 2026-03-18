@@ -375,35 +375,55 @@ function updateAvatar(containerId, imgId, user) {
 // 8. NOTIFICATIONS, PROFILE MENU & LOGOUT
 // ==========================================
 // --- NOTIFICATION FETCH LOGIC ---
-async function fetchNotifications() {
+// --- NOTIFICATION FETCH LOGIC ---
+// --- NOTIFICATION FETCH LOGIC ---
+async function fetchNotifications(markAsRead = false) {
     const emp_id = localStorage.getItem('employee_id');
-    const notifList = document.getElementById("db-notif-list"); // We will add this ID to HTML
+    const notifList = document.getElementById("db-notif-list"); 
     const badge = document.querySelector(".db-notif-badge");
 
     if (!emp_id || !notifList) return;
 
     try {
-        const res = await fetch(`https://theoppty.com/api/notofications/${emp_id}/`);
-        const data = await res.json();
-
-        // Update Badge Count
-        const unreadCount = data.filter(n => !n.is_read).length;
-        if (badge) {
-            badge.innerText = unreadCount;
-            badge.style.display = unreadCount > 0 ? "flex" : "none";
+        // FIX: Start with the URL as a STRING
+        let apiUrl = `https://theoppty.com/api/notofications/${emp_id}/`;
+        
+        // Append the query parameter to the STRING
+        if (markAsRead) {
+            apiUrl += '?mark_read=true';
         }
 
-        // Clear and Render List
+        // Now pass the string to fetch
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        if (badge) {
+            if (markAsRead) {
+                // If we just marked them read, hide badge immediately
+                badge.style.display = "none";
+                badge.innerText = "0";
+            } else {
+                // Background update logic
+                const unreadCount = data.filter(n => !n.is_read).length;
+                badge.innerText = unreadCount;
+                badge.style.display = unreadCount > 0 ? "flex" : "none";
+            }
+        }
+
+        // Render List
         notifList.innerHTML = "";
         if (data.length === 0) {
-            notifList.innerHTML = '<div class="db-notif-item"><p>No new notifications</p></div>';
+            notifList.innerHTML = '<div class="db-notif-item"><p style="padding:15px; text-align:center;">No new notifications</p></div>';
             return;
         }
 
         data.forEach(n => {
             const timeStr = new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            // Visually treat as read if we just sent the markAsRead signal
+            const itemClass = (n.is_read || markAsRead) ? '' : 'unread';
+            
             const item = `
-                <div class="db-notif-item ${n.is_read ? '' : 'unread'}">
+                <div class="db-notif-item ${itemClass}">
                     <div class="db-notif-symbol"><i class="fa-solid fa-bell"></i></div>
                     <div class="db-notif-text">
                         <h4>Update</h4>
@@ -418,10 +438,10 @@ async function fetchNotifications() {
     }
 }
 
-// Update the toggle function to refresh notifications when opened
 function db_toggleNotifications() {
     const notifDropdown = document.getElementById('db-notification-menu');
     const notifBtn = document.querySelector('.db-notif-trigger-btn');
+    const badge = document.querySelector(".db-notif-badge");
     
     if (!notifDropdown || !notifBtn) return;
 
@@ -429,7 +449,10 @@ function db_toggleNotifications() {
     
     const isOpening = !notifDropdown.classList.contains('db-show-menu');
     if (isOpening) {
-        fetchNotifications(); // Load real data from Django
+        // This now correctly triggers the 'mark_read=true' path in your Django view
+        fetchNotifications(true); 
+        
+        if (badge) badge.style.display = "none";
     }
 
     notifDropdown.classList.toggle('db-show-menu');

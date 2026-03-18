@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const emp_id = localStorage.getItem('employee_id');
     
     // --- ENSURE THIS POINTS TO YOUR LIVE BACKEND ---
-    const API_BASE_URL = "https://theoppty.com";
+    const API_BASE_URL = "http://127.0.0.1:8000";
 
     // 1. CONFIGURATION & STATE
     fetch(`${API_BASE_URL}/api/employee/dashboard/${emp_id}/`)
@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let baselineMonthlyMs = 0;
 
     const LIMITS = { lunch: 45 * 60, normal: 15 * 60 };
+
+    // Initialize from LocalStorage (Fast UI Load)
     let usage = JSON.parse(localStorage.getItem(USAGE_KEY));
     if (!usage || typeof usage !== 'object') usage = { lunch: 0, normal: 0 };
     usage.lunch = parseInt(usage.lunch) || 0;
@@ -291,189 +293,208 @@ document.addEventListener("DOMContentLoaded", () => {
         isWorking = false;
     }
 
-    // 6. BREAK TIMER LOGIC
-    function updateBreakCircleUI(additionalSeconds = 0) {
-        let type = "lunch";
-        if (bmEls.breakSelect) type = bmEls.breakSelect.value.toLowerCase().trim();
+// --- 6. BREAK TIMER LOGIC (ONE-TIME USE ENFORCEMENT) ---
+
+let completedBreaks = { lunch: false, normal: false };
+
+function checkBreakAvailability() {
+    if (!bmEls.breakSelect || !bmEls.btnIn) return;
+    
+    const selectedType = bmEls.breakSelect.value.toLowerCase().trim();
+    
+    // Check usage. If > 0, it means break was taken.
+    completedBreaks.lunch = (usage.lunch > 0);
+    completedBreaks.normal = (usage.normal > 0);
+
+    if (completedBreaks[selectedType]) {
+        bmEls.btnIn.disabled = true;
+        bmEls.btnIn.innerHTML = `<i class="fa-solid fa-ban"></i> Break Finished`;
+        bmEls.btnIn.style.opacity = "0.6";
+        bmEls.statusBadge.textContent = "Used Today";
+        bmEls.statusBadge.className = "bm-badge bm-badge-danger";
+    } else {
+        // Only allow "Break In" if the user is currently Punched In and not already on a break
+        bmEls.btnIn.disabled = !isWorking || isOnBreak;
+        bmEls.btnIn.style.opacity = (isWorking && !isOnBreak) ? "1" : "0.6";
+        bmEls.btnIn.innerHTML = `<i class="fa-solid fa-mug-hot"></i> Break In`;
         
-        const limitSec = LIMITS[type] || LIMITS.lunch;
-        const usedSec = (usage[type] || 0) + additionalSeconds;
-
-        if (bmEls.timerDisplay) bmEls.timerDisplay.textContent = formatTime(usedSec * 1000);
-
-        const breakProgress = document.getElementById("bmTimerProgress");
-        if (breakProgress) {
-            breakProgress.classList.remove("lunch-fill", "normal-fill", "overtime-fill");
-            breakProgress.classList.add(type === "lunch" ? "lunch-fill" : "normal-fill");
-
-            const radius = 80;
-            const circumference = 2 * Math.PI * radius; 
-            const percent = Math.min(usedSec / limitSec, 1);
-            breakProgress.style.strokeDasharray = circumference;
-            breakProgress.style.strokeDashoffset = circumference - (percent * circumference);
-
-            if (usedSec > limitSec) {
-                breakProgress.classList.add("overtime-fill");
-                if (bmEls.timerDisplay) bmEls.timerDisplay.style.color = "#d32f2f";
-                if (bmEls.limitWarning) bmEls.limitWarning.style.display = "block";
-            } else {
-                if (bmEls.timerDisplay) bmEls.timerDisplay.style.color = "#333";
-                if (bmEls.limitWarning) bmEls.limitWarning.style.display = "none";
-            }
+        if (!isOnBreak) {
+            bmEls.statusBadge.textContent = "Available";
+            bmEls.statusBadge.className = "bm-badge bm-badge-success";
         }
     }
+}
 
-    if (bmEls.breakSelect) {
-        bmEls.breakSelect.addEventListener("change", () => {
-            if (!isOnBreak) updateBreakCircleUI(0);
-        });
+function updateBreakCircleUI(additionalSeconds = 0) {
+    let type = "lunch";
+    if (bmEls.breakSelect) type = bmEls.breakSelect.value.toLowerCase().trim();
+    
+    const limitSec = LIMITS[type] || LIMITS.lunch;
+    const usedSec = (usage[type] || 0) + additionalSeconds;
+
+    if (bmEls.timerDisplay) bmEls.timerDisplay.textContent = formatTime(usedSec * 1000);
+
+    const breakProgress = document.getElementById("bmTimerProgress");
+    if (breakProgress) {
+        breakProgress.classList.remove("lunch-fill", "normal-fill", "overtime-fill");
+        breakProgress.classList.add(type === "lunch" ? "lunch-fill" : "normal-fill");
+
+        const radius = 80;
+        const circumference = 2 * Math.PI * radius; 
+        const percent = Math.min(usedSec / limitSec, 1);
+        breakProgress.style.strokeDasharray = circumference;
+        breakProgress.style.strokeDashoffset = circumference - (percent * circumference);
+
+        if (usedSec > limitSec) {
+            breakProgress.classList.add("overtime-fill");
+            if (bmEls.timerDisplay) bmEls.timerDisplay.style.color = "#d32f2f";
+            if (bmEls.limitWarning) bmEls.limitWarning.style.display = "block";
+        } else {
+            if (bmEls.timerDisplay) bmEls.timerDisplay.style.color = "#333";
+            if (bmEls.limitWarning) bmEls.limitWarning.style.display = "none";
+        }
     }
+}
 
-    // BREAK IN
-    if (bmEls.btnIn) {
-        bmEls.btnIn.addEventListener("click", async (e) => {
-            e.preventDefault(); 
-            
-            if (!isWorking) return alert("You must be actively punched in to start a break.");
-            
-            const ogText = bmEls.btnIn.innerHTML;
-            bmEls.btnIn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
-            bmEls.btnIn.disabled = true;
+if (bmEls.breakSelect) {
+    bmEls.breakSelect.addEventListener("change", () => {
+        if (!isOnBreak) {
+            updateBreakCircleUI(0);
+            checkBreakAvailability(); 
+        }
+    });
+}
 
-            currentBreakType = bmEls.breakSelect.value.toLowerCase().trim();
+// BREAK IN
+if (bmEls.btnIn) {
+    bmEls.btnIn.addEventListener("click", async (e) => {
+        e.preventDefault(); 
+        const selectedType = bmEls.breakSelect.value.toLowerCase().trim();
 
-            try {
-                const res = await fetch(`${API_BASE_URL}/api/employee-break/start/`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id: emp_id, break_type: currentBreakType })
-                });
+        // 1. ONE-TIME CHECK: If usage is > 0, stop here.
+        if (usage[selectedType] > 0) return alert(`You have already completed your ${selectedType} break for today.`);
+        
+        if (!isWorking) return alert("You must be actively punched in to start a break.");
+        
+        const ogText = bmEls.btnIn.innerHTML;
+        bmEls.btnIn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+        bmEls.btnIn.disabled = true;
 
-                if (!res.ok) {
-                    const errData = await res.json().catch(()=>({}));
-                    throw new Error(errData.error || "Failed to start break on server.");
-                }
+        currentBreakType = selectedType;
 
-                pauseWorkTimer();
-                statusMsg.innerHTML = `<i class="fa-solid fa-mug-hot"></i> On Break...`;
-                statusMsg.style.color = "#FF5B1E";
-                isOnBreak = true;
-                breakStartTime = Date.now();
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/employee-break/start/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: emp_id, break_type: currentBreakType })
+            });
 
-                timelineSessions.push({ type: 'break', start: breakStartTime, end: null });
-                saveTimelineSession();
-
-                const typeLabel = currentBreakType === "lunch" ? "Lunch Break" : "Normal Break";
-                bmEls.btnIn.style.display = "none";
-                bmEls.btnOut.style.display = "flex";
-                bmEls.breakSelect.disabled = true;
-                punchBtn.disabled = true;
-                bmEls.statusBadge.textContent = `On ${typeLabel}`;
-                bmEls.statusBadge.className = "bm-badge bm-badge-primary";
-                addMainLog("Break Started", typeLabel);
-
-                if (breakTimerInterval) clearInterval(breakTimerInterval);
-                breakTimerInterval = setInterval(() => {
-                    const currentBreakMs = Date.now() - breakStartTime;
-                    const diffInSeconds = Math.floor(currentBreakMs / 1000);
-                    updateBreakCircleUI(diffInSeconds); 
-                    drawTimeline();
-                }, 1000);
-
-            } catch (err) {
-                console.error("Break Start Error:", err);
-                
-                // SMART RECOVERY LOGIC
-                if (err.message.includes("Already on an active break")) {
-                    isOnBreak = true;
-                    currentBreakType = bmEls.breakSelect.value.toLowerCase().trim();
-                    breakStartTime = Date.now(); 
-                    
-                    bmEls.btnIn.style.display = "none";
-                    bmEls.btnOut.style.display = "flex";
-                    bmEls.breakSelect.disabled = true;
-                    punchBtn.disabled = true;
-                    
-                    bmEls.statusBadge.textContent = "On Break (Recovered)";
-                    bmEls.statusBadge.className = "bm-badge bm-badge-primary";
-                    
-                    alert("We detected an active break from a previous session. Click 'Break Out' to close it!");
-                } else {
-                    alert(`Error: ${err.message}`);
-                }
-            } finally {
-                bmEls.btnIn.innerHTML = ogText;
-                bmEls.btnIn.disabled = false;
+            if (!res.ok) {
+                const errData = await res.json().catch(()=>({}));
+                throw new Error(errData.error || "Failed to start break on server.");
             }
-        });
-    }
 
-    // BREAK OUT
-    if (bmEls.btnOut) {
-        bmEls.btnOut.addEventListener("click", async (e) => {
-            e.preventDefault(); 
+            pauseWorkTimer();
+            statusMsg.innerHTML = `<i class="fa-solid fa-mug-hot"></i> On Break...`;
+            statusMsg.style.color = "#FF5B1E";
+            isOnBreak = true;
+            breakStartTime = Date.now();
+
+            timelineSessions.push({ type: 'break', start: breakStartTime, end: null });
+            saveTimelineSession();
+
+            bmEls.btnIn.style.display = "none";
+            bmEls.btnOut.style.display = "flex";
+            bmEls.breakSelect.disabled = true;
+            punchBtn.disabled = true;
             
-            if (!isOnBreak) return; 
-            
-            const ogText = bmEls.btnOut.innerHTML;
-            bmEls.btnOut.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
-            bmEls.btnOut.disabled = true;
+            const typeLabel = currentBreakType === "lunch" ? "Lunch Break" : "Normal Break";
+            bmEls.statusBadge.textContent = `On ${typeLabel}`;
+            bmEls.statusBadge.className = "bm-badge bm-badge-primary";
+            addMainLog("Break Started", typeLabel);
 
-            try {
-                const res = await fetch(`${API_BASE_URL}/api/employee-break/end/`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id: emp_id, break_type: currentBreakType })
-                });
+            if (breakTimerInterval) clearInterval(breakTimerInterval);
+            breakTimerInterval = setInterval(() => {
+                const currentBreakMs = Date.now() - breakStartTime;
+                updateBreakCircleUI(Math.floor(currentBreakMs / 1000)); 
+                drawTimeline();
+            }, 1000);
 
-                if (!res.ok) {
-                    const errData = await res.json().catch(()=>({}));
-                    throw new Error(errData.error || "Failed to end break on server.");
-                }
+        } catch (err) {
+            console.error("Break Start Error:", err);
+            alert(`Error: ${err.message}`);
+            checkBreakAvailability();
+        } finally {
+            bmEls.btnIn.innerHTML = ogText;
+        }
+    });
+}
 
-                clearInterval(breakTimerInterval);
-                const endTime = Date.now();
-                const durationMs = endTime - breakStartTime;
-                const durationSec = Math.floor(durationMs / 1000);
+// BREAK OUT
+if (bmEls.btnOut) {
+    bmEls.btnOut.addEventListener("click", async (e) => {
+        e.preventDefault(); 
+        if (!isOnBreak) return; 
+        
+        const ogText = bmEls.btnOut.innerHTML;
+        bmEls.btnOut.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+        bmEls.btnOut.disabled = true;
 
-                totalBreakMs += durationMs;
-                usage[currentBreakType] = (usage[currentBreakType] || 0) + durationSec;
-                localStorage.setItem(USAGE_KEY, JSON.stringify(usage));
-                
-                closeLastSession(endTime); 
-                isOnBreak = false;
-                breakStartTime = null; 
-                
-                workStartTime = Date.now(); 
-                
-                timelineSessions.push({ type: 'work', start: workStartTime, end: null });
-                saveTimelineSession();
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/employee-break/end/`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: emp_id, break_type: currentBreakType })
+            });
 
-                startWorkTimer(); 
-                addMainLog("Break Ended", "Resumed Work");
-
-                bmEls.btnIn.style.display = "flex";
-                bmEls.btnOut.style.display = "none";
-                bmEls.breakSelect.disabled = false;
-                punchBtn.disabled = false;
-
-                bmEls.statusBadge.textContent = "Not Active";
-                bmEls.statusBadge.className = "bm-badge bm-badge-light";
-
-                updateBreakCircleUI(0);
-                bmAddToHistoryLog(currentBreakType, endTime - durationMs, endTime, durationSec);
-                bmUpdateProgressStats();
-
-            } catch (err) {
-                console.error("Break End Error:", err);
-                alert(`Error: ${err.message}`);
-            } finally {
-                bmEls.btnOut.innerHTML = ogText;
-                bmEls.btnOut.disabled = false;
+            if (!res.ok) {
+                const errData = await res.json().catch(()=>({}));
+                throw new Error(errData.error || "Failed to end break on server.");
             }
-        });
-    }
 
+            clearInterval(breakTimerInterval);
+            const endTime = Date.now();
+            const durationMs = endTime - breakStartTime;
+            const durationSec = Math.floor(durationMs / 1000);
+
+            // Update local tracking
+            totalBreakMs += durationMs;
+            
+            // 2. FORCE UPDATE: Set usage, force at least 1 second if it was instant, to lock the button
+            const finalDur = durationSec > 0 ? durationSec : 1;
+            usage[currentBreakType] = (usage[currentBreakType] || 0) + finalDur;
+            localStorage.setItem(USAGE_KEY, JSON.stringify(usage));
+            
+            closeLastSession(endTime); 
+            isOnBreak = false;
+            breakStartTime = null; 
+            workStartTime = Date.now(); 
+            
+            timelineSessions.push({ type: 'work', start: workStartTime, end: null });
+            saveTimelineSession();
+
+            startWorkTimer(); 
+            addMainLog("Break Ended", "Resumed Work");
+
+            bmEls.btnIn.style.display = "flex";
+            bmEls.btnOut.style.display = "none";
+            bmEls.breakSelect.disabled = false;
+            punchBtn.disabled = false;
+
+            updateBreakCircleUI(0);
+            checkBreakAvailability(); // This will now disable the button because usage > 0
+            bmAddToHistoryLog(currentBreakType, endTime - durationMs, endTime, durationSec);
+            bmUpdateProgressStats();
+
+        } catch (err) {
+            console.error("Break End Error:", err);
+            alert(`Error: ${err.message}`);
+        } finally {
+            bmEls.btnOut.innerHTML = ogText;
+            bmEls.btnOut.disabled = false;
+        }
+    });
+}
     // 7. MAIN PUNCH BUTTON LOGIC
     if (punchBtn) {
         punchBtn.addEventListener("click", (e) => {
@@ -532,110 +553,161 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // PAGE LOAD & SYNC
     window.addEventListener("load", () => {
-        loadDailyLogs();
-        loadBreakLogs();
-        bmUpdateProgressStats(); 
-        updateBreakCircleUI(0); 
-        loadHistoryTable(); 
+    loadDailyLogs();
+    loadBreakLogs();
+    bmUpdateProgressStats(); 
+    updateBreakCircleUI(0); 
+    loadHistoryTable(); 
 
-        fetch(`${API_BASE_URL}/api/attendence-status/${emp_id}/`)
-        .then(res => res.json())
-        .then(data => {
-            const isPunchedIn = data.status === "punched_in";
-            const isOnActiveBreak = data.break_info && data.break_info.is_on_break;
+    fetch(`${API_BASE_URL}/api/attendence-status/${emp_id}/`)
+    .then(res => res.json())
+    .then(data => {
+        
+        // --- START OF MODIFICATION: STRICT BACKEND SYNC ---
+        
+        // 1. HARD RESET: Clear everything local first.
+        usage = { lunch: 0, normal: 0 };
+        breakLogs = [];
+        if (bmEls.logTable) bmEls.logTable.innerHTML = "";
 
-            if (isPunchedIn) {
-                punchBtn.innerText = "Punch Out";
-                punchBtn.classList.add("mode-out");
-                
-                if (isOnActiveBreak) {
-                    isWorking = false;
-                    isOnBreak = true;
-                    
-                    totalWorkMs = calculateTotalWorkFromTimeline();
-                    updateMetricsUI(totalWorkMs);
-                    
-                    currentBreakType = data.break_info.break_type;
-                    breakStartTime = new Date(data.break_info.start_time).getTime();
-                    
-                    statusMsg.innerHTML = `<i class="fa-solid fa-mug-hot"></i> On Break...`;
-                    statusMsg.style.color = "#FF5B1E";
-                    
-                    bmEls.btnIn.style.display = "none";
-                    bmEls.btnOut.style.display = "flex";
-                    bmEls.breakSelect.value = currentBreakType;
-                    bmEls.breakSelect.disabled = true;
-                    punchBtn.disabled = true;
-                    
-                    const typeLabel = currentBreakType === "lunch" ? "Lunch Break" : "Normal Break";
-                    bmEls.statusBadge.textContent = `On ${typeLabel}`;
-                    bmEls.statusBadge.className = "bm-badge bm-badge-primary";
-                    
-                    if (breakTimerInterval) clearInterval(breakTimerInterval);
-                    breakTimerInterval = setInterval(() => {
-                        const currentBreakMs = Date.now() - breakStartTime;
-                        updateBreakCircleUI(Math.floor(currentBreakMs / 1000));
-                        drawTimeline();
-                    }, 1000);
+        // 2. GET HISTORY FROM BACKEND
+        const serverBreaks = data.today_breaks || []; 
+        
+        if (Array.isArray(serverBreaks) && serverBreaks.length > 0) {
+            serverBreaks.forEach(b => {
+                // A. Normalize Type
+                const rawType = (b.break_type || "").toLowerCase();
+                let bType = "";
+                if (rawType.includes("lunch")) bType = "lunch";
+                else if (rawType.includes("normal")) bType = "normal";
 
-                } else {
-                    isWorking = true;
-                    isOnBreak = false;
-                    
-                    if (timelineSessions.length > 0) {
-                        let lastSession = timelineSessions[timelineSessions.length - 1];
-                        if (lastSession.type === 'work' && !lastSession.end) {
-                            workStartTime = lastSession.start;
-                        } else {
-                            workStartTime = Date.now();
-                        }
-                        totalWorkMs = calculateTotalWorkFromTimeline();
-                    } else {
-                        workStartTime = new Date(data.checkin).getTime();
-                        totalWorkMs = 0;
-                        timelineSessions.push({ type: 'work', start: workStartTime, end: null });
-                        saveTimelineSession();
-                    }
-                    startWorkTimer();
+                // B. Only process if it is a COMPLETED break
+                if (bType && b.end_time && b.start_time) {
+                   const s = new Date(b.start_time).getTime();
+                   const e = new Date(b.end_time).getTime();
+                   
+                   // C. Get Duration (use backend or calculate)
+                   let dur = b.duration ? parseInt(b.duration) : Math.floor((e - s) / 1000);
+                   
+                   // CRITICAL: Force usage > 0.
+                   const safeDur = dur > 0 ? dur : 1;
+
+                   usage[bType] = (usage[bType] || 0) + safeDur;
+                   
+                   // D. Add to visual table
+                   bmAddToHistoryLog(bType, s, e, safeDur);
                 }
+            });
+        }
+        
+        // 3. SAVE SYNCED STATE
+        localStorage.setItem(USAGE_KEY, JSON.stringify(usage));
+        
+        // 4. UPDATE UI & BUTTONS
+        bmUpdateProgressStats(); 
+        checkBreakAvailability(); 
 
-            } else if (data.status === "punched_out") {
-                punchBtn.innerText = "Shift Completed";
-                statusMsg.innerHTML = `<i class="fa-solid fa-fingerprint"></i> Shift Completed `
-                punchBtn.disabled = true;
+        // --- END OF MODIFICATION ---
 
-                if (bmEls.btnIn) bmEls.btnIn.disabled = true;
-                if (bmEls.btnOut) bmEls.btnOut.disabled = true;
-                if (bmEls.breakSelect) bmEls.breakSelect.disabled = true;
+        const isPunchedIn = data.status === "punched_in";
+        const isOnActiveBreak = data.break_info && data.break_info.is_on_break;
+
+        if (isPunchedIn) {
+            punchBtn.innerText = "Punch Out";
+            punchBtn.classList.add("mode-out");
+            
+            if (isOnActiveBreak) {
+                isWorking = false;
+                isOnBreak = true;
                 
                 totalWorkMs = calculateTotalWorkFromTimeline();
                 updateMetricsUI(totalWorkMs);
-                drawTimeline(); 
+                
+                currentBreakType = (data.break_info.break_type || "").toLowerCase();
+                if(currentBreakType.includes("lunch")) currentBreakType = "lunch";
+                else if(currentBreakType.includes("normal")) currentBreakType = "normal";
+
+                breakStartTime = new Date(data.break_info.start_time).getTime();
+                
+                statusMsg.innerHTML = `<i class="fa-solid fa-mug-hot"></i> On Break...`;
+                statusMsg.style.color = "#FF5B1E";
+                
+                bmEls.btnIn.style.display = "none";
+                bmEls.btnOut.style.display = "flex";
+                bmEls.breakSelect.value = currentBreakType;
+                bmEls.breakSelect.disabled = true;
+                punchBtn.disabled = true;
+                
+                const typeLabel = currentBreakType === "lunch" ? "Lunch Break" : "Normal Break";
+                bmEls.statusBadge.textContent = `On ${typeLabel}`;
+                bmEls.statusBadge.className = "bm-badge bm-badge-primary";
+                
+                if (breakTimerInterval) clearInterval(breakTimerInterval);
+                breakTimerInterval = setInterval(() => {
+                    const currentBreakMs = Date.now() - breakStartTime;
+                    updateBreakCircleUI(Math.floor(currentBreakMs / 1000));
+                    drawTimeline();
+                }, 1000);
 
             } else {
-                punchBtn.innerText = "Punch In";
-                isWorking = false;
-
-                if (bmEls.btnIn) bmEls.btnIn.disabled = true;
-                if (bmEls.btnOut) bmEls.btnOut.disabled = true;
-                if (bmEls.breakSelect) bmEls.breakSelect.disabled = true;
+                isWorking = true;
+                isOnBreak = false;
                 
-                timelineSessions = []; localStorage.removeItem(TIMELINE_KEY);
-                usage = { lunch: 0, normal: 0 }; localStorage.removeItem(USAGE_KEY);
-                breakLogs = []; localStorage.removeItem(BREAK_LOGS_KEY);
-                dailyLogs = []; localStorage.removeItem(DAILY_LOGS_KEY);
-                totalWorkMs = 0;
-                
-                updateMetricsUI(0);
-                updateBreakCircleUI(0);
-                drawTimeline();
-                bmUpdateProgressStats();
-                loadBreakLogs();
-                loadDailyLogs();
+                if (timelineSessions.length > 0) {
+                    let lastSession = timelineSessions[timelineSessions.length - 1];
+                    if (lastSession.type === 'work' && !lastSession.end) {
+                        workStartTime = lastSession.start;
+                    } else {
+                        workStartTime = Date.now();
+                    }
+                    totalWorkMs = calculateTotalWorkFromTimeline();
+                } else {
+                    workStartTime = new Date(data.checkin).getTime();
+                    totalWorkMs = 0;
+                    timelineSessions.push({ type: 'work', start: workStartTime, end: null });
+                    saveTimelineSession();
+                }
+                startWorkTimer();
             }
-        })
-        .catch(err => console.error("Status fetch error:", err));
-    });
+
+        } else if (data.status === "punched_out") {
+            punchBtn.innerText = "Shift Completed";
+            statusMsg.innerHTML = `<i class="fa-solid fa-fingerprint"></i> Shift Completed `;
+            punchBtn.disabled = true;
+
+            if (bmEls.btnIn) bmEls.btnIn.disabled = true;
+            if (bmEls.btnOut) bmEls.btnOut.disabled = true;
+            if (bmEls.breakSelect) bmEls.breakSelect.disabled = true;
+            
+            totalWorkMs = calculateTotalWorkFromTimeline();
+            updateMetricsUI(totalWorkMs);
+            drawTimeline(); 
+
+        } else {
+            punchBtn.innerText = "Punch In";
+            isWorking = false;
+            
+            // Cleanup
+            if (bmEls.btnIn) bmEls.btnIn.disabled = true;
+            if (bmEls.btnOut) bmEls.btnOut.disabled = true;
+            if (bmEls.breakSelect) bmEls.breakSelect.disabled = true;
+            
+            timelineSessions = []; localStorage.removeItem(TIMELINE_KEY);
+            // Usage is already reset by the sync block above
+            dailyLogs = []; localStorage.removeItem(DAILY_LOGS_KEY);
+            totalWorkMs = 0;
+            
+            updateMetricsUI(0);
+            updateBreakCircleUI(0);
+            drawTimeline();
+            bmUpdateProgressStats();
+        }
+
+        // Final check
+        checkBreakAvailability();
+    })
+    .catch(err => console.error("Status fetch error:", err));
+});
 
     // 8. STATS & BREAK HISTORY HELPERS
     function bmUpdateProgressStats() {
