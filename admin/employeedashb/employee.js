@@ -158,12 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <i class="fa-solid ${icon}"></i> ${currentStatus}
                         </span>
                     </td>
-                    <td>
-                        <div class="action-menu">
-                            <button class="btn-action edit-btn" data-id="${emp.id}" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
-                            <button class="btn-action delete-btn" data-id="${emp.id}" title="Delete" style="color:#FF5B5B;"><i class="fa-regular fa-trash-can"></i></button>
-                        </div>
-                    </td>
+                    
                 </tr>
             `;
             tableBody.innerHTML += row;
@@ -172,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --- 5. UPDATE DASHBOARD STATS DYNAMICALLY ---
     function updateDashboardStats() {
-        if (!statTotal || !statActive || !statLeave || !statNew) return;
+        if (!statTotal || !statActive || !statLeave) return;
 
         const totalEmployees = employees.length;
         
@@ -184,25 +179,13 @@ document.addEventListener("DOMContentLoaded", function () {
             emp.status.toLowerCase().includes('leave')
         ).length;
 
-        // Calculate New Hires (Joined in the last 30 days)
-        let newHiresCount = 0;
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-        employees.forEach(emp => {
-            if (emp.joinDate) {
-                const joinDate = new Date(emp.joinDate);
-                if (joinDate >= thirtyDaysAgo) {
-                    newHiresCount++;
-                }
-            }
-        });
+        
 
         // Update the DOM Elements
         statTotal.innerText = totalEmployees;
         statActive.innerText = activeCount;
         statLeave.innerText = onLeaveCount;
-        statNew.innerText = newHiresCount;
+        
     }
 
     // --- 6. SEARCH & FILTERS LOGIC ---
