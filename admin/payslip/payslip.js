@@ -264,7 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const lop_d = Number(inputs.lopDays.value) || 0;
 
             const gr = bas ;         
-            const n = gr - pf_a - pt; 
+            const n = gr -lop_A-pf_a-pt; 
+
 
             const payload = {
                 month: monthText,
@@ -276,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gross_salary: gr,
                 net_salary: n
             };
-
+            console.log(payload)
             // Show Loading State
             const originalText = generateBtn.innerHTML;
             generateBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sending...`;
