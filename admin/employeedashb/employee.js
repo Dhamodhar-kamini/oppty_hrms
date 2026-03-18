@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Map the backend data to our frontend structure
             employees = data.map(emp => ({
-                id: emp.id || emp.employee_id || "N/A",
+                id: emp.employee_id || "N/A",
                 name: emp.name || "N/A",
                 email: emp.email || "N/A",
                 dept: emp.department || "N/A",
