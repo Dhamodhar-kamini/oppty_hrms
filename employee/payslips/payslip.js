@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Payslip:", payslip);
         
         // ✅ Employee Information
-        const employeeId = employee.id || employee.employee_id || 'N/A';
+        const employeeId = employee.employee_id || 'N/A';
         const name = employee.name || 'N/A';
         const department = employee.department || 'N/A';
         const role = employee.role || employee.designation || 'N/A';
