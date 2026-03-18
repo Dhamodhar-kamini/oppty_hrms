@@ -25,7 +25,7 @@
 /* --- HEADER --- */
 .page-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 100px;
   align-items: center;
   margin-bottom: 30px;
@@ -1028,4 +1028,43 @@
 /* Utility to show modal via JS */
 .hdr-modal-overlay.show-modal {
     display: flex;
+}
+
+
+/* scrollbar */
+/* --- SCROLLABLE TABLE BODY --- */
+.dash-table tbody {
+    display: block;
+    max-height: 500px; /* Approx height for 10 rows (50px per row) */
+    overflow-y: auto;  /* Scroll vertically if content exceeds height */
+    width: 100%;
+    
+    /* Hide Scrollbar (Chrome, Safari, Edge) */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+/* Hide Scrollbar for Webkit (Chrome, Safari) */
+.dash-table tbody::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* Fix for Table Alignment */
+/* Since tbody is block, we need to ensure cells align with thead */
+.dash-table thead, 
+.dash-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Ensures column widths match */
+}
+
+.dash-table thead {
+    width: calc(100% - 0px); /* Adjust if scrollbar width causes misalignment */
+}
+
+/* Optional: Ensure table takes full width */
+.dash-table {
+    width: 100%;
 }
