@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let employeeData = null;
 
     // ✅ Fetch employee info and store it
-    fetch(`https://theoppty.com/api/employee/dashboard/${empId}/`)
+    fetch(`https://api.theoppty.com/api/employee/dashboard/${empId}/`)
         .then(res => res.json())
         .then(data => {
             console.log("Employee Data:", data);
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ✅ Fetch payslips
-    fetch(`https://theoppty.com/api/employee-payslips/${empId}/`)
+    fetch(`https://api.theoppty.com/api/employee-payslips/${empId}/`)
         .then(res => res.json())
         .then(data => {
             console.log("Payslips Data:", data);

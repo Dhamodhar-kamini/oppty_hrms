@@ -7,7 +7,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     password: document.getElementById("password").value
   };
 
-  fetch("https://theoppty.com/api/employee/login/", {
+  fetch("https://api.theoppty.com/api/employee/login/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)

@@ -1,7 +1,7 @@
 // ==========================================
 // API CONFIGURATION
 // ==========================================
-const API_BASE_URL = "https://theoppty.com";
+const API_BASE_URL = "https://api.theoppty.com";
 
 document.addEventListener('DOMContentLoaded', () => {
 

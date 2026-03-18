@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const API_BASE = "https://theoppty.com"; // Live Server IP
+    const API_BASE = "https://api.theoppty.com"; // Live Server IP
     const emp_id = localStorage.getItem('employee_id');
 
     let birthdaySwiper = null;

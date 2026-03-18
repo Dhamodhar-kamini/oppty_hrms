@@ -20,7 +20,7 @@ window.addEventListener("load", function () {
 // 1. CONFIGURATION & GLOBAL VARIABLES
 // ==========================================
 
-const API_BASE_URL = "https://theoppty.com";
+const API_BASE_URL = "https://api.theoppty.com";
 
 // ==========================================
 // 2. UI & NAVIGATION LOGIC
@@ -227,7 +227,7 @@ async function loadAssetRequests() {
 window.updateAssetStatus = function(id, status) {
     if(!confirm(`Mark asset request as ${status}?`)) return;
 
-    fetch(`https://theoppty.com/api/admin/asset-request-status/${id}/`, {
+    fetch(`https://api.theoppty.com/api/admin/asset-request-status/${id}/`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: status })

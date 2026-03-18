@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const emp_id = localStorage.getItem('employee_id','123')
     console.log(emp_id)
-   fetch(`https://theoppty.com/api/employee/dashboard/${emp_id}/`)
+   fetch(`https://api.theoppty.com/api/employee/dashboard/${emp_id}/`)
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
     
     const documentstable = document.getElementById('table-documents')
-    fetch(`https://theoppty.com/api/employee-documents/${emp_id}/`)
+    fetch(`https://api.theoppty.com/api/employee-documents/${emp_id}/`)
         .then(res => res.json())
         .then(data => {
             documentstable.innerHTML = "";
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>${formatDate(p.uploaded_at)}</td>
                     <td>${p.doc_type}</td>
                     <td>${p.description}</td>
-                    <td> <a href="https://theoppty.com${p.file}" target="_blank">View
+                    <td> <a href="https://api.theoppty.com${p.file}" target="_blank">View
                     </a></td>
                 `;
                 documentstable.appendChild(row);
@@ -184,7 +184,7 @@ setInterval(documents_table,1000)
 
         console.log(document.getElementById("docFileInput").files[0]);
 
-        fetch(`https://theoppty.com/api/upload-documents/${emp_id}/`, {
+        fetch(`https://api.theoppty.com/api/upload-documents/${emp_id}/`, {
             method: "POST",
             body: formData
         })

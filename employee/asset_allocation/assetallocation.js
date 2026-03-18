@@ -2,7 +2,7 @@
 // 1. CONFIGURATION & GLOBAL VARIABLES
 // ==========================================
 
-const API_BASE_URL = "https://theoppty.com";
+const API_BASE_URL = "https://api.theoppty.com";
 
 // Get User Data from LocalStorage
 const EMP_ID = localStorage.getItem("employee_id");

@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ==========================================
     // 2. FETCH REAL USER DATA FROM BACKEND
     // ==========================================
-    fetch(`https://theoppty.com/api/employee/dashboard/${emp_id}/`)
+    fetch(`https://api.theoppty.com/api/employee/dashboard/${emp_id}/`)
         .then(res => res.json())
         .then(data => {
             console.log("Employee Data:", data);
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let profileImageUrl = "";
             if (data.profile_pic) {
                 // Construct full URL using your server IP
-                profileImageUrl = `https://theoppty.com${data.profile_pic}`;
+                profileImageUrl = `https://api.theoppty.com${data.profile_pic}`;
             }
             loadUserProfile({
                 firstName: fName,
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 city: document.getElementById('input_city') ? document.getElementById('input_city').value : ""
             };
 
-            fetch(`https://theoppty.com/api/update-employee/${emp_id}/`, {
+            fetch(`https://api.theoppty.com/api/update-employee/${emp_id}/`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(profileData)
@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 dob: document.getElementById('input_other_dob') ? document.getElementById('input_other_dob').value : "",
             };
 
-            fetch(`https://theoppty.com/api/update-employee/${emp_id}/`, {
+            fetch(`https://api.theoppty.com/api/update-employee/${emp_id}/`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(profileData)
@@ -386,7 +386,7 @@ async function fetchNotifications(markAsRead = false) {
 
     try {
         // FIX: Start with the URL as a STRING
-        let apiUrl = `https://theoppty.com/api/notofications/${emp_id}/`;
+        let apiUrl = `https://api.theoppty.com/api/notofications/${emp_id}/`;
         
         // Append the query parameter to the STRING
         if (markAsRead) {

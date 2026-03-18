@@ -21,7 +21,7 @@ window.addEventListener("load", function () {
 // ==========================================
 // NEW: Define API Base URL at the top
 // ==========================================
-const API_BASE_URL = "https://theoppty.com"; // Use your server's address
+const API_BASE_URL = "https://api.theoppty.com"; // Use your server's address
 
 // ==========================================
 // NEW: Helper function to force UTC time display
