@@ -1,61 +1,42 @@
+// ==========================================
+// 1. CONFIGURATION & GLOBAL VARIABLES
+// ==========================================
+const API_BASE_URL = "https://api.theoppty.com";
+
+// Track state
+let pendingAction = null; 
+let currentActiveTab = 'leave'; // Default tab
+
 // --- PRELOADER LOGIC ---
 window.addEventListener("load", function () {
     const preloader = document.getElementById("page-preloader");
-    
-    // Minimum wait time of 800ms for a smooth experience, 
-    // even if the page loads instantly.
     setTimeout(() => {
         if (preloader) {
             preloader.classList.add("loaded");
-            
-            // Optional: Remove it from DOM entirely after fade out ends
-            setTimeout(() => {
-                preloader.style.display = "none";
-            }, 500); // Matches CSS transition time
+            setTimeout(() => { preloader.style.display = "none"; }, 500);
         }
     }, 800);
 });
 
-// ==========================================
-// 1. CONFIGURATION & GLOBAL VARIABLES
-// ==========================================
-
-const API_BASE_URL = "https://api.theoppty.com";
-
-// ==========================================
-// 2. UI & NAVIGATION LOGIC
-// ==========================================
-// Tab Switch Logic (Attached to window so HTML onclick works)
-window.switchTab = function(tabName, btnElement) {
-    const titleMap = {
-        leave: "Leaves",
-        attendance: "Attendance",
-        assets: "Assets"
-    };
-
-    // Update Title
-    const titleEl = document.getElementById("pageTitle");
-    if (titleEl) titleEl.textContent = titleMap[tabName] || "Dashboard";
-
-    // Update Buttons
-    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-    if (btnElement) btnElement.classList.add("active");
-
-    // Show/Hide Sections
-    document.querySelectorAll(".table-responsive").forEach(section => section.classList.add("hidden"));
-    
-    const target = document.getElementById(tabName + "-section");
-    if (target) target.classList.remove("hidden");
-};
-
 document.addEventListener('DOMContentLoaded', () => {
+    // Initial Data Load
+    loadLeaves();
+    loadAssetRequests();
+    loadAttendanceRequests();
+    setupUI();
+});
 
+// ==========================================
+// 2. UI & EVENT LISTENERS
+// ==========================================
+
+function setupUI() {
     // Sidebar Toggle
     const menuBtn = document.getElementById("dashboardMenu");
     const submenu = document.getElementById("dashboardSubmenu");
     if (menuBtn && submenu) {
-        menuBtn.onclick = function () {
-            this.classList.toggle("open");
+        menuBtn.onclick = () => {
+            menuBtn.classList.toggle("open");
             submenu.classList.toggle("open");
         };
     }
@@ -63,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Notification Dropdown
     const bellBtn = document.getElementById('ntBellBtn');
     const dropdown = document.getElementById('ntDropdown');
-    
     if(bellBtn && dropdown) {
         bellBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -76,43 +56,194 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-// Load Data Initially
-    loadLeaves();
-    loadAssetRequests();
-    loadAttendanceRequests();
+    // ✅ "Approve All" Button Listener
+    const approveAllBtn = document.getElementById("approveAllBtn");
+    if (approveAllBtn) {
+        approveAllBtn.addEventListener("click", function() {
+            // Trigger the modal with ID 'ALL'
+            showConfirmModal(currentActiveTab, 'ALL', 'Approved');
+        });
+    }
+}
+
+// ✅ Tab Switching (Updated to track current tab)
+window.switchTab = function(tabName, btnElement) {
+    currentActiveTab = tabName; // Store active tab
+
+    const titleMap = {
+        leave: "Leaves",
+        attendance: "Attendance",
+        assets: "Assets"
+    };
+    
+    // Update Title
+    const titleEl = document.getElementById("pageTitle");
+    if (titleEl) titleEl.textContent = titleMap[tabName] || "Dashboard";
+
+    // Update Buttons
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+    if (btnElement) btnElement.classList.add("active");
+
+    // Show/Hide Sections
+    document.querySelectorAll(".table-responsive").forEach(section => section.classList.add("hidden"));
+    const target = document.getElementById(tabName + "-section");
+    if (target) target.classList.remove("hidden");
+};
+
+
+// ==========================================
+// 3. MODAL LOGIC (Single & Bulk)
+// ==========================================
+
+// Open Modal
+function showConfirmModal(type, id, actionType) {
+    const modal = document.getElementById('confirmModal');
+    const iconEl = document.getElementById('modalIcon');
+    const titleEl = document.getElementById('modalTitle');
+    const textEl = document.getElementById('modalText');
+    const confirmBtn = document.getElementById('modalConfirmBtn');
+
+    // Store action for later
+    pendingAction = { type, id, actionType };
+
+    const isApprove = actionType.toLowerCase() === 'approved';
+    const isBulk = id === 'ALL'; // Check if it's "Approve All"
+
+    // Icon
+    iconEl.className = `modal-icon ${isApprove ? 'approve' : 'reject'}`;
+    iconEl.innerHTML = isApprove ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+
+    // ✅ Dynamic Text for Bulk vs Single
+    if (isBulk) {
+        titleEl.textContent = "Approve All?";
+        textEl.textContent = `Are you sure you want to approve ALL pending ${type} requests?`;
+        confirmBtn.textContent = "Yes, Approve All";
+    } else {
+        titleEl.textContent = isApprove ? 'Approve Request?' : 'Reject Request?';
+        textEl.textContent = `Are you sure you want to ${isApprove ? 'approve' : 'reject'} this request?`;
+        confirmBtn.textContent = isApprove ? 'Yes, Approve' : 'Yes, Reject';
+    }
+
+    // Button Color
+    confirmBtn.className = `btn-modal btn-modal-confirm ${isApprove ? 'approve' : 'reject'}`;
+
+    modal.classList.add('show');
+}
+
+// Close Modal
+window.closeConfirmModal = function() {
+    document.getElementById('confirmModal').classList.remove('show');
+    pendingAction = null;
+};
+
+// Confirm Button Click
+document.getElementById('modalConfirmBtn').addEventListener('click', function() {
+    if (!pendingAction) return;
+
+    const { type, id, actionType } = pendingAction;
+    
+    // ✅ Check if it is a Bulk Action or Single Action
+    if (id === 'ALL') {
+        performBulkApprove(type);
+    } else {
+        // Single Actions
+        if (type === 'leave') processLeaveUpdate(id, actionType);
+        else if (type === 'asset') processAssetUpdate(id, actionType);
+        else if (type === 'attendance') processAttendanceUpdate(id, actionType);
+    }
+
+    closeConfirmModal();
 });
 
+
 // ==========================================
-// 3. LEAVES SECTION
+// 4. BULK APPROVE LOGIC (The New Feature)
 // ==========================================
 
+async function performBulkApprove(type) {
+    showToast("info", "Processing bulk approval...");
+
+    let endpointList = "";
+    let statusKey = "status"; // Some APIs might differ
+    let updateUrlBase = "";
+
+    // 1. Determine Endpoints based on Type
+    if (type === 'leave') {
+        endpointList = `${API_BASE_URL}/api/leave-approvals/`;
+        updateUrlBase = `${API_BASE_URL}/api/employee/update/`; 
+    } else if (type === 'asset') {
+        endpointList = `${API_BASE_URL}/api/admin/asset-requests/`;
+        updateUrlBase = `https://api.theoppty.com/api/admin/asset-request-status/`;
+    } else if (type === 'attendance') {
+        endpointList = `${API_BASE_URL}/api/admin/attendance-requests/`;
+        updateUrlBase = `${API_BASE_URL}/api/admin/attendance-status/`;
+    }
+
+    try {
+        // 2. Fetch ALL requests to find the pending IDs
+        const res = await fetch(endpointList);
+        const json = await res.json();
+        const data = json.data || json;
+
+        // Filter for Pending items
+        const pendingItems = data.filter(item => {
+            // Check status property (some APIs use 'status', leave uses 'status' inside object usually)
+            // Assuming default structure provided in previous codes
+            const s = item.status || 'pending'; 
+            return s.toLowerCase() === 'pending';
+        });
+
+        if (pendingItems.length === 0) {
+            showToast("info", "No pending requests to approve.");
+            return;
+        }
+
+        // 3. Create an array of Promises (Parallel Requests)
+        const promises = pendingItems.map(item => {
+            return fetch(`${updateUrlBase}${item.id}/`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ [statusKey]: "Approved" })
+            });
+        });
+
+        // 4. Wait for all to finish
+        await Promise.all(promises);
+
+        // 5. Refresh Data
+        if (type === 'leave') loadLeaves();
+        else if (type === 'asset') loadAssetRequests();
+        else if (type === 'attendance') loadAttendanceRequests();
+
+        showToast("success", `Approved ${pendingItems.length} requests successfully!`);
+
+    } catch (error) {
+        console.error("Bulk Approve Error:", error);
+        showToast("error", "Some requests failed to update.");
+    }
+}
+
+
+// ==========================================
+// 5. INDIVIDUAL API ACTIONS
+// ==========================================
+
+// Leaves
 function loadLeaves() {
-    const leaveTableBody = document.getElementById('leaveTableBody');
-    if (!leaveTableBody) return;
+    const tbody = document.getElementById('leaveTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>';
 
     fetch(`${API_BASE_URL}/api/leave-approvals/`)
     .then(res => res.json())
     .then(response => {
-        const data = response.data || response; 
-        leaveTableBody.innerHTML = "";
-
+        const data = response.data || response;
+        tbody.innerHTML = "";
         if (!data || data.length === 0) {
-            leaveTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No pending leaves found</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No pending leaves</td></tr>`;
             return;
         }
-
         data.forEach(p => {
-            const actionHtml = `
-                <div class="action-cell">
-                    <button class="btn-action-reject" onclick="rejectLeave(${p.id})">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                    <button class="btn-action-approve" onclick="approveLeave(${p.id})">
-                        <i class="fa-solid fa-check"></i> Approve
-                    </button>
-                </div>
-            `;
-
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${p.name}</td>
@@ -120,256 +251,145 @@ function loadLeaves() {
                 <td>${p.duration || '-'}</td>
                 <td>${p.reason}</td>
                 <td>${p.days || '-'}</td>
-                <td>${actionHtml}</td>
-            `;
-            leaveTableBody.appendChild(row);
+                <td>
+                    <div class="action-cell">
+                        <button class="btn-action-reject" onclick="showConfirmModal('leave', ${p.id}, 'Rejected')"><i class="fa-solid fa-xmark"></i></button>
+                        <button class="btn-action-approve" onclick="showConfirmModal('leave', ${p.id}, 'Approved')"><i class="fa-solid fa-check"></i> Approve</button>
+                    </div>
+                </td>`;
+            tbody.appendChild(row);
         });
-    })
-    .catch(err => {
-        console.error("Error fetching leaves:", err);
-        leaveTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Failed to load leaves</td></tr>`;
-    });
+    }).catch(() => tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:red;">Failed to load</td></tr>`);
 }
 
-// Leave Action Functions
-window.approveLeave = function(id) {
-    if(!confirm("Approve this leave?")) return;
-    updateLeaveStatus(id, "approved");
-};
-
-window.rejectLeave = function(id) {
-    if(!confirm("Reject this leave?")) return;
-    updateLeaveStatus(id, "rejected");
-};
-
-function updateLeaveStatus(id, status) {
-    fetch(`${API_BASE_URL}/api/employee/update/${id}/`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: status })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Request failed");
-        return res.json();
-    })
-    .then(() => {
-        loadLeaves(); // Reload table
-        showToast("success", `Leave ${status}`);
-    })
-    .catch(err => {
-        console.error(err);
-        showToast("error", "Action failed");
-    });
+function processLeaveUpdate(id, status) {
+    updateItem(`${API_BASE_URL}/api/employee/update/${id}/`, status, loadLeaves);
 }
 
-
-// ==========================================
-// 4. ASSETS APPROVAL SECTION
-// ==========================================
-
+// Assets
 async function loadAssetRequests() {
-    const assetTableBody = document.getElementById("assetsTableBody");
-    if (!assetTableBody) return;
-
-    assetTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Loading...</td></tr>`;
-
+    const tbody = document.getElementById("assetsTableBody");
+    if (!tbody) return;
+    
     try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/asset-requests/`);
-        if (!response.ok) throw new Error("Failed to fetch");
+        const res = await fetch(`${API_BASE_URL}/api/admin/asset-requests/`);
+        const data = await res.json();
+        tbody.innerHTML = "";
+        
+        const pending = data.filter(r => !r.status || r.status.toLowerCase() === 'pending');
 
-        const data = await response.json();
-        assetTableBody.innerHTML = "";
-
-        if (!data || data.length === 0) {
-            assetTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No pending asset requests</td></tr>`;
+        if (pending.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No pending assets</td></tr>`;
             return;
         }
 
-        data.forEach(req => {
-            // Only show Pending requests
-            if (req.status && req.status.toLowerCase() !== 'pending') return;
-
-            const dateStr = req.created_at ? req.created_at.split('T')[0] : new Date().toLocaleDateString();
-
-            const actionHtml = `
-                <div class="action-cell">
-                    <button class="btn-action-reject" onclick="updateAssetStatus(${req.id}, 'Rejected')">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                    <button class="btn-action-approve" onclick="updateAssetStatus(${req.id}, 'Approved')">
-                        <i class="fa-solid fa-check"></i> Approve
-                    </button>
-                </div>`;
-
+        pending.forEach(req => {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${req.employee_name}</td>
                 <td>${req.asset_category}</td>
                 <td>${req.location}</td>
-                <td>${dateStr}</td>
+                <td>${req.created_at ? req.created_at.split('T')[0] : '-'}</td>
                 <td>${req.description || '-'}</td>
-                <td>${actionHtml}</td>
-            `;
-            assetTableBody.appendChild(row);
+                <td>
+                    <div class="action-cell">
+                        <button class="btn-action-reject" onclick="showConfirmModal('asset', ${req.id}, 'Rejected')"><i class="fa-solid fa-xmark"></i></button>
+                        <button class="btn-action-approve" onclick="showConfirmModal('asset', ${req.id}, 'Approved')"><i class="fa-solid fa-check"></i> Approve</button>
+                    </div>
+                </td>`;
+            tbody.appendChild(row);
         });
-
-        // If all were filtered out
-        if (assetTableBody.children.length === 0) {
-            assetTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No pending requests</td></tr>`;
-        }
-
-    } catch (error) {
-        console.error("Error loading assets:", error);
-        assetTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading data</td></tr>`;
-    }
+    } catch(e) { console.error(e); }
 }
 
-window.updateAssetStatus = function(id, status) {
-    if(!confirm(`Mark asset request as ${status}?`)) return;
+function processAssetUpdate(id, status) {
+    updateItem(`https://api.theoppty.com/api/admin/asset-request-status/${id}/`, status, loadAssetRequests);
+}
 
-    fetch(`https://api.theoppty.com/api/admin/asset-request-status/${id}/`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: status })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Failed to update");
-        return res.json();
-    })
-    .then(() => {
-        loadAssetRequests(); // Reload table
-        showToast("success", `Asset ${status}`);
-    })
-    .catch(err => {
-        console.error(err);
-        showToast("error", "Failed to update asset status");
-    });
-};
-
-
-// ==========================================
-// 5. ATTENDANCE APPROVAL SECTION
-// ==========================================
-
+// Attendance
 async function loadAttendanceRequests() {
-    const attendanceTableBody = document.getElementById("attendanceTableBody");
-    if (!attendanceTableBody) return;
+    const tbody = document.getElementById("attendanceTableBody");
+    if (!tbody) return;
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/attendance-requests/`); // Updated endpoint to match pattern
-        if (!response.ok) throw new Error("Failed to fetch");
+        const res = await fetch(`${API_BASE_URL}/api/admin/attendance-requests/`);
+        const data = await res.json();
+        tbody.innerHTML = "";
+        
+        const pending = data.filter(r => !r.status || r.status.toLowerCase() === 'pending');
 
-        const data = await response.json();
-        attendanceTableBody.innerHTML = "";
-
-        if (!data || data.length === 0) {
-            attendanceTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No pending attendance requests</td></tr>`;
+        if (pending.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No pending attendance</td></tr>`;
             return;
         }
 
-        data.forEach(req => {
-            // Only show Pending
-            if (req.status && req.status.toLowerCase() !== 'pending') return;
-
-            const actionHtml = `
-                <div class="action-cell">
-                    <button class="btn-action-reject" onclick="updateAttendanceStatus(${req.id}, 'Rejected')">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                    <button class="btn-action-approve" onclick="updateAttendanceStatus(${req.id}, 'Approved')">
-                        <i class="fa-solid fa-check"></i> Approve
-                    </button>
-                </div>`;
-
+        pending.forEach(req => {
             const row = document.createElement("tr");
-            const inTime = req.clock_in || '-';
-            const outTime = req.clock_out || '-';
-
             row.innerHTML = `
                 <td>${req.employee_name}</td>
                 <td>Correction</td>
                 <td>${req.date}</td>
-                <td>In: ${inTime} <br> Out: ${outTime}</td>
+                <td>In: ${req.clock_in} <br> Out: ${req.clock_out}</td>
                 <td>${req.reason}</td>
-                <td>${actionHtml}</td>
-            `;
-            attendanceTableBody.appendChild(row);
+                <td>
+                    <div class="action-cell">
+                        <button class="btn-action-reject" onclick="showConfirmModal('attendance', ${req.id}, 'Rejected')"><i class="fa-solid fa-xmark"></i></button>
+                        <button class="btn-action-approve" onclick="showConfirmModal('attendance', ${req.id}, 'Approved')"><i class="fa-solid fa-check"></i> Approve</button>
+                    </div>
+                </td>`;
+            tbody.appendChild(row);
         });
-
-    } catch (error) {
-        console.error("Error loading attendance:", error);
-        attendanceTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading data</td></tr>`;
-    }
+    } catch(e) { console.error(e); }
 }
 
-window.updateAttendanceStatus = function(id, status) {
-    if(!confirm(`Mark attendance request as ${status}?`)) return;
+function processAttendanceUpdate(id, status) {
+    updateItem(`${API_BASE_URL}/api/admin/attendance-status/${id}/`, status, loadAttendanceRequests);
+}
 
-    fetch(`${API_BASE_URL}/api/admin/attendance-status/${id}/`, {
+// Generic Update Helper
+function updateItem(url, status, reloadCallback) {
+    fetch(url, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: status })
     })
-    .then(res => {
-        if (!res.ok) throw new Error("Failed to update");
-        return res.json();
-    })
+    .then(res => { if(!res.ok) throw new Error("Failed"); return res.json(); })
     .then(() => {
-        loadAttendanceRequests();
-        showToast("success", `Attendance ${status}`);
+        reloadCallback();
+        showToast("success", `Request ${status}`);
     })
-    .catch(err => {
-        console.error(err);
-        showToast("error", "Failed to update status");
-    });
-};
+    .catch(() => showToast("error", "Action Failed"));
+}
 
-// Helper: Simple Toast Notification (Optional, prevents crashing if missing)
+// Toast Notification
 function showToast(type, msg) {
-    console.log(`[${type.toUpperCase()}] ${msg}`);
-    // If you have a toast element, add logic here:
-    // const toast = document.getElementById("popupToast"); 
-    // ... logic ...
+    console.log(`[${type}] ${msg}`);
+    let toast = document.createElement('div');
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.padding = '12px 24px';
+    toast.style.background = type === 'success' ? '#28a745' : (type === 'info' ? '#17a2b8' : '#dc3545');
+    toast.style.color = '#fff';
+    toast.style.borderRadius = '5px';
+    toast.style.zIndex = '3000';
+    toast.innerText = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
 }
 
-
-// ==========================================
-// LOGOUT SECTION
-// ==========================================
-function hdr_toggleProfilePopup() {
-  const dropdown = document.getElementById("hdrProfileDropdown");
-  if (dropdown) dropdown.classList.toggle("show");
-}
-
-function hdr_showLogoutModal() {
-  const dropdown = document.getElementById("hdrProfileDropdown");
-  if (dropdown) dropdown.classList.remove("show");
-
-  const modal = document.getElementById("hdrLogoutModal");
-  if (modal) modal.classList.add("show-modal");
-}
-
-function hdr_hideLogoutModal() {
-  const modal = document.getElementById("hdrLogoutModal");
-  if (modal) modal.classList.remove("show-modal");
-}
-
-function hdr_confirmLogout() {
-  sessionStorage.clear();
-  localStorage.clear();
+// Profile & Logout (Keep existing logic)
+window.hdr_toggleProfilePopup = function() {
+  document.getElementById("hdrProfileDropdown")?.classList.toggle("show");
+};
+window.hdr_showLogoutModal = function() {
+  document.getElementById("hdrProfileDropdown")?.classList.remove("show");
+  document.getElementById("hdrLogoutModal")?.classList.add("show-modal");
+};
+window.hdr_hideLogoutModal = function() {
+  document.getElementById("hdrLogoutModal")?.classList.remove("show-modal");
+};
+window.hdr_confirmLogout = function() {
+  sessionStorage.clear(); localStorage.clear();
   window.location.href = "../../index.html";
-}
-
-window.onclick = function (event) {
-  if (!event.target.closest(".hdr-profile-wrapper")) {
-    const dropdown = document.getElementById("hdrProfileDropdown");
-    if (dropdown && dropdown.classList.contains("show")) {
-      dropdown.classList.remove("show");
-    }
-  }
-
-  const modal = document.getElementById("hdrLogoutModal");
-  if (event.target === modal) {
-    hdr_hideLogoutModal();
-  }
 };

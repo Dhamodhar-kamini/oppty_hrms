@@ -196,14 +196,27 @@
           </div>
 
           <div class="toolbar-group">
-
-
-            <button class="btn-primary" id="approveAllBtn">
-              <i class="ph ph-check-circle"></i> Approve All
-            </button>
-
-          </div>
+    <button class="btn-primary" id="approveAllBtn">
+        <i class="fa-solid fa-check-double"></i> Approve All
+    </button>
+</div>
         </div>
+
+        <!-- Custom Confirmation Modal -->
+<div id="confirmModal" class="modal-overlay">
+    <div class="confirm-modal">
+        <div id="modalIcon" class="modal-icon">
+            <!-- Icon injected by JS -->
+        </div>
+        <h3 id="modalTitle" class="modal-title">Are you sure?</h3>
+        <p id="modalText" class="modal-text">Do you want to proceed with this action?</p>
+        
+        <div class="modal-actions">
+            <button class="btn-modal btn-modal-cancel" onclick="closeConfirmModal()">Cancel</button>
+            <button id="modalConfirmBtn" class="btn-modal btn-modal-confirm">Confirm</button>
+        </div>
+    </div>
+</div>
 
 
         <!-- LEAVES TABLE -->
