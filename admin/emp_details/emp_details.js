@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const emp_id = localStorage.getItem("employee_id");
   
   if (!emp_id) {
-    alert("No employee selected.");
+    window.showSuccessPopup("No employee selected.");
     window.location.href = "../employeedashb/employee.html";
     return;
   }
@@ -414,7 +414,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch(err => {
         console.error("Error saving employee:", err);
-        alert("Failed to save changes. Please check server.");
+        window.showSuccessPopup("Failed to save changes. Please check server."); // Changed from alert
         saveBtn.innerText = "Save Changes";
         saveBtn.disabled = false;
     });
@@ -432,31 +432,47 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   window.admPerformAction = function (actionType) {
-      if (actionType === 'delete') {
-          const btn = document.querySelector(".adm-btn-confirm.adm-red");
-          if(btn) btn.innerText = "Deleting...";
+    if (actionType === 'delete') {
+        const btn = document.querySelector(".adm-btn-confirm.adm-red");
+        if (btn) {
+            btn.innerText = "Deleting...";
+            btn.disabled = true;
+        }
 
-          fetch(`${API_BASE_URL}/api/employee-details/${emp_id}/`, {
-              method: 'DELETE'
-          })
-          .then(res => {
-              if (res.ok) {
-                  alert("Employee deleted permanently.");
-                  window.location.href = "../employeedashb/employee.html"; // Return to list
-              } else {
-                  throw new Error("Failed to delete");
-              }
-          })
-          .catch(err => {
-              console.error("Error deleting employee:", err);
-              alert("Failed to delete employee. Please ensure the DELETE endpoint is correct.");
-              if(btn) btn.innerText = "Delete Permanently";
-          });
-      }
-      
-      // Hide all modals after click
-      document.querySelectorAll('.adm-modal-overlay').forEach(el => el.style.display = "none");
-  };
+        fetch(`${API_BASE_URL}/api/employee-details/${emp_id}/`, {
+            method: 'DELETE'
+        })
+        .then(res => {
+            if (res.ok) {
+                // Hide the modal immediately
+                document.getElementById('admDeleteModal').style.display = "none";
+                // Show your custom success popup
+                window.showSuccessPopup("Employee deleted permanently.");
+                
+                // Redirect after the popup shows
+                setTimeout(() => {
+                    window.location.href = "../employeedashb/employee.html";
+                }, 1500);
+            } else {
+                throw new Error("Failed to delete");
+            }
+        })
+        .catch(err => {
+            console.error("Error deleting employee:", err);
+            window.showSuccessPopup("Error: Could not delete employee.");
+            if (btn) {
+                btn.innerText = "Delete Permanently";
+                btn.disabled = false;
+            }
+        })
+        .finally(() => {
+            // Ensure all overlays are hidden if the redirect hasn't happened yet
+            document.querySelectorAll('.adm-modal-overlay').forEach(el => {
+                el.style.display = "none";
+            });
+        });
+    }
+};
 
   // ==================================================
   // 8. SUCCESS POPUP INJECTION
@@ -495,7 +511,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   window.downloadAsCSV = function () {
-    alert("Downloading CSV...");
+    window.showSuccessPopup("Downloading CSV...");
     window.closeDownloadModal();
   };
 
@@ -512,7 +528,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (typeof html2pdf !== "undefined") {
       html2pdf().set(opt).from(element).save();
     } else {
-      alert("PDF Library not loaded.");
+      window.showSuccessPopup("PDF Library not loaded.");
     }
   };
 });

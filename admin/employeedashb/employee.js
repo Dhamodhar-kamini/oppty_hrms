@@ -66,104 +66,125 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentEditId = null;
     let deleteTargetId = null;
 
-    // --- 3. INITIAL FETCH FROM BACKEND ---
-    function loadDataFromAPI() {
-        if (!tableBody) return;
-        tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding: 20px;'>Loading employees from server... <i class='fa-solid fa-spinner fa-spin'></i></td></tr>";
+    // Helper to check if an employee is on leave TODAY
+async function checkOnLeaveStatus(empId, currentStatus) {
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/employee/apply-leave/${empId}/`);
+        const leaves = await res.json();
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        fetch(`${API_BASE_URL}/api/employees/`)
-        .then(res => {
-            if(!res.ok) throw new Error("Network response was not ok");
-            return res.json();
-        })
-        .then(data => {
-            console.log("Backend Data Fetched:", data);
+        const isOnLeave = leaves.some(leave => {
+            if (leave.status.toLowerCase() !== 'approved') return false;
+            const start = new Date(leave.from_date);
+            const end = new Date(leave.to_date);
+            start.setHours(0, 0, 0, 0);
+            end.setHours(0, 0, 0, 0);
+            return today >= start && today <= end;
+        });
+
+        return isOnLeave ? "On Leave" : currentStatus;
+    } catch (err) {
+        console.error(`Leave fetch failed for ${empId}:`, err);
+        return currentStatus;
+    }
+}
+
+    // --- 3. INITIAL FETCH FROM BACKEND ---
+    // --- 3. INITIAL FETCH FROM BACKEND (UPDATED) ---
+function loadDataFromAPI() {
+    if (!tableBody) return;
+    tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding: 20px;'>Syncing Leave Status... <i class='fa-solid fa-spinner fa-spin'></i></td></tr>";
+
+    fetch(`${API_BASE_URL}/api/employees/`)
+    .then(res => res.json())
+    .then(async (data) => {
+        // Map data and check leave status for each employee
+        employees = await Promise.all(data.map(async (emp) => {
+            const finalStatus = await checkOnLeaveStatus(emp.id, emp.status || "Active");
             
-            // Map the backend data to our frontend structure
-            employees = data.map(emp => ({
+            return {
                 id: emp.id || "N/A",
                 name: emp.name || "N/A",
                 email: emp.email || "N/A",
                 dept: emp.department || "N/A",
                 role: emp.role || "N/A",
                 type: emp.full_time || "N/A", 
-                status: emp.status || "Active", // Default to active if missing
+                status: finalStatus, // Now correctly identifies "On Leave"
                 phone: emp.phone || "",
                 joinDate: emp.joining || "",
                 salary: emp.salary || "",
                 location: emp.location || ""
-            }));
+            };
+        }));
 
-            // Render table and stats using the freshly fetched data
-            renderTable(employees);
-            updateDashboardStats();
-        })
-        .catch(err => {
-            console.error("Error fetching employees:", err);
-            tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; color: red;">Failed to load data from server. Ensure your Django server is running.</td></tr>`;
-        });
-    }
+        renderTable(employees);
+        updateDashboardStats();
+    })
+    .catch(err => {
+        console.error("Error fetching employees:", err);
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; color: red;">Failed to load data.</td></tr>`;
+    });
+}
 
     // --- 4. RENDER TABLE WITH DYNAMIC STATUS ---
     function renderTable(dataArray) {
-        if (!tableBody) return;
-        tableBody.innerHTML = "";
+    if (!tableBody) return;
+    tableBody.innerHTML = "";
 
-        if (!dataArray || dataArray.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; color:#999;">No employees match your search/filters.</td></tr>`;
-            return;
+    if (!dataArray || dataArray.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; color:#999;">No employees match your search/filters.</td></tr>`;
+        return;
+    }
+
+    dataArray.forEach(emp => {
+        let currentStatus = emp.status;
+        let statusClass = "status-active";
+        let icon = "fa-check";
+
+        const statusLower = currentStatus.toLowerCase();
+        if (statusLower.includes("leave")) { 
+            statusClass = "status-leave"; 
+            icon = "fa-clock"; 
+        } 
+        else if (statusLower.includes("remote") || statusLower.includes("wfh")) { 
+            statusClass = "status-remote"; 
+            icon = "fa-house-laptop"; 
         }
 
-        dataArray.forEach(emp => {
-            // Determine Status CSS and Icon based on backend value
-            let currentStatus = emp.status;
-            let statusClass = "status-active";
-            let icon = "fa-check";
-
-            const statusLower = currentStatus.toLowerCase();
-            if (statusLower.includes("leave")) { 
-                statusClass = "status-leave"; 
-                icon = "fa-clock"; 
-            } 
-            else if (statusLower.includes("remote") || statusLower.includes("wfh")) { 
-                statusClass = "status-remote"; 
-                icon = "fa-house-laptop"; 
-            }
-            else if (statusLower.includes("inactive") || statusLower.includes("dismissed")) {
-                statusClass = "status-inactive";
-                icon = "fa-xmark";
-                // Fallback class if status-inactive doesn't exist in CSS
-                if(!document.styleSheets[0].cssRules) statusClass = "status-leave"; 
-            }
-
-            const row = `
-                <tr>
-                    <td>
-                        <div class="user-cell">
-                            <div class="user-info">
-                                <span class="user-name view-profile-btn" data-id="${emp.id}" 
-                                      style="cursor:pointer; color:#FF5B1E; font-weight:600;">
-                                    ${emp.name}
-                                </span>
-                                <span class="user-email">${emp.email}</span>
-                            </div>
+        const row = `
+            <tr>
+                <td>
+                    <div class="user-cell">
+                        <div class="user-info">
+                            <span class="user-name view-profile-btn" data-id="${emp.id}" 
+                                  style="cursor:pointer; color:#FF5B1E; font-weight:600;">
+                                ${emp.name}
+                            </span>
+                            <span class="user-email">${emp.email}</span>
                         </div>
-                    </td>
-                    <td>EMP-${emp.id}</td>
-                    <td>${emp.dept}</td>
-                    <td>${emp.role}</td>
-                    <td>${emp.type}</td>
-                    <td>
-                        <span class="status-pill ${statusClass}">
-                            <i class="fa-solid ${icon}"></i> ${currentStatus}
-                        </span>
-                    </td>
-                    
-                </tr>
-            `;
-            tableBody.innerHTML += row;
-        });
-    }
+                    </div>
+                </td>
+                <td>EMP-${emp.id}</td>
+                <td>${emp.dept}</td>
+                <td>${emp.role}</td>
+                <td>${emp.type}</td>
+                <td>
+                    <span class="status-pill ${statusClass}">
+                        <i class="fa-solid ${icon}"></i> ${currentStatus}
+                    </span>
+                </td>
+                <td>
+                    <div style="display:flex; gap:10px;">
+                        <button class="delete-btn" data-id="${emp.id}" style="border:none; background:none; cursor:pointer; color:#ef4444;"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `;
+        tableBody.innerHTML += row;
+    });
+}
 
     // --- 5. UPDATE DASHBOARD STATS DYNAMICALLY ---
     function updateDashboardStats() {
@@ -262,22 +283,38 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if(confirmDeleteBtn) {
-        confirmDeleteBtn.addEventListener("click", () => {
-            if(deleteTargetId) {
-                // If you add a delete endpoint to your Django URLs later, call it here:
-                // fetch(`${API_BASE_URL}/api/employee/delete/${deleteTargetId}/`, { method: 'DELETE' });
+    confirmDeleteBtn.addEventListener("click", () => {
+        if(deleteTargetId) {
+            confirmDeleteBtn.innerText = "Deleting...";
+            confirmDeleteBtn.disabled = true;
 
-                // Remove from local array to update UI instantly
-                employees = employees.filter(emp => String(emp.id) !== String(deleteTargetId));
-                
-                applyFilters(); // Re-render table
-                updateDashboardStats(); // Update stat numbers
-                
-                deleteModal.classList.remove("active");
-                showSuccess("Deleted!", "Employee removed successfully.");
-            }
-        });
-    }
+            // API call to delete from database
+            fetch(`${API_BASE_URL}/api/employee-details/${deleteTargetId}/`, {
+                method: 'DELETE'
+            })
+            .then(res => {
+                if (res.ok) {
+                    // Remove from local array to update UI instantly
+                    employees = employees.filter(emp => String(emp.id) !== String(deleteTargetId));
+                    
+                    applyFilters(); // Re-render table
+                    updateDashboardStats(); // Update stat numbers
+                    
+                    deleteModal.classList.remove("active");
+                    showSuccess("Deleted!", "Employee removed from database.");
+                } else {
+                    throw new Error("Failed to delete from server");
+                }
+            })
+            .catch(err => {
+                showSuccess("Error", "Failed to delete employee. Please check your connection.");            })
+            .finally(() => {
+                confirmDeleteBtn.innerText = "Delete";
+                confirmDeleteBtn.disabled = false;
+            });
+        }
+    });
+}
 
     if(cancelDeleteBtn) cancelDeleteBtn.addEventListener("click", () => deleteModal.classList.remove("active"));
 
@@ -378,8 +415,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     updateDashboardStats();
                 })
                 .catch(err => {
-                    console.error("Error creating:", err);
-                    alert("Failed to add employee to database.");
+                    showSuccess("Error", "Failed to add employee to database.");
                 });
             }
 

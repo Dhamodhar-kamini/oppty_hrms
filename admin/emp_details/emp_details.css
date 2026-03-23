@@ -686,8 +686,11 @@ body {
   z-index: 10000;
   justify-content: center;
   align-items: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  /* opacity: 0; */
+  /* transition: opacity 0.3s ease; */
+}
+.adm-modal-overlay.active-flex {
+  display: flex !important;
 }
 
 .adm-modal-overlay.adm-show {
