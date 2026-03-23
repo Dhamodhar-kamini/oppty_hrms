@@ -95,7 +95,7 @@ async function checkOnLeaveStatus(empId, currentStatus) {
     // --- 3. INITIAL FETCH FROM BACKEND (UPDATED) ---
 function loadDataFromAPI() {
     if (!tableBody) return;
-    tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding: 20px;'>Syncing Leave Status... <i class='fa-solid fa-spinner fa-spin'></i></td></tr>";
+    tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding: 20px;'>Syncing Employee Status... <i class='fa-solid fa-spinner fa-spin'></i></td></tr>";
 
     fetch(`${API_BASE_URL}/api/employees/`)
     .then(res => res.json())
