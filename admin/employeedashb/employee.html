@@ -38,65 +38,55 @@
 </div>
 <!-- PRELOADER END -->
       <!-- 1. Sidebar Navigation (Detailed based on image) -->
-      <aside class="sidebar">
-        <div class="logo">
-          <!-- <i class="fas fa-chart-line"></i> -->
-          <!-- <span>OPPTY</span> -->
-          <img
-            class="opptyLogo"
-            src="../assets/opptylogo.png"
-            alt="OPPTY HRMS Logo"
-          />
+      <aside class="sidebar" id="sidebar">
+  <!-- Close Button (Visible only on mobile) -->
+  <div class="sidebar-close-btn" id="sidebarCloseBtn">
+    <i class="fas fa-times"></i>
+  </div>
+
+  <div class="logo">
+    <img class="opptyLogo" src="../assets/opptylogo.png" alt="OPPTY HRMS Logo" />
+  </div>
+
+  <div class="sidebar-content">
+    <div class="menu-section main-menu">
+      <p class="menu-header">MAIN MENU</p>
+      
+      <!-- Dashboard Parent -->
+      <div class="menu-item-wrapper">
+        <a href="javascript:void(0)" class="menu-item has-submenu" id="dashboardMenu">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <!-- Submenu Items -->
+        <div class="submenu" id="dashboardSubmenu">
+          <a href="../admin_page/admin.html" class="menu-item">
+            <i class="fas fa-user-tie"></i><span>Admin Dashboard</span>
+          </a>
+          <a href="../employeedashb/employee.html" class="menu-item active">
+            <i class="fas fa-user"></i><span>Employee Dashboard</span>
+          </a>
+          <a href="../approval/approval.html" class="menu-item">
+            <i class="fas fa-check-circle"></i><span>Approval</span>
+          </a>
+          <a href="../payslip/payslip.html" class="menu-item">
+            <i class="fas fa-money-bill-wave"></i><span>Payroll Dashboard</span>
+          </a>
+          <!-- <a href="../recruitment/recruitment.html" class="menu-item">
+            <i class="fas fa-search"></i><span>Recruitment Dashboard</span>
+          </a> -->
+          <a href="../assertAllocation/assertAllocation.html" class="menu-item">
+            <i class="fas fa-boxes"></i><span>Asset Allocation</span>
+          </a>
         </div>
+      </div>
+    </div>
+  </div>
+</aside>
 
-        <div class="sidebar-content">
-          <div class="menu-section main-menu">
-            <p class="menu-header">MAIN MENU</p>
-            <div class="menu-section main-menu">
-              <!-- Dashboard Parent -->
-              <a
-                href="javascript:void(0)"
-                class="menu-item has-submenu"
-                id="dashboardMenu"
-              >
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-              </a>
-
-              <!-- Submenu Items -->
-              <div class="submenu" id="dashboardSubmenu">
-                <a href="../admin_page/admin.html" class="menu-item"
-                  ><i class="fas fa-user-tie"></i
-                  ><span>Admin Dashboard</span></a
-                >
-                <a
-                  href="../employeedashb/employee.html"
-                  class="menu-item active"
-                  ><i class="fas fa-user"></i><span>Employee Dashboard</span></a
-                >
-                <a href="../approval/approval.html" class="menu-item"
-                  ><i class="fas fa-check-circle"></i><span>Approval</span></a
-                >
-
-                <a href="../payslip/payslip.html" class="menu-item"
-                  ><i class="fas fa-money-bill-wave"></i
-                  ><span>Payroll Dashboard</span></a
-                >
-                <a href="../recruitment/recruitment.html" class="menu-item"
-                  ><i class="fas fa-search"></i
-                  ><span>Recruitment Dashboard</span></a
-                >
-                <a
-                  href="../assertAllocation/assertAllocation.html"
-                  class="menu-item"
-                  ><i class="fas fa-boxes"></i><span>Asset Allocation</span></a
-                >
-
-
-            </div>
-          </div>
-        </div>
-      </aside>
+<!-- Overlay for mobile background dimming -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
       <!-- 2. Main Content Area -->
       <main class="main-content">
@@ -108,6 +98,11 @@
             <span>CTRL + /</span>
           </div>
           <div class="header-icons">
+
+            <!--hambargar section-->
+            <div class="hamburger-menu-icon" id="hamburgerMenu">
+              <i class="fas fa-bars"></i>
+            </div>
             <!-- Existing Icons -->
 
             <!-- MODIFIED PROFILE SECTION -->

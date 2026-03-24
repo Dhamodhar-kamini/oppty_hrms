@@ -17,6 +17,43 @@ window.addEventListener("load", function () {
     }, 800);
 });
 
+
+//hambargar section
+document.addEventListener("DOMContentLoaded", function () {
+    const hamburgerBtn = document.getElementById("hamburgerMenu");
+    const sidebar = document.getElementById("sidebar");
+    const closeBtn = document.getElementById("sidebarCloseBtn");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    // Open Sidebar
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener("click", function () {
+        sidebar.classList.add("mobile-active");
+        overlay.classList.add("active");
+        // Optional: Prevent body scrolling when menu is open
+        document.body.style.overflow = "hidden";
+      });
+    }
+
+    // Close Sidebar (Function)
+    function closeSidebar() {
+      sidebar.classList.remove("mobile-active");
+      overlay.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    // Close on X button click
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeSidebar);
+    }
+
+    // Close on Overlay click
+    if (overlay) {
+      overlay.addEventListener("click", closeSidebar);
+    }
+  });
+
+
 // --- Data Storage ---
 let hraAssets = [];
 let hraReturnAssets = [];

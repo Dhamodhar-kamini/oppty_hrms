@@ -23,25 +23,31 @@
   <body>
     <div class="dashboard-container">
       <!-- PRELOADER START -->
-<div id="page-preloader">
-  <div class="loader-content">
-    <!-- Spinning Rings -->
-    <div class="loader-circle"></div>
-    <div class="loader-circle-inner"></div>
-    
-    <!-- Branding Text -->
-    <div class="loader-text">
-      <span class="brand-dark"><img src="../assets/opptylogo.png" alt="logo" style="height: 50px;"></span><span class="brand-orange">HRMS</span>
-    </div>
-    
-  </div>
-</div>
-<!-- PRELOADER END -->
-      <!-- 1. Sidebar Navigation (Detailed based on image) -->
-      <aside class="sidebar">
+      <div id="page-preloader">
+        <div class="loader-content">
+          <!-- Spinning Rings -->
+          <div class="loader-circle"></div>
+          <div class="loader-circle-inner"></div>
+
+          <!-- Branding Text -->
+          <div class="loader-text">
+            <span class="brand-dark"
+              ><img
+                src="../assets/opptylogo.png"
+                alt="logo"
+                style="height: 50px" /></span
+            ><span class="brand-orange">HRMS</span>
+          </div>
+        </div>
+      </div>
+      <!-- PRELOADER END -->
+      <aside class="sidebar" id="sidebar">
+        <!-- Close Button (Visible only on mobile) -->
+        <div class="sidebar-close-btn" id="sidebarCloseBtn">
+          <i class="fas fa-times"></i>
+        </div>
+
         <div class="logo">
-          <!-- <i class="fas fa-chart-line"></i> -->
-          <!-- <span>OPPTY</span> -->
           <img
             class="opptyLogo"
             src="../assets/opptylogo.png"
@@ -52,8 +58,9 @@
         <div class="sidebar-content">
           <div class="menu-section main-menu">
             <p class="menu-header">MAIN MENU</p>
-            <div class="menu-section main-menu">
-              <!-- Dashboard Parent -->
+
+            <!-- Dashboard Parent -->
+            <div class="menu-item-wrapper">
               <a
                 href="javascript:void(0)"
                 class="menu-item has-submenu"
@@ -65,36 +72,37 @@
 
               <!-- Submenu Items -->
               <div class="submenu" id="dashboardSubmenu">
-                <a href="../admin_page/admin.html" class="menu-item active"
-                  ><i class="fas fa-user-tie"></i
-                  ><span>Admin Dashboard</span></a
-                >
-                <a href="../employeedashb/employee.html" class="menu-item"
-                  ><i class="fas fa-user"></i><span>Employee Dashboard</span></a
-                >
-                <a href="../approval/approval.html" class="menu-item"
-                  ><i class="fas fa-check-circle"></i><span>Approval</span></a
-                >
-
-                <a href="../payslip/payslip.html" class="menu-item"
-                  ><i class="fas fa-money-bill-wave"></i
-                  ><span>Payroll Dashboard</span></a
-                >
-                <a href="../recruitment/recruitment.html" class="menu-item"
-                  ><i class="fas fa-search"></i
-                  ><span>Recruitment Dashboard</span></a
-                >
+                <a href="../admin_page/admin.html" class="menu-item active">
+                  <i class="fas fa-user-tie"></i><span>Admin Dashboard</span>
+                </a>
+                <a href="../employeedashb/employee.html" class="menu-item">
+                  <i class="fas fa-user"></i><span>Employee Dashboard</span>
+                </a>
+                <a href="../approval/approval.html" class="menu-item">
+                  <i class="fas fa-check-circle"></i><span>Approval</span>
+                </a>
+                <a href="../payslip/payslip.html" class="menu-item">
+                  <i class="fas fa-money-bill-wave"></i
+                  ><span>Payroll Dashboard</span>
+                </a>
+                <!-- <a href="../recruitment/recruitment.html" class="menu-item">
+                  <i class="fas fa-search"></i
+                  ><span>Recruitment Dashboard</span>
+                </a> -->
                 <a
                   href="../assertAllocation/assertAllocation.html"
                   class="menu-item"
-                  ><i class="fas fa-boxes"></i><span>Asset Allocation</span></a
                 >
-
-
+                  <i class="fas fa-boxes"></i><span>Asset Allocation</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </aside>
+
+      <!-- Overlay for mobile background dimming -->
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
       <!-- 2. Main Content Area -->
       <main class="main-content">
@@ -107,6 +115,10 @@
           </div>
 
           <div class="header-icons">
+            <!--hambargar section-->
+            <div class="hamburger-menu-icon" id="hamburgerMenu">
+              <i class="fas fa-bars"></i>
+            </div>
 
             <!-- MODIFIED PROFILE SECTION -->
             <!-- Profile Wrapper (Existing) -->
@@ -115,7 +127,7 @@
               <div class="user-profile" onclick="hdr_toggleProfilePopup()">
                 <!-- Update src to your actual image path -->
                 <!-- <img src="../assets/profiledp.jpeg" alt="User Avatar" /> -->
-                 <div class="profile-avatar-text">AD</div>
+                <div class="profile-avatar-text">AD</div>
               </div>
 
               <!-- The Popup Menu -->
@@ -385,8 +397,8 @@
           <p>
             You have
             <span class="highlight-pending" id="pendingApprovalsCount">
-              <a href="../approval/approval.html" class="highlight-pending"
-                > --Pending Approvals</a
+              <a href="../approval/approval.html" class="highlight-pending">
+                --Pending Approvals</a
               ></span
             >
             <!-- &
@@ -445,15 +457,15 @@
               <div class="total-employee">
                 <p style="font-size: 20px; font-weight: 700">Total Employee</p>
                 <!-- Added ID here -->
-                <span class="count" id="totalEmpCount" style="font-size: 40px;"
+                <span class="count" id="totalEmpCount" style="font-size: 40px"
                   >0</span
                 >
               </div>
-              <div class="status-bars" style="margin-top: 20px;">
+              <div class="status-bars" style="margin-top: 20px">
                 <!-- Fulltime -->
 
                 <!-- WFO -->
-                <div class="bar-row" style="text-align: left;">
+                <div class="bar-row" style="text-align: left">
                   <span class="dot color-red"></span>
                   <div
                     class="bar-fill"
@@ -491,7 +503,7 @@
                 </div>
 
                 <!-- Internship -->
-                <div class="bar-row" style="margin-bottom: 40px;">
+                <div class="bar-row" style="margin-bottom: 40px">
                   <!-- <span class="dot color-pink"></span> -->
                   <div
                     class="bar-fill"
@@ -687,8 +699,13 @@
                 <i class="fas fa-user-clock"></i>
               </div>
               <p>Attendance Overview</p>
-               <span id="attendanceOverviewCount">10/<span id="total_employees">100</span></span>
-              <a href="#" class="view-details-link attendance-trigger" id="attendanceTrigger"
+              <span id="attendanceOverviewCount"
+                >10/<span id="total_employees">100</span></span
+              >
+              <a
+                href="#"
+                class="view-details-link attendance-trigger"
+                id="attendanceTrigger"
                 >View Details</a
               >
             </div>

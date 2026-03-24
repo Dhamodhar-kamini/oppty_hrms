@@ -1105,3 +1105,161 @@ display:none;
 
 .btn-modal-confirm.reject { background: #dc3545; }
 .btn-modal-confirm.reject:hover { background: #c82333; }
+
+
+/* all media queries */
+/* ==========================================================================
+   HAMBURGER & SIDEBAR STYLES
+   ========================================================================== */
+
+/* 1. Hamburger Icon Styling (Hidden on Desktop) */
+.hamburger-menu-icon {
+  display: none; /* Default hidden */
+  font-size: 1.4rem;
+  color: #333;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  transition: 0.2s;
+  margin-right: 10px;
+}
+.hamburger-menu-icon:hover {
+  background-color: #f0f0f0;
+  color: var(--primary-color);
+}
+
+/* 2. Sidebar Close Button (Hidden on Desktop) */
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  z-index: 10001;
+}
+
+/* 3. Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.sidebar-overlay.active {
+  opacity: 1;
+}
+
+
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+
+/* --- Tablet & Mobile View (Max: 992px) --- */
+@media (max-width: 992px) {
+
+  /* --- A. SIDEBAR TRANSFORMATION (Slide-In) --- */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Initially hidden off-screen */
+    height: 100vh;
+    z-index: 9999;
+    
+    /* 30% Width Logic (with minimum safety width) */
+    width: 30vw; 
+    min-width: 280px; /* Don't get too small on phones */
+    max-width: 80%;   /* Don't cover entire screen on small phones */
+    
+    transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth Slide */
+    box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+  }
+
+  /* Active Class added by JS */
+  .sidebar.mobile-active {
+    left: 0;
+  }
+
+  /* Show Mobile Controls */
+  .hamburger-menu-icon {
+    display: block;
+  }
+  .sidebar-close-btn {
+    display: block;
+  }
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  /* --- B. HEADER ADJUSTMENTS --- */
+  .top-bar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 15px;
+  }
+
+  /* Reorder Header: Search on new line for mobile */
+  .search-bar {
+    order: 2;
+    width: 100%;
+    margin: 10px 0 0 0;
+  }
+  .header-icons {
+    order: 1;
+    width: 100%;
+    justify-content: flex-end; /* Align icons to right */
+    gap: 15px;
+  }
+  
+  /* Ensure Hamburger is visible next to Profile */
+  .hamburger-menu-icon {
+    order: -1; /* Place before profile in flex container if needed */
+  }
+
+  /* Force User Profile Visibility */
+  .user-profile {
+    display: block !important;
+  }
+
+  /* --- C. LAYOUT ADJUSTMENTS --- */
+  .main-content {
+    width: 100%;
+    padding: 15px;
+  }
+
+  /* Card Stacking */
+  .grid-row-2-3, .grid-row-4, .grid-row-5, .stats-grid-1 {
+    grid-template-columns: 1fr;
+  }
+  #employees-dept, #sales-overview, .leave-card, .holiday-card, .da-dashboard-wrapper {
+    grid-column: span 1;
+    width: 100%;
+    flex-direction: column;
+  }
+  .da-stats-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* --- Mobile Specific (Max: 500px) --- */
+@media (max-width: 500px) {
+  /* On very small screens, 30% is too small, use standard width */
+  .sidebar {
+    width: 85%; /* Cover most of screen for usability */
+    min-width: unset;
+  }
+  
+  .header-icons {
+    justify-content: space-between; /* Spread icons out */
+  }
+}
