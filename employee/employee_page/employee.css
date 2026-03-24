@@ -2814,3 +2814,65 @@ textarea#wishMessage:focus {
     align-items: center;
     position: relative;
 }
+
+
+
+
+/* --- CARD CONTAINER --- */
+
+
+
+
+.hidden {
+    display: none;
+}
+
+
+/* --- MOBILE RESPONSIVENESS (Alignment Fix) --- */
+@media (max-width: 768px) {
+    .profile-card {
+        flex-direction: column; /* Stack vertically */
+        text-align: center;
+        padding: 40px 20px;
+        gap: 25px;
+    }
+
+    .profile-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #profileImage {
+      margin-left: -30px;
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+        align-items: center;
+        margin-left: 30px;
+    }
+
+    .info-grid {
+        text-align: center;
+        gap: 20px;
+        margin-left: -10px;
+        align-items: center;
+    }
+
+    .info-item {
+        grid-template-columns: 1fr; /* Stack label on top of value */
+        gap: 5px;
+        justify-items: center; /* Center the text inside the grid */
+    }
+
+    .label {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 2px;
+    }
+    
+    .value {
+        font-size: 16px;
+    }
+}

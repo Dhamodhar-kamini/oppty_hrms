@@ -19,6 +19,54 @@ window.addEventListener("load", function () {
 
 
 
+//hambargar section
+ document.addEventListener('DOMContentLoaded', function() {
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const icon = mobileBtn.querySelector('i');
+
+        // Function to toggle sidebar
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Toggle Icon between Bars and Times (X)
+            if (sidebar.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times'); // Changes to X
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars'); // Changes back to Hamburger
+            }
+        }
+
+        // Event Listener for Button Click
+        if(mobileBtn) {
+            mobileBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent immediate closing
+                toggleSidebar();
+            });
+        }
+
+        // Event Listener for Overlay Click (Close menu when clicking outside)
+        if(overlay) {
+            overlay.addEventListener('click', toggleSidebar);
+        }
+
+        // Close sidebar when a menu link is clicked (Optional UX improvement)
+        const menuLinks = document.querySelectorAll('.sidebar-menu .menu-link');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(window.innerWidth <= 992) { // Only on mobile
+                    toggleSidebar();
+                }
+            });
+        });
+    });
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const emp_id = localStorage.getItem('employee_id');
 
