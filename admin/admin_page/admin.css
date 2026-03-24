@@ -3579,6 +3579,140 @@ textarea#wishMessage:focus {
 }
 
 
+
+/* ==========================================================================
+   DASHBOARD HEADER ALIGNMENT FIX
+   ========================================================================== */
+
+/* 1. Base Container Styling */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* Aligns buttons to bottom of title text */
+  flex-wrap: wrap; /* Allows wrapping on tablets */
+  gap: 20px; /* Space between Title and Buttons */
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+}
+
+/* 2. Title & Breadcrumbs Area */
+.header-left h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.breadcrumbs a {
+  text-decoration: none;
+  color: #777;
+  transition: 0.2s;
+}
+.breadcrumbs a:hover {
+  color: var(--primary-color);
+}
+
+/* 3. Action Buttons Area */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Calendar Button Styling */
+.btn-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  height: 45px; /* Fixed height for alignment */
+  white-space: nowrap;
+}
+
+/* Add Employee Button Styling */
+.emp-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--primary-color); /* Uses your root variable */
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  height: 45px; /* Fixed height to match calendar */
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.emp-add-btn:hover {
+  background: #0056b3; /* Slightly darker blue */
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS (The Fix)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start; /* Align everything to left */
+    gap: 15px;
+  }
+
+  .action-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Spread buttons evenly */
+    gap: 10px;
+  }
+
+  /* Make buttons equal width on mobile */
+  .calendar-wrapper, 
+  .emp-add-btn {
+    flex: 1; 
+    width: 100%;
+  }
+
+  /* Ensure the button inside calendar wrapper fills space */
+  .btn-icon {
+    width: 100%; 
+    justify-content: center;
+  }
+}
+
+/* Extra Small Screens (iPhone SE etc.) */
+@media (max-width: 480px) {
+  .action-buttons {
+    flex-direction: column; /* Stack buttons vertically */
+  }
+  
+  .calendar-wrapper, .btn-icon, .emp-add-btn {
+    width: 100%;
+  }
+}
+
+
+
+
 /* all media queries section */
 /* ==========================================================================
    HAMBURGER & SIDEBAR STYLES
