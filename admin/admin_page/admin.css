@@ -380,6 +380,32 @@ body {
   transform: scale(1.05);
 }
 
+
+/* The circle avatar styling */
+.profile-avatar-text {
+    width: 40px;      /* Adjust size as needed */
+    height: 40px;     /* Match width for perfect circle */
+    background-color: #FD7E14; /* Your theme orange color */
+    color: #ffffff;   /* White text */
+    border-radius: 50%; /* Makes it round */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700; /* Bold text */
+    font-size: 16px;
+    letter-spacing: 1px;
+    user-select: none; /* Prevents text highlighting */
+    border: 2px solid #ffffff; /* Optional: White border ring */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+/* Optional: Hover effect */
+.user-profile:hover .profile-avatar-text {
+    background-color: #e36a08; /* Darker orange on hover */
+}
+
+
+
 /* --- The Popup Menu (Hidden by default) --- */
 .hdr-popup-menu {
   position: absolute;
