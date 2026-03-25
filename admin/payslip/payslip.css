@@ -420,3 +420,113 @@ input:checked + .slider:before {
     transition: background 0.2s;
 }
 .btn-popup-secondary:hover { background: #e0e5f2; }
+
+
+/* media queries all devices... */
+/* ==========================================================================
+   RESPONSIVE DESIGN (FIXED FOR ALL DEVICES)
+   ========================================================================== */
+
+/* --- 1. Tablet & Small Laptop (Max: 992px) --- */
+@media (max-width: 992px) {
+  .container {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  /* Stack the grid: Form on top, Preview below */
+  .grid-container {
+    grid-template-columns: 1fr; 
+    gap: 30px;
+  }
+
+  /* Adjust Page Header */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  /* Ensure form rows stay 2-column if space permits */
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --- 2. Mobile Landscape (Max: 768px) --- */
+@media (max-width: 768px) {
+  /* Stack Form Rows vertically on smaller screens */
+  .form-row {
+    grid-template-columns: 1fr; /* 1 column per row */
+    gap: 10px;
+  }
+
+  /* Card Padding */
+  .card {
+    padding: 15px;
+  }
+
+  /* Preview Ticket Fixes */
+  .payslip-ticket {
+    padding: 15px;
+  }
+  
+  .ticket-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  /* Employee Summary (Emp ID, Days) */
+  .employee-summary {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .employee-summary > div {
+    min-width: 45%; /* Ensure 2 items per row */
+  }
+}
+
+/* --- 3. Mobile Portrait (Max: 480px) --- */
+@media (max-width: 480px) {
+  /* Typography Adjustments */
+  h1 { font-size: 16px; }
+  .card-title { font-size: 14px; }
+  
+  /* Input Fields */
+  .form-control {
+    font-size: 14px; /* Better for touch */
+    padding: 12px;
+  }
+
+  /* Buttons */
+  .form-actions {
+    flex-direction: column;
+  }
+  .btn {
+    width: 100%;
+    padding: 12px;
+  }
+
+  /* Popup Modal Fixes */
+  .popup-content {
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .popup-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-popup-primary, .btn-popup-secondary {
+    width: 100%;
+  }
+}
