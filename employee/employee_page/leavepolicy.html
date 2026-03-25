@@ -2,100 +2,234 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Leave Policy</title>
+    <title>Employee Leave Policy</title>
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --primary: #ff7a00;         /* Brand Color */
+            --primary-dim: #fff6ed;     /* Very light orange for backgrounds */
+            --text-main: #1f2937;       /* Dark Grey for Headings */
+            --text-body: #4b5563;       /* Softer Grey for Paragraphs */
+            --border-color: #e5e7eb;    /* Light border for crisp edges */
+            --bg-page: #f9fafb;         /* Page background */
+            --white: #ffffff;
+        }
+
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #ffffff;
-            color: #000;
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
         }
 
         .container {
-            width: 70%;
-            margin: 40px auto;
+            max-width: 850px;
+            margin: 60px auto;
+            padding: 0 20px;
         }
 
-        /* Header */
-        h1 {
+        /* Header Styling */
+        header {
             text-align: center;
-            color: #ff7a00;
-            font-weight: 600;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 30px;
         }
 
-        /* Card Sections */
-        .section {
-            background: #fff;
-            padding: 25px;
+        .policy-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        h1 {
+            color: var(--text-main);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Standard Section Card */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
             margin-bottom: 25px;
-            border-radius: 12px;
-            border: 1px solid #e5e5e5;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            /* Removed transition and hover effects here */
+            /* Static shadow for depth, no hover movement */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
         }
 
         h2 {
-            color: #ff7a00;
-            margin-bottom: 12px;
+            color: var(--text-main);
+            font-size: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Accent Line next to headings */
+        h2::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 24px;
+            background-color: var(--primary);
+            margin-right: 12px;
+            border-radius: 2px;
         }
 
         p {
-            line-height: 1.7;
-            font-size: 15px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
         }
 
-        ul {
-            padding-left: 20px;
+        /* Highlight Pill */
+        .highlight {
+            background-color: var(--primary-dim);
+            color: #c2410c; /* Darker orange text for readability */
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.95em;
+            border: 1px solid rgba(255, 122, 0, 0.1);
         }
 
-        li {
-            margin-bottom: 8px;
+        /* Featured Allowance Section */
+        .feature-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
         }
 
-        /* Table Styling */
+        .stat-circle {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary-dim);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 122, 0, 0.2);
+        }
+
+        /* Table Design - Clean & Minimal */
+        .table-wrapper {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            border-radius: 8px;
-            overflow: hidden;
+            font-size: 0.9rem;
         }
 
         th {
-            background-color: #ff7a00;
-            color: #fff;
-            padding: 12px;
-            font-weight: 500;
+            background-color: #f3f4f6; /* Light grey header */
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 12px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
         }
 
         td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-body);
         }
 
-        /* Removed tr:hover here */
+        tr:last-child td {
+            border-bottom: none;
+        }
 
         /* Example Box */
-        .example-box {
-            margin-top: 15px;
-            padding: 15px;
-            border-left: 4px solid #ff7a00;
-            background-color: #fafafa;
-            border-radius: 6px;
+        .scenario-box {
+            margin-top: 20px;
+            background-color: #f8fafc; /* Cool grey */
+            border-left: 4px solid var(--text-main);
+            padding: 15px 20px;
+            font-size: 0.9rem;
+            border-radius: 0 4px 4px 0;
         }
 
-        /* Small divider line */
-        .divider {
-            height: 2px;
-            width: 50px;
-            background-color: #ff7a00;
-            margin-bottom: 15px;
+        /* Grid for Consequences */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .grid-item {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #d93025; /* Professional warning red */
+        }
+        
+        .grid-item span {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+            color: var(--text-main);
+        }
+
+        /* Lists */
+        ul.bullet-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.bullet-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        ul.bullet-list li::before {
+            content: '•';
+            color: var(--primary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Footer Note */
+        .footer-note {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-top: 40px;
         }
 
     </style>
@@ -105,80 +239,95 @@
 
 <div class="container">
 
-    <h1>Leave Policy</h1>
+    <header>
+        
+        <h1>Leave & Attendance Policy</h1>
+    </header>
 
-    <div class="section">
-        <div class="divider"></div>
+    <!-- Introductory Statement -->
+    <div class="card">
+        <h2>1. Policy Overview</h2>
         <p>
-            The leave policy ensures a balance between employee welfare and operational efficiency.
-            <span class="highlight">Weekends and company-declared holidays</span> are not counted as leave days.
+            This policy outlines the guidelines for employee leave to ensure a balance between personal well-being and business continuity.
+        </p>
+        <p>
+            <strong>Note:</strong> <span class="highlight">Weekends and Official Public Holidays</span> are <strong>excluded</strong> from leave calculations and will not be deducted from your balance.
         </p>
     </div>
 
-    <div class="section">
-        <div class="divider"></div>
-        <h2>1) Monthly Leave Allowance</h2>
-        <p>
-            Employees may take up to <span class="highlight">2 leaves</span> in a calendar month without salary deduction,
-            subject to approval by their reporting manager.
-        </p>
-    </div>
-
-    <div class="section">
-        <div class="divider"></div>
-        <h2>2) Leave Deduction Rule</h2>
-        <p>If an employee takes more than 2 leaves in a calendar month:</p>
-
-        <ul>
-            <li>All leaves will be treated as <span class="highlight">LOP</span>.</li>
-            <li>First two leaves will also be converted to LOP.</li>
-            <li><span class="highlight">Paid Leave Balance</span> cannot be used.</li>
-            <li>Each leave = <span class="highlight">1.5 days salary deduction</span>.</li>
-            <li>Applies to total leaves taken in the month.</li>
-        </ul>
-
-        <table>
-            <tr>
-                <th>Leaves Taken</th>
-                <th>Deduction</th>
-            </tr>
-            <tr><td>1 Leave</td><td>No Deduction</td></tr>
-            <tr><td>2 Leaves</td><td>No Deduction</td></tr>
-            <tr><td>3 Leaves</td><td>4.5 Days</td></tr>
-            <tr><td>4 Leaves</td><td>6 Days</td></tr>
-            <tr><td>5 Leaves</td><td>7.5 Days</td></tr>
-        </table>
-
-        <div class="example-box">
-            <strong>Example:</strong><br>
-            3 leaves → <span class="highlight">3 × 1.5 = 4.5 days deduction</span>
+    <!-- The Allowance Feature -->
+    <div class="card">
+        
+        <div>
+            <h2>2.Monthly Leave Allowance</h2>
+            <p style="margin: 0; font-size: 0.9rem; color: var(--text-body);">
+                Employees are eligible for <strong>2 paid leaves</strong> per calendar month. <br>
+                (Subject to prior approval by the reporting manager).
+            </p>
         </div>
     </div>
 
-    <div class="section">
-        <div class="divider"></div>
-        <h2>3) Excessive Leave Policy</h2>
-        <ul>
-            <li>Employee will be placed under <span class="highlight">PIP</span>.</li>
-            <li>Performance will be reviewed.</li>
-            <li>Possible actions:
-                <ul>
-                    <li>Extension of probation</li>
-                    <li>Role reassessment</li>
-                    <li>Salary review</li>
-                    <li>Termination</li>
-                </ul>
-            </li>
+    <!-- Deduction Rules -->
+    <div class="card">
+        <h2>3.Deduction Logic (Excessive Leave)</h2>
+        <p>If leave utilization exceeds the 2-day allowance, the following deduction rules apply automatically:</p>
+
+        <ul class="bullet-list">
+            <li>Any leaves beyond the allowance result in <strong>Loss Of Pay (LOP)</strong>.</li>
+            <li>The accumulated Paid Leave Balance cannot be applied to offset these specific deductions.</li>
+            <li><strong>Calculation Multiplier:</strong> 1 Leave day = <span class="highlight">1.5 Days Salary Deduction</span>.</li>
         </ul>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th width="40%">Total Leaves Taken</th>
+                        <th width="60%">Payroll Impact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1 Leave</td><td><span style="color: #059669; font-weight:600;">No Deduction</span></td></tr>
+                    <tr><td>2 Leaves</td><td><span style="color: #059669; font-weight:600;">No Deduction</span></td></tr>
+                    <tr><td>3 Leaves</td><td><strong>4.5 Days</strong> Salary Deduction</td></tr>
+                    <tr><td>4 Leaves</td><td><strong>6.0 Days</strong> Salary Deduction</td></tr>
+                    <tr><td>5 Leaves</td><td><strong>7.5 Days</strong> Salary Deduction</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="scenario-box">
+            <strong>Calculation Example:</strong><br>
+            If an employee takes 3 leaves in a month, the system calculates: 
+            3 × 1.5 = <span style="color: #c2410c; font-weight:600;">4.5 Days Deduction</span>.
+        </div>
     </div>
 
-    <div class="section">
-        <div class="divider"></div>
-        <h2>4) Sandwich Leave Policy</h2>
+    <!-- Consequences -->
+    <div class="card">
+        <h2>4.Performance Implications</h2>
+        <p>Consistent breach of the leave policy will trigger a performance review and may result in placement on a Performance Improvement Plan (PIP).</p>
+        
+        <div class="grid-container">
+            <div class="grid-item"><span>📅</span>Probation Extension</div>
+            <div class="grid-item"><span>📋</span>Role Reassessment</div>
+            <div class="grid-item"><span>💰</span>Salary Revision</div>
+            <div class="grid-item"><span>🚫</span>Termination</div>
+        </div>
+    </div>
+
+    <!-- Sandwich Rule -->
+    <div class="card">
+        <h2>5.Sandwich Leave Rule</h2>
         <p>
-            Leave before and after a holiday may cause the holiday to be counted as leave
-            <span class="highlight">(management discretion)</span>.
+            Leaves taken immediately <strong>before and after</strong> a public holiday may result in the holiday itself being counted as a leave day. 
+            <br>
+            <span style="font-size: 0.85rem; color: #6b7280; font-style: italic;">*Application of this rule is at management discretion.</span>
         </p>
+    </div>
+
+    <div class="footer-note">
+        Oppty TechHub Private Limited• HR Department • 2026
     </div>
 
 </div>
