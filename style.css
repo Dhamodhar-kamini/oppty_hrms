@@ -593,3 +593,169 @@ p {
         flex-direction: row; /* Ensure side-by-side on desktop */
     }
 }
+
+
+/* all media queries */
+/* ==========================================================================
+   ROBUST RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+
+/* --- 1. Large Laptops & Desktops (Max: 1440px) --- */
+@media (max-width: 1440px) {
+  .hero-container {
+    max-width: 1100px;
+    gap: 40px;
+  }
+  
+  h1 {
+    font-size: 56px; /* Slightly smaller title */
+  }
+}
+
+/* --- 2. Standard Laptops (Max: 1200px) --- */
+@media (max-width: 1200px) {
+  .navbar {
+    padding: 20px 5%;
+  }
+  
+  .hero {
+    padding: 0 5%;
+  }
+  
+  .hero-container {
+    gap: 30px;
+  }
+  
+  /* Prevent cards from getting too wide */
+  .glass-card {
+    width: 220px;
+    padding: 25px 15px;
+  }
+}
+
+/* --- 3. Tablets & Small Laptops (Max: 1024px) --- */
+@media (max-width: 1024px) {
+  /* Hero Section: Switch to Single Column */
+  .hero-container {
+    grid-template-columns: 1fr; /* Stack Text on top of Cards */
+    text-align: center;
+    padding-top: 100px; /* Add space for navbar */
+    gap: 60px;
+  }
+
+  /* Text Adjustments */
+  h1 {
+    font-size: 48px;
+    margin: 0 auto 20px;
+  }
+  
+  p {
+    margin: 0 auto 30px;
+    max-width: 600px;
+  }
+  
+  .cta-group {
+    justify-content: center; /* Center buttons */
+  }
+
+  /* Hero Cards Wrapper */
+  .hero-cards-wrapper {
+    flex-direction: row; /* Keep side-by-side on tablet if space permits */
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* Allow wrapping if screen is narrow */
+  }
+  
+  .glass-card {
+    width: 260px; /* Slightly wider cards for touch targets */
+  }
+
+  /* Floating Elements: Hide on Tablet to reduce clutter */
+  .float-box, .scroll-mouse {
+    display: none;
+  }
+  
+  /* Features Grid */
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 Columns */
+    gap: 30px;
+  }
+}
+
+/* --- 4. Mobile Devices (Max: 768px) --- */
+@media (max-width: 768px) {
+  /* Navbar */
+  .navbar {
+    padding: 20px;
+  }
+  .logo img {
+    height: 35px; /* Smaller Logo */
+  }
+  .btn-glass {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  /* Hero Typography */
+  h1 {
+    font-size: 36px;
+  }
+  
+  p {
+    font-size: 16px;
+  }
+
+  /* Stack Cards Vertically on Mobile */
+  .hero-cards-wrapper {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .glass-card {
+    width: 100%; /* Full width cards */
+    max-width: 320px;
+  }
+
+  /* Features Section */
+  .features {
+    padding: 60px 5%;
+  }
+  
+  .section-header h2 {
+    font-size: 32px;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr; /* 1 Column */
+  }
+}
+
+/* --- 5. Small Phones (Max: 480px) --- */
+@media (max-width: 480px) {
+  /* Tighter Padding */
+  .hero {
+    padding: 0 20px;
+  }
+  
+  /* Font Sizes */
+  h1 {
+    font-size: 32px;
+  }
+  
+  .cta-group {
+    flex-direction: column; /* Stack Buttons */
+    width: 100%;
+  }
+  
+  .btn-primary, .link-secondary {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  /* Ensure Cards fit */
+  .glass-card {
+    width: 100%;
+  }
+}
