@@ -705,10 +705,10 @@ function removeTypingIndicator() {
 
 //hambargar section
 document.addEventListener('DOMContentLoaded', function() {
-    const btn = document.getElementById('mobileMenuBtn');
+    const menuBtn = document.getElementById('mobileMenuBtn');
     const sidebar = document.querySelector('.sidebar');
     
-    // 1. Create Overlay dynamically if it doesn't exist
+    // Create Overlay if missing
     let overlay = document.querySelector('.sidebar-overlay');
     if (!overlay) {
         overlay = document.createElement('div');
@@ -716,25 +716,34 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(overlay);
     }
 
-    if (btn && sidebar) {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevents click from bubbling
-            sidebar.classList.toggle('mobile-active');
-            overlay.classList.toggle('active');
+    function toggleSidebar() {
+        const isActive = sidebar.classList.toggle('mobile-active');
+        overlay.classList.toggle('active');
+        
+        // Prevent background scrolling
+        document.body.style.overflow = isActive ? 'hidden' : '';
+        
+        // Change icon to 'X' when open (if using FontAwesome)
+        const icon = menuBtn.querySelector('i');
+        if (icon) {
+            icon.className = isActive ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+        }
+    }
+
+    if (menuBtn && sidebar) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSidebar();
         });
 
-        // 2. Close when clicking the overlay
-        overlay.addEventListener('click', function() {
-            sidebar.classList.remove('mobile-active');
-            overlay.classList.remove('active');
-        });
+        // Close on overlay click
+        overlay.addEventListener('click', toggleSidebar);
 
-        // 3. Optional: Close when clicking a menu link
-        const menuLinks = document.querySelectorAll('.sidebar a');
-        menuLinks.forEach(link => {
+        // Close on clicking menu links
+        const links = sidebar.querySelectorAll('a');
+        links.forEach(link => {
             link.addEventListener('click', () => {
-                sidebar.classList.remove('mobile-active');
-                overlay.classList.remove('active');
+                if (sidebar.classList.contains('mobile-active')) toggleSidebar();
             });
         });
     }

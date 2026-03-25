@@ -1467,45 +1467,117 @@
     }
 }
 
-/* Ensure the sidebar container has a solid background and high layer priority */
-.sidebar {
-    background-color: #ffffff !important;
-    display: flex !important; /* Ensure it's not set to display: none */
-    flex-direction: column;
-    z-index: 10000; /* Must be higher than the overlay */
-}
 
-/* Ensure the navigation links/items are visible */
-.sidebar .menu-link, 
-.sidebar .menu-item,
-.sidebar a {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    color: #111827 !important; /* Force a dark color so they don't blend with white */
-    padding: 12px 20px;
-    text-decoration: none;
-}
-
-/* Fix for icons inside the nav */
-.sidebar i {
-    color: #6b7280 !important; /* Grey icons */
-    margin-right: 12px;
-    width: 20px;
-    text-align: center;
-}
-
-/* Ensure the sidebar content isn't hidden */
-.sidebar-content, .sidebar-menu {
-    display: block !important;
-    width: 100%;
-}
-
+/* hambargar section */
+/* --- Optimized Mobile Menu --- */
 @media (max-width: 992px) {
+    /* 1. Force the button to the top-left corner */
+    .mobile-menu-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        width: 40px;
+        height: 40px;
+        background: var(--white);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        z-index: 10001; /* Must be above everything */
+        cursor: pointer;
+        /* box-shadow: 0 2px 10px rgba(0,0,0,0.1); */
+    }
+
+    /* 2. Fix the Sidebar positioning */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        background: #ffffff;
+        z-index: 10000;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(-100%); /* Start fully hidden */
+        box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
+        display: block !important;
+    }
+
+    /* 3. The Active State */
+    .sidebar.mobile-active {
+        transform: translateX(0); /* Slide in to view */
+    }
+
+    /* 4. Ensure main content doesn't break */
     .main-content {
         margin-left: 0 !important;
-        padding: 15px !important;
         width: 100% !important;
-        transition: none; /* Prevent jumping when menu opens */
+        padding-top: 60px; /* Make room for the fixed hamburger */
     }
 }
+
+/* Sidebar Overlay */
+/* --- 1. The Overlay (The Background Dimmer) --- */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* background: rgba(0, 0, 0, 0.4);  */
+    backdrop-filter: blur(4px);    /* Blur the back */
+    z-index: 999;                 /* Lower than sidebar */
+    display: none;                 /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* --- 2. The Sidebar (The Menu) --- */
+@media (max-width: 992px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        background: #ffffff !important; /* Force solid white */
+        z-index: 1000;                /* HIGHER than overlay */
+        display: block !important;
+        /* box-shadow: 10px 0 30px rgba(0,0,0,0.2); */
+        
+        /* Smooth Slide Animation */
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        /* CRITICAL: Remove blur from the sidebar itself */
+        backdrop-filter: none !important;
+        pointer-events: all !important; /* Ensure clicks work */
+    }
+
+    .sidebar.mobile-active {
+        transform: translateX(0);
+    }
+
+    /* --- 3. The Hamburger/Close Button --- */
+    .mobile-menu-btn {
+        display: flex !important;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1001; /* HIGHEST layer so it's always clickable */
+        background: #fff;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+}
+
