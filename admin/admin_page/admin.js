@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   // Call the function to get the dynamic count on page load
   // ==========================================
+  loadBirthdayData();
   loadPendingApprovalsCount();
 
   console.log("oppty Dashboard JS Initialized.");
@@ -869,111 +870,121 @@ document.addEventListener('DOMContentLoaded', () => {
     da_runSimulation();
 });
 // ====================================================================
+// ==========================================
+// BIRTHDAY LOGIC: CONSOLIDATED & FIXED
+// ==========================================
 
-//birthday wihes
-//birthday wishes
-document.addEventListener("DOMContentLoaded", function () {
-    
-    // Updated data with phone numbers (Use real numbers in production)
-    const birthdays = [
-        { name: "Dhamodhar", role: "IOS Developer", date: "24 Oct", rawDate: "2023-10-24", img: "../assets/profiledp.jpeg", phone: "8790997602" },
-        { name: "Saleem", role: "UI Designer", date: "25 Oct", rawDate: "2023-10-25", img: "../assets/profiledp.jpeg", phone: "7075653250" },
-        { name: "Balaji", role: "Product Manager", date: "26 Oct", rawDate: "2023-10-26", img: "../assets/profiledp.jpeg", phone: "8309930827" },
-        { name: "Manikanta", role: "QA Engineer", date: "28 Oct", rawDate: "2023-10-28", img: "../assets/profiledp.jpeg", phone: "7036084043" },
-        { name: "Arjun", role: "HR Manager", date: "02 Nov", rawDate: "2023-11-02", img: "../assets/profiledp.jpeg", phone: "919876543214" }
-    ];
+// ==========================================
+// BIRTHDAY LOGIC: CONSOLIDATED & FIXED
+// ==========================================
+let todayBirthdays = [];    
+let upcomingBirthdays = []; 
+let currentBdayIndex = 0;
+let bdayAutoInterval; // This is the variable used to stop/start auto-slide
 
-    let currentIndex = 0;
-    let currentTargetPhone = ""; // Variable to store phone number for redirection
-    let autoSlideInterval;
+async function loadBirthdayData() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/birthdays/`);
+        const data = await res.json();
+        
+        todayBirthdays = data.today || [];
+        upcomingBirthdays = data.upcoming || [];
 
+        if (todayBirthdays.length > 0) {
+            updateBdayCarousel(0);
+            startBdayRotation();
+        } else {
+            const nameEl = document.getElementById("bdayName");
+            if (nameEl) nameEl.innerText = "No Birthdays Today";
+        }
+    } catch (err) {
+        console.error("Birthday Fetch Error:", err);
+    }
+}
+
+function updateBdayCarousel(index) {
+    const container = document.getElementById("bdayProfileContainer");
+    if (!container || todayBirthdays.length === 0) return;
+
+    container.classList.remove("fade-in");
+    void container.offsetWidth; 
+
+    const person = todayBirthdays[index];
     const imgEl = document.getElementById("bdayImg");
     const nameEl = document.getElementById("bdayName");
     const roleEl = document.getElementById("bdayRole");
     const dateEl = document.getElementById("bdayDate");
-    const container = document.getElementById("bdayProfileContainer");
-    const bdayCard = document.querySelector(".birthday-card");
 
-    function updateCarousel(index) {
-        if(!container) return;
-        container.classList.remove("fade-in");
-        void container.offsetWidth; 
-        const person = birthdays[index];
-        if(imgEl) imgEl.src = person.img;
-        if(nameEl) nameEl.innerText = person.name;
-        if(roleEl) roleEl.innerText = person.role;
-        if(dateEl) dateEl.innerText = person.date;
-        container.classList.add("fade-in");
+    const existingInitials = container.querySelector(".avatar-initials-gen");
+    if (existingInitials) existingInitials.remove();
+
+    if (person.profile_pic) {
+        imgEl.src = API_BASE_URL + person.profile_pic;
+        imgEl.style.display = "block";
+    } else {
+        imgEl.style.display = "none";
+        const initials = person.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
+        const initialsDiv = document.createElement("div");
+        initialsDiv.className = "avatar-initials-gen";
+        initialsDiv.innerText = initials;
+        container.insertBefore(initialsDiv, nameEl);
     }
 
-    function startAutoSlide() {
-        clearInterval(autoSlideInterval);
-        autoSlideInterval = setInterval(() => {
-            currentIndex = (currentIndex + 1) % birthdays.length;
-            updateCarousel(currentIndex);
-        }, 4000);
+    if (nameEl) nameEl.innerText = person.name;
+    if (roleEl) roleEl.innerText = person.role || "Team Member";
+    if (dateEl) dateEl.innerText = `Today, ${person.dob}`;
+
+    container.classList.add("fade-in");
+}
+
+function startBdayRotation() {
+    if (todayBirthdays.length <= 1) return;
+    clearInterval(bdayAutoInterval);
+    bdayAutoInterval = setInterval(() => {
+        currentBdayIndex = (currentBdayIndex + 1) % todayBirthdays.length;
+        updateBdayCarousel(currentBdayIndex);
+    }, 5000);
+}
+
+// --- FIX FOR THE REFERENCE ERRORS ---
+window.openWishModal = function(id) {
+    clearInterval(bdayAutoInterval); // Correct way to stop auto-slide
+    let p = id === 'current' ? todayBirthdays[currentBdayIndex] : [...todayBirthdays, ...upcomingBirthdays].find(x => x.name === id);
+    if (p) {
+        document.getElementById("wishTargetName").innerText = p.name;
+        document.getElementById("wishMessage").value = `Happy Birthday ${p.name}! 🎂`;
+        window.currentTargetPhone = p.mobile; 
+        document.getElementById("wishModal").classList.add("active");
     }
+};
 
-    function stopAutoSlide() {
-        clearInterval(autoSlideInterval);
+window.openAllBirthdaysModal = function() {
+    clearInterval(bdayAutoInterval); // FIXED: Replaced stopAutoSlide() with this
+    const list = document.getElementById("bdayListContainer");
+    const all = [...todayBirthdays, ...upcomingBirthdays];
+    if (list) {
+        list.innerHTML = all.map(p => `
+            <div class="bday-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #eee;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    ${p.profile_pic ? `<img src="${API_BASE_URL}${p.profile_pic}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">` : `<div class="avatar-initials-gen" style="width:40px; height:40px; font-size:14px; margin:0; display:flex; align-items:center; justify-content:center; background:#ff5b1e; color:white; border-radius:50%;">${p.name[0]}</div>`}
+                    <div><h4 style="margin:0;">${p.name}</h4><span style="font-size:12px; color:#666;">${p.dob}</span></div>
+                </div>
+                <button class="btn-mini-wish" onclick="openWishModal('${p.name}')" style="background:#ff5b1e; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Wish</button>
+            </div>`).join("");
     }
+    document.getElementById("allBirthdaysModal").classList.add("active");
+};
 
-    if(bdayCard) {
-        bdayCard.addEventListener("mouseenter", stopAutoSlide);
-        bdayCard.addEventListener("mouseleave", startAutoSlide);
-    }
+window.closeWishModal = () => {
+    document.getElementById("wishModal").classList.remove("active");
+    startBdayRotation(); // Restart slide when closing
+};
+window.closeAllBirthdaysModal = () => {
+    document.getElementById("allBirthdaysModal").classList.remove("active");
+    startBdayRotation(); // Restart slide when closing
+};
+window.closeSuccessWishModal = () => document.getElementById("successWishModal").classList.remove("active");
 
-    const nextBtn = document.getElementById("nextBdayBtn");
-    const prevBtn = document.getElementById("prevBdayBtn");
-
-    if(nextBtn) nextBtn.addEventListener("click", () => {
-        currentIndex = (currentIndex + 1) % birthdays.length;
-        updateCarousel(currentIndex);
-        stopAutoSlide(); 
-        if(!bdayCard.matches(':hover')) startAutoSlide();
-    });
-
-    if(prevBtn) prevBtn.addEventListener("click", () => {
-        currentIndex = (currentIndex - 1 + birthdays.length) % birthdays.length;
-        updateCarousel(currentIndex);
-        stopAutoSlide();
-        if(!bdayCard.matches(':hover')) startAutoSlide();
-    });
-
-    // --- Modal Elements ---
-    const wishModal = document.getElementById("wishModal");
-    const wishTargetName = document.getElementById("wishTargetName");
-    const wishMessage = document.getElementById("wishMessage");
-    const successWishModal = document.getElementById("successWishModal"); 
-    const successName = document.getElementById("successName"); 
-
-    // --- Open Modal Logic ---
-    window.openWishModal = function(identifier) {
-        stopAutoSlide();
-        let person = null;
-
-        if (identifier === 'current') {
-            person = birthdays[currentIndex];
-        } else {
-            // Find person by name from the list view
-            person = birthdays.find(p => p.name === identifier);
-        }
-
-        if (person) {
-            if(wishTargetName) wishTargetName.innerText = person.name;
-            currentTargetPhone = person.phone; // Store the phone number
-            // Pre-fill a nice message
-            if(wishMessage) wishMessage.value = `Happy Birthday ${person.name}! Have a fantastic year ahead! 🎉`; 
-            if(wishModal) wishModal.classList.add("active");
-        }
-    };
-
-    window.closeWishModal = function() {
-        if(wishModal) wishModal.classList.remove("active");
-        if(bdayCard && !bdayCard.matches(':hover')) {
-            startAutoSlide();
-        }
-    };
 
     // --- Submit Logic (WhatsApp Redirect) ---
     window.submitWish = function() {
@@ -1058,11 +1069,11 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // Initial Load
-    if(birthdays.length > 0) {
-        updateCarousel(currentIndex);
-        startAutoSlide();
-    }
-});
+    // if(birthdays.length > 0) {
+    //     updateCarousel(currentIndex);
+    //     startAutoSlide();
+    // }
+
 
 
 //holidays section
