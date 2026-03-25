@@ -2955,3 +2955,130 @@ textarea#wishMessage:focus {
     font-size: 12px;
     color: #6b7280;
 }
+
+/* all media queries */
+/* --- COMPREHENSIVE RESPONSIVE UPDATES --- */
+
+/* Tablet & Large Mobile (Under 992px) */
+@media (max-width: 992px) {
+    /* Layout & Sidebar */
+    .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
+    }
+    .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .main-content, .main-content.expanded {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    /* Grid Adjustments */
+    .grid-3, .grid-attend, .grid-2, .grid-bottom, .bottom-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* Profile Card Fix */
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 15px;
+        gap: 20px;
+        width: 100%;
+    }
+    .profile-left {
+        padding-left: 0; /* Resetting the large desktop padding */
+    }
+    .profile-left img {
+        width: 150px;
+        height: 150px;
+    }
+    .header {
+        justify-content: center;
+        margin-left: 0;
+    }
+    .info-grid {
+        grid-template-columns: 1fr; /* Stack labels and values */
+        text-align: center;
+        justify-content: center;
+        margin-left: 0;
+    }
+    .value {
+        margin-bottom: 10px;
+    }
+    .social {
+        justify-content: center;
+    }
+}
+
+/* Small Mobile (Under 768px) */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .header-actions, .search-box-wrapper {
+        width: 100%;
+    }
+
+    /* Policy Cards (HR, IT, Leave, Holiday) */
+    /* If they are in a 2x2 grid, stack them */
+    .dashboard {
+        width: 100%;
+    }
+    
+    .small-stat-cards {
+        grid-template-columns: 1fr 1fr; /* 2 columns for stats */
+    }
+
+    /* Birthday Section */
+    .birthday-card {
+        padding: 20px;
+    }
+    .birthday-profile h3 {
+        font-size: 20px;
+    }
+    .birthday-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .wish-btn, .view-btn {
+        width: 100%;
+    }
+
+    /* Modal Adjustments */
+    .modal-card, .wish-card, .list-card, .lm-modal-box {
+        width: 95%;
+        padding: 20px;
+    }
+    
+    /* Break Management Grid */
+    .bm-grid-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Very Small Screen (Under 480px) */
+@media (max-width: 480px) {
+    .small-stat-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .lm-form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .bm-timer-circle {
+        width: 150px;
+        height: 150px;
+    }
+}

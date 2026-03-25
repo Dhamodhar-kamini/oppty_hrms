@@ -1263,3 +1263,127 @@ display:none;
     justify-content: space-between; /* Spread icons out */
   }
 }
+
+
+
+
+
+/* ==========================================================================
+   PERFECT ALIGNMENT & CENTERING RESPONSIVE ENGINE
+   ========================================================================== */
+
+/* --- Tablet & Mobile View (Max: 1024px) --- */
+@media (max-width: 1024px) {
+    /* Stack Toolbar elements and force them to fill card width */
+    .toolbar, .toolbar-header, .filter-bar, .toolbar-group {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 15px;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    /* Reset widths for inputs and buttons */
+    .search-wrapper, .search-input, .btn-primary, #calendarBtn, 
+    #approveAllBtn, .search-wrapper input {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+/* --- Mobile Transition Point (Max: 992px) --- */
+@media (max-width: 992px) {
+    /* SIDEBAR SLIDE-IN RESET */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%; 
+        height: 100vh;
+        z-index: 9999;
+        width: 280px; 
+        transition: left 0.4s ease;
+    }
+
+    .sidebar.mobile-active { left: 0; }
+
+    /* MAIN CONTENT CENTERING FIX */
+    .main-content {
+        margin-left: 0 !important; /* Critical: Remove desktop sidebar offset */
+        width: 100% !important;
+        padding: 15px !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centers children (cards) horizontally */
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+
+    /* CARD STYLING & CENTERING */
+    .card, .table-card, .table-responsive {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto 20px auto !important; /* Center card with auto margins */
+        overflow-x: auto !important; /* Enable internal scroll for tables */
+        display: block;
+        box-sizing: border-box;
+        border-radius: 12px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Ensure tables inside cards have a min-width for readability */
+    .leave-table, .asset-table {
+        min-width: 700px; 
+    }
+
+    .top-bar {
+        width: 100%;
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+        gap: 10px;
+    }
+}
+
+/* --- Mobile Specific (Max: 768px) --- */
+@media (max-width: 768px) {
+    .tabs-nav {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        display: flex;
+        justify-content: flex-start;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .tab-btn {
+        flex-shrink: 0;
+        padding: 10px 14px;
+    }
+
+    .page-title h1 {
+        font-size: 22px;
+        text-align: left;
+    }
+}
+
+/* --- Small Phones (Max: 500px) --- */
+@media (max-width: 500px) {
+    .sidebar { width: 85%; }
+
+    .header-icons {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .btn-modal, .btn-primary, .btn-primary-orange, .confirm-modal {
+        width: 95% !important;
+    }
+}
