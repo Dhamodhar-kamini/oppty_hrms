@@ -142,6 +142,7 @@ function loadDataFromAPI() {
             
             return {
                 id: emp.id || "N/A",
+                idd:emp.employee_id || "N/A",
                 name: emp.name || "N/A",
                 email: emp.email || "N/A",
                 dept: emp.department || "N/A",
@@ -202,7 +203,7 @@ function loadDataFromAPI() {
                         </div>
                     </div>
                 </td>
-                <td>EMP-${emp.id}</td>
+                <td>EMP-${emp.idd}</td>
                 <td>${emp.dept}</td>
                 <td>${emp.role}</td>
                 <td>${emp.type}</td>
