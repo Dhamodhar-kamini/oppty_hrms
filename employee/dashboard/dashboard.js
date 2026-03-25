@@ -701,3 +701,41 @@ function removeTypingIndicator() {
     const el = document.getElementById('typing-indicator');
     if (el) el.remove();
 }
+
+
+//hambargar section
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.querySelector('.sidebar');
+    
+    // 1. Create Overlay dynamically if it doesn't exist
+    let overlay = document.querySelector('.sidebar-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+    }
+
+    if (btn && sidebar) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevents click from bubbling
+            sidebar.classList.toggle('mobile-active');
+            overlay.classList.toggle('active');
+        });
+
+        // 2. Close when clicking the overlay
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('mobile-active');
+            overlay.classList.remove('active');
+        });
+
+        // 3. Optional: Close when clicking a menu link
+        const menuLinks = document.querySelectorAll('.sidebar a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.remove('mobile-active');
+                overlay.classList.remove('active');
+            });
+        });
+    }
+});

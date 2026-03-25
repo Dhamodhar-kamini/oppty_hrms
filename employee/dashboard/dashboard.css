@@ -1415,3 +1415,97 @@
     justify-content: center;
   }
 }
+
+
+/* hambargar section */
+/* --- Sidebar Overlay --- */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 9998; /* Just below sidebar */
+    display: none; /* Hidden by default */
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* --- Responsive Sidebar Logic --- */
+@media (max-width: 992px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px; /* Hide sidebar to the left */
+        width: 280px;
+        height: 100vh;
+        background: #ffffff;
+        z-index: 9999; /* Highest priority */
+        transition: left 0.3s ease-in-out;
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* THE CLASS TOGGLED BY JS */
+    .sidebar.mobile-active {
+        left: 0 !important;
+    }
+
+    /* Ensure main content doesn't shift awkwardly */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* Display the button on mobile */
+    .mobile-menu-btn {
+        display: block !important;
+        cursor: pointer;
+    }
+}
+
+/* Ensure the sidebar container has a solid background and high layer priority */
+.sidebar {
+    background-color: #ffffff !important;
+    display: flex !important; /* Ensure it's not set to display: none */
+    flex-direction: column;
+    z-index: 10000; /* Must be higher than the overlay */
+}
+
+/* Ensure the navigation links/items are visible */
+.sidebar .menu-link, 
+.sidebar .menu-item,
+.sidebar a {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #111827 !important; /* Force a dark color so they don't blend with white */
+    padding: 12px 20px;
+    text-decoration: none;
+}
+
+/* Fix for icons inside the nav */
+.sidebar i {
+    color: #6b7280 !important; /* Grey icons */
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Ensure the sidebar content isn't hidden */
+.sidebar-content, .sidebar-menu {
+    display: block !important;
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0 !important;
+        padding: 15px !important;
+        width: 100% !important;
+        transition: none; /* Prevent jumping when menu opens */
+    }
+}
