@@ -365,18 +365,34 @@
 
 /* Red Counter Badge */
 .db-notif-badge {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  background: #ff3b30;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 5px;
-  border-radius: 10px;
-  border: 2px solid white;
+    
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    width: 10px !important;  /* Ensure it has a size */
+    height: 10px !important; /* Ensure it has a size */
+    background-color: #ff3b30; 
+    border-radius: 50%;
+    border: 2px solid #fff;
+    z-index: 100; /* High z-index to stay on top */
+
+    display: none; 
 }
 
+.db-notif-badge.active-dot {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+.db-notif-symbol.db-symbol-alert {
+    background-color: #fff5f8 !important; /* Soft Red Bg */
+    color: #f1416c !important; /* Bright Red Icon */
+}
+
+/* Ensure unread items have a subtle highlight */
+.db-notif-item.unread {
+    background-color: #fff9f6; /* Very faint orange tint */
+}
 /* --- SHARED DROPDOWN STYLES --- */
 .db-dropdown-card {
   position: absolute;
@@ -1398,85 +1414,4 @@
     text-align: center;
     justify-content: center;
   }
-}
-
-
-
-/* hambargar section */
-/* ==========================================================================
-   SIDEBAR & HAMBURGER MENU LOGIC
-   ========================================================================== */
-
-/* 1. Mobile Menu Button (Hidden on Desktop) */
-.mobile-menu-btn {
-  display: none; /* Hidden by default */
-  position: fixed;
-  top: 15px;
-  right: 15px; /* Position top-right */
-  z-index: 1001; /* Above sidebar */
-  background-color: #ff6b00; /* Theme Orange */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transition: background 0.2s;
-}
-
-.mobile-menu-btn:hover {
-  background-color: #e65e00;
-}
-
-/* 2. Sidebar Overlay (Background Dimmer) */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999; /* Below sidebar, above content */
-  backdrop-filter: blur(2px);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-/* Class added by JS to show overlay */
-.sidebar-overlay.active {
-  display: block;
-  opacity: 1;
-}
-
-/* 3. RESPONSIVE MEDIA QUERY (Max Width: 992px - Tablets/Mobile) */
-@media (max-width: 992px) {
-  
-  /* Show Hamburger Button */
-  .mobile-menu-btn {
-    display: block;
-  }
-
-  /* Hide Sidebar Off-Screen */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: -280px; /* Width of sidebar (adjust if needed) */
-    height: 100vh;
-    z-index: 1000;
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 5px 0 15px rgba(0,0,0,0.1);
-  }
-
-  /* Class added by JS to Slide In Sidebar */
-  .sidebar.active {
-    left: 0;
-  }
-
-  /* Push Main Content (Optional: usually just overlay is enough) */
-  /* .main-content {
-     margin-left: 0; 
-     width: 100%;
-  } */
 }
