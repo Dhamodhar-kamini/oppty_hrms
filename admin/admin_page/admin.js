@@ -881,7 +881,18 @@ let todayBirthdays = [];
 let upcomingBirthdays = []; 
 let currentBdayIndex = 0;
 let bdayAutoInterval; // This is the variable used to stop/start auto-slide
+document.getElementById("nextBdayBtn")?.addEventListener("click", () => {
+    // Stop auto-slide when user clicks manually
+    clearInterval(bdayAutoInterval); 
+    currentBdayIndex = (currentBdayIndex + 1) % todayBirthdays.length;
+    updateBdayCarousel(currentBdayIndex);
+});
 
+document.getElementById("prevBdayBtn")?.addEventListener("click", () => {
+    clearInterval(bdayAutoInterval);
+    currentBdayIndex = (currentBdayIndex - 1 + todayBirthdays.length) % todayBirthdays.length;
+    updateBdayCarousel(currentBdayIndex);
+});
 async function loadBirthdayData() {
     try {
         const res = await fetch(`${API_BASE_URL}/api/birthdays/`);
@@ -906,33 +917,39 @@ function updateBdayCarousel(index) {
     const container = document.getElementById("bdayProfileContainer");
     if (!container || todayBirthdays.length === 0) return;
 
+    // Reset Animation
     container.classList.remove("fade-in");
     void container.offsetWidth; 
 
     const person = todayBirthdays[index];
     const imgEl = document.getElementById("bdayImg");
     const nameEl = document.getElementById("bdayName");
-    const roleEl = document.getElementById("bdayRole");
-    const dateEl = document.getElementById("bdayDate");
 
-    const existingInitials = container.querySelector(".avatar-initials-gen");
-    if (existingInitials) existingInitials.remove();
+    // FIX: Clear any old initials circles before adding a new one
+    const oldInit = container.querySelector(".avatar-initials-gen");
+    if (oldInit) oldInit.remove();
 
     if (person.profile_pic) {
         imgEl.src = API_BASE_URL + person.profile_pic;
         imgEl.style.display = "block";
     } else {
         imgEl.style.display = "none";
-        const initials = person.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
+        
+        // Generate Initials (e.g., "VC")
+        const nameParts = person.name.trim().split(" ");
+        const initials = (nameParts[0].charAt(0) + (nameParts.length > 1 ? nameParts[nameParts.length - 1].charAt(0) : "")).toUpperCase();
+        
         const initialsDiv = document.createElement("div");
         initialsDiv.className = "avatar-initials-gen";
         initialsDiv.innerText = initials;
-        container.insertBefore(initialsDiv, nameEl);
+        
+        // FIX: Prepend ensures it stays ABOVE the name text
+        container.prepend(initialsDiv);
     }
 
     if (nameEl) nameEl.innerText = person.name;
-    if (roleEl) roleEl.innerText = person.role || "Team Member";
-    if (dateEl) dateEl.innerText = `Today, ${person.dob}`;
+    document.getElementById("bdayRole").innerText = person.role || "Associate Software Engineering";
+    document.getElementById("bdayDate").innerText = `Today, ${person.dob}`;
 
     container.classList.add("fade-in");
 }
@@ -959,19 +976,52 @@ window.openWishModal = function(id) {
 };
 
 window.openAllBirthdaysModal = function() {
-    clearInterval(bdayAutoInterval); // FIXED: Replaced stopAutoSlide() with this
-    const list = document.getElementById("bdayListContainer");
-    const all = [...todayBirthdays, ...upcomingBirthdays];
-    if (list) {
-        list.innerHTML = all.map(p => `
-            <div class="bday-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #eee;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    ${p.profile_pic ? `<img src="${API_BASE_URL}${p.profile_pic}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">` : `<div class="avatar-initials-gen" style="width:40px; height:40px; font-size:14px; margin:0; display:flex; align-items:center; justify-content:center; background:#ff5b1e; color:white; border-radius:50%;">${p.name[0]}</div>`}
-                    <div><h4 style="margin:0;">${p.name}</h4><span style="font-size:12px; color:#666;">${p.dob}</span></div>
-                </div>
-                <button class="btn-mini-wish" onclick="openWishModal('${p.name}')" style="background:#ff5b1e; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Wish</button>
-            </div>`).join("");
+    clearInterval(bdayAutoInterval); 
+
+    const listContainer = document.getElementById("bdayListContainer");
+    const today = new Date();
+    
+    // Set 'tomorrow' as the starting point
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    
+    // Set the limit to 10 days from today
+    const tenDaysLater = new Date();
+    tenDaysLater.setDate(today.getDate() + 10);
+
+    // Filter upcomingBirthdays to only include those within the next 10 days
+    const next10DaysList = upcomingBirthdays.filter(p => {
+        // Construct a date for this year based on the p.dob (e.g. "28 May")
+        const bdayThisYear = new Date(`${p.dob} ${today.getFullYear()}`);
+        
+        // Return true if the bday is between tomorrow and the 10-day limit
+        return bdayThisYear >= tomorrow && bdayThisYear <= tenDaysLater;
+    });
+
+    if (listContainer) {
+        if (next10DaysList.length === 0) {
+            listContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#666;">No birthdays in the next 10 days.</div>`;
+        } else {
+            listContainer.innerHTML = next10DaysList.map(p => {
+                let avatarHtml = p.profile_pic 
+                    ? `<img src="${API_BASE_URL}${p.profile_pic}" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">`
+                    : `<div class="avatar-initials-gen" style="width:45px; height:45px; font-size:16px; margin:0; display:flex; align-items:center; justify-content:center; background:#ff5b1e; color:white; border-radius:50%;">${p.name ? p.name.charAt(0).toUpperCase() : "?"}</div>`;
+
+                return `
+                    <div class="bday-item" style="display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid #f0f0f0;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            ${avatarHtml}
+                            <div>
+                                <h4 style="margin:0; font-size:14px; color:#333;">${p.name}</h4>
+                                <span style="font-size:12px; color:#888;">${p.dob}</span>
+                            </div>
+                        </div>
+                        <button class="btn-mini-wish" onclick="openWishModal('${p.name}')" style="background:#ff5b1e; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600;">Wish</button>
+                    </div>`;
+            }).join("");
+        }
     }
+    
     document.getElementById("allBirthdaysModal").classList.add("active");
 };
 
@@ -1029,30 +1079,55 @@ window.closeSuccessWishModal = () => document.getElementById("successWishModal")
     const allBdayModal = document.getElementById("allBirthdaysModal");
     const listContainer = document.getElementById("bdayListContainer");
 
-    window.openAllBirthdaysModal = function() {
-        stopAutoSlide();
-        if(listContainer) {
-            listContainer.innerHTML = "";
-            birthdays.forEach(person => {
-                const item = document.createElement("div");
-                item.className = "bday-item";
-                item.innerHTML = `
-                    <div class="bday-left">
-                        <img src="${person.img}" alt="${person.name}">
-                        <div class="bday-info">
-                            <h4>${person.name}</h4>
-                            <span>${person.date} - ${person.role}</span>
+   window.openAllBirthdaysModal = function() {
+    clearInterval(bdayAutoInterval); 
+
+    const listContainer = document.getElementById("bdayListContainer");
+    const today = new Date();
+    
+    // Set 'tomorrow' as the starting point
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    
+    // Set the limit to 10 days from today
+    const tenDaysLater = new Date();
+    tenDaysLater.setDate(today.getDate() + 10);
+
+    // Filter upcomingBirthdays to only include those within the next 10 days
+    const next10DaysList = upcomingBirthdays.filter(p => {
+        // Construct a date for this year based on the p.dob (e.g. "28 May")
+        const bdayThisYear = new Date(`${p.dob} ${today.getFullYear()}`);
+        
+        // Return true if the bday is between tomorrow and the 10-day limit
+        return bdayThisYear >= tomorrow && bdayThisYear <= tenDaysLater;
+    });
+
+    if (listContainer) {
+        if (next10DaysList.length === 0) {
+            listContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#666;">No birthdays in the next 10 days.</div>`;
+        } else {
+            listContainer.innerHTML = next10DaysList.map(p => {
+                let avatarHtml = p.profile_pic 
+                    ? `<img src="${API_BASE_URL}${p.profile_pic}" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">`
+                    : `<div class="avatar-initials-gen" style="width:45px; height:45px; font-size:16px; margin:0; display:flex; align-items:center; justify-content:center; background:#ff5b1e; color:white; border-radius:50%;">${p.name ? p.name.charAt(0).toUpperCase() : "?"}</div>`;
+
+                return `
+                    <div class="bday-item" style="display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid #f0f0f0;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            ${avatarHtml}
+                            <div>
+                                <h4 style="margin:0; font-size:14px; color:#333;">${p.name}</h4>
+                                <span style="font-size:12px; color:#888;">${p.dob}</span>
+                            </div>
                         </div>
-                    </div>
-                    <button class="btn-mini-wish" onclick="openWishModal('${person.name}')">
-                        Wish
-                    </button>
-                `;
-                listContainer.appendChild(item);
-            });
+                        <button class="btn-mini-wish" onclick="openWishModal('${p.name}')" style="background:#ff5b1e; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600;">Wish</button>
+                    </div>`;
+            }).join("");
         }
-        if(allBdayModal) allBdayModal.classList.add("active");
-    };
+    }
+    
+    document.getElementById("allBirthdaysModal").classList.add("active");
+};
 
     window.closeAllBirthdaysModal = function() {
         if(allBdayModal) allBdayModal.classList.remove("active");

@@ -745,66 +745,121 @@
 
           <!-- 1. MAIN BIRTHDAY CARD (CAROUSEL) -->
           <div class="birthday-card">
-  <h2>Team Birthday</h2>
+            <div class="bday-header">
+              <h2>Team Birthday</h2>
+              <div class="bday-controls">
+                <button id="prevBdayBtn" class="nav-arrow">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="nextBdayBtn" class="nav-arrow">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
 
-  <!-- Swiper Container -->
-  <div class="swiper birthdaySwiper">
-    <div class="swiper-wrapper" id="birthdayWrapper">
-      <!-- Slide injected by JS -->
-    </div>
-    <div class="swiper-pagination"></div>
-  </div>
+            <!-- Dynamic Content Area -->
+            <div class="birthday-carousel">
+              <div class="birthday-profile fade-in" id="bdayProfileContainer">
+                <img
+                  id="bdayImg"
+                  src=""
+                  alt="Profile"
+                  style="display: none;"
+                />
+                <h3 id="bdayName">Loading..</h3>
+                <p id="bdayRole"></p>
+                <span id="bdayDate" class="bday-date-badge"></span>
+              </div>
+            </div>
 
-  <div class="birthday-actions">
-    <button class="wish-btn" id="sendWishBtn">Send Wishes</button>
-    <button class="view-btn" onclick="openAllBirthdaysModal()">View All Birthdays</button>
-  </div>
-</div>
+            <div class="birthday-actions">
+              <!-- Passes 'current' to JS to know who is visible -->
+              <button class="wish-btn" onclick="openWishModal('current')">
+                Send Wishes
+              </button>
+              <button class="view-btn" onclick="openAllBirthdaysModal()">
+                View All
+              </button>
+            </div>
+          </div>
 
-<!-- 1. WISH MODAL (Input Message) -->
-<div id="wishModal" class="modal-overlay">
-  <div class="modal-card wish-card">
-    <span class="close-modal" onclick="closeWishModal()">&times;</span>
-    <div class="wish-header-icon">
-      <i class="fa-solid fa-cake-candles"></i>
-    </div>
-    <h3>Happy Birthday!</h3>
-    <p>Send your best wishes to <span id="wishTargetName" class="highlight-name">Employee</span></p>
-    
-    <textarea id="wishMessage" placeholder="Write a warm message..."></textarea>
+          <!-- ========================================= -->
+          <!-- 2. POPUP: SEND WISHES (Celebration Theme) -->
+          <!-- ========================================= -->
+          <div id="wishModal" class="modal-overlay">
+            <div class="modal-card wish-card">
+              <span class="close-modal" onclick="closeWishModal()"
+                >&times;</span
+              >
 
-    <button class="btn-send-wish" onclick="submitWish()">
-      <i class="fa-regular fa-paper-plane"></i> Send Wish
-    </button>
-  </div>
-</div>
+              <div class="wish-header-icon">
+                <i class="fa-solid fa-cake-candles"></i>
+              </div>
 
-<!-- 2. SUCCESS MODAL -->
-<div id="successWishModal" class="modal-overlay">
-  <div class="modal-card success-card">
-    <div class="success-icon-container">
-      <i class="fa-solid fa-check"></i>
-      <div class="confetti-piece"></div>
-      <div class="confetti-piece"></div>
-    </div>
-    <h3>Wishes Sent Successfully!</h3>
-    <p>Your warm wishes have been delivered to <br><span id="successName" class="highlight-name">Employee</span>.</p>
-    <button class="btn-success-close" onclick="closeSuccessWishModal()">Awesome!</button>
-  </div>
-</div>
+              <h3>Happy Birthday!</h3>
+              <p>
+                Send your best wishes to
+                <span id="wishTargetName" class="highlight-name">DD</span>
+              </p>
 
-<!-- 3. VIEW ALL MODAL -->
-<div id="allBirthdaysModal" class="modal-overlay">
-  <div class="modal-card list-card">
-    <div class="modal-header">
-      <h2>Upcoming Birthdays</h2>
-      <span class="close-modal" onclick="closeAllBirthdaysModal()">&times;</span>
-    </div>
-    <div class="bday-list-container" id="bdayListContainer">
-      <!-- List items injected by JS -->
-    </div>
-  </div>
-</div>
+              <textarea
+                id="wishMessage"
+                placeholder="Write a warm message... (e.g. Have a fantastic year ahead!)"
+              ></textarea>
+
+              <button class="btn-send-wish" onclick="submitWish()">
+                <i class="fa-regular fa-paper-plane"></i> Send Wish
+              </button>
+            </div>
+          </div>
+
+          <!-- ========================================= -->
+          <!-- 3. POPUP: VIEW ALL BIRTHDAYS (List View)  -->
+          <!-- ========================================= -->
+          <div id="allBirthdaysModal" class="modal-overlay">
+            <div class="modal-card list-card">
+              <div class="modal-header">
+                <h2>Upcoming Birthdays</h2>
+                <span class="close-modal" onclick="closeAllBirthdaysModal()"
+                  >&times;</span
+                >
+              </div>
+
+              <div class="bday-list-container" id="bdayListContainer">
+                <!-- List items will be injected by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. POPUP: WISHES SENT SUCCESS (New)       -->
+          <!-- ========================================= -->
+          <div id="successWishModal" class="modal-overlay">
+            <div class="modal-card success-card">
+              <!-- Animated Icon Circle -->
+              <div class="success-icon-container">
+                <i class="fa-solid fa-check"></i>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+              </div>
+
+              <h3>Wishes Sent Successfully!</h3>
+              <p>
+                Your warm wishes have been delivered to <br /><span
+                  id="successName"
+                  class="highlight-name"
+                  >DD</span
+                >.
+              </p>
+
+              <button
+                class="btn-success-close"
+                onclick="closeSuccessWishModal()"
+              >
+                Awesome!
+              </button>
+            </div>
+          </div>
 
           <!-- LEAVE POLICY -->
           <div style="display: flex; gap: 40px; justify-content: center">

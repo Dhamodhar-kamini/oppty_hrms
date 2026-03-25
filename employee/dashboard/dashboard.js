@@ -19,54 +19,6 @@ window.addEventListener("load", function () {
 
 
 
-//hambargar section
- document.addEventListener('DOMContentLoaded', function() {
-        const mobileBtn = document.getElementById('mobileMenuBtn');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-        const icon = mobileBtn.querySelector('i');
-
-        // Function to toggle sidebar
-        function toggleSidebar() {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-            
-            // Toggle Icon between Bars and Times (X)
-            if (sidebar.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times'); // Changes to X
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars'); // Changes back to Hamburger
-            }
-        }
-
-        // Event Listener for Button Click
-        if(mobileBtn) {
-            mobileBtn.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent immediate closing
-                toggleSidebar();
-            });
-        }
-
-        // Event Listener for Overlay Click (Close menu when clicking outside)
-        if(overlay) {
-            overlay.addEventListener('click', toggleSidebar);
-        }
-
-        // Close sidebar when a menu link is clicked (Optional UX improvement)
-        const menuLinks = document.querySelectorAll('.sidebar-menu .menu-link');
-        menuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if(window.innerWidth <= 992) { // Only on mobile
-                    toggleSidebar();
-                }
-            });
-        });
-    });
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
     const emp_id = localStorage.getItem('employee_id');
 
@@ -222,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(res => res.json())
                 .then(data => {
                     if (data.message || data.profile) {
-                        // alert("Profile updated successfully!");
+                        alert("Profile updated successfully!");
                         closeProfileModalFunc();
                         showToast();
                         window.location.reload();
@@ -287,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
                 .then(res => res.json())
                 .then(data => {
-                    // alert("Other Information updated successfully!");
+                    alert("Other Information updated successfully!");
                     closeOtherModalFunc();
                     showToast();
                     window.location.reload();
@@ -425,7 +377,7 @@ function updateAvatar(containerId, imgId, user) {
 // --- NOTIFICATION FETCH LOGIC ---
 // --- NOTIFICATION FETCH LOGIC ---
 // --- NOTIFICATION FETCH LOGIC ---
-async function fetchNotifications(markAsRead = false) {
+ async function fetchNotifications(markAsRead = false) {
     const emp_id = localStorage.getItem('employee_id');
     const notifList = document.getElementById("db-notif-list"); 
     const badge = document.querySelector(".db-notif-badge");
@@ -433,30 +385,35 @@ async function fetchNotifications(markAsRead = false) {
     if (!emp_id || !notifList) return;
 
     try {
-        // FIX: Start with the URL as a STRING
         let apiUrl = `https://api.theoppty.com/api/notofications/${emp_id}/`;
-        
-        // Append the query parameter to the STRING
-        if (markAsRead) {
-            apiUrl += '?mark_read=true';
-        }
+        if (markAsRead) apiUrl += '?mark_read=true';
 
-        // Now pass the string to fetch
         const res = await fetch(apiUrl);
         const data = await res.json();
 
-        if (badge) {
-            if (markAsRead) {
-                // If we just marked them read, hide badge immediately
-                badge.style.display = "none";
-                badge.innerText = "0";
-            } else {
-                // Background update logic
-                const unreadCount = data.filter(n => !n.is_read).length;
-                badge.innerText = unreadCount;
-                badge.style.display = unreadCount > 0 ? "flex" : "none";
-            }
+        // --- RED DOT LOGIC ---
+     if (badge) {
+    if (markAsRead) {
+        // If user just opened the menu, hide the dot
+        badge.classList.remove("active-dot");
+        badge.style.display = "none";
+    } else {
+        // Check if ANY notification in the list has is_read === false
+        // We check for both Boolean and String "false" to be safe
+        const hasUnread = data.some(n => n.is_read === false || String(n.is_read).toLowerCase() === "false");
+        
+        console.log("Badge Status -> Unread items found:", hasUnread);
+
+        if (hasUnread) {
+            badge.classList.add("active-dot");
+            // Manually forcing display in case CSS class is being overridden
+            badge.style.setProperty('display', 'block', 'important');
+        } else {
+            badge.classList.remove("active-dot");
+            badge.style.display = "none";
         }
+    }
+}
 
         // Render List
         notifList.innerHTML = "";
@@ -467,14 +424,21 @@ async function fetchNotifications(markAsRead = false) {
 
         data.forEach(n => {
             const timeStr = new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            // Visually treat as read if we just sent the markAsRead signal
+            
+            // --- DYNAMIC COLOR LOGIC ---
+            // If the message contains "rejected", use the alert symbol class (Red)
+            const isRejected = n.message.toLowerCase().includes("rejected");
+            const symbolClass = isRejected ? 'db-symbol-alert' : ''; // db-symbol-alert is red in your CSS
+            
             const itemClass = (n.is_read || markAsRead) ? '' : 'unread';
             
             const item = `
                 <div class="db-notif-item ${itemClass}">
-                    <div class="db-notif-symbol"><i class="fa-solid fa-bell"></i></div>
+                    <div class="db-notif-symbol ${symbolClass}">
+                        <i class="fa-solid ${isRejected ? 'fa-circle-xmark' : 'fa-bell'}"></i>
+                    </div>
                     <div class="db-notif-text">
-                        <h4>Update</h4>
+                        <h4>${isRejected ? 'Leave Rejected' : 'Update'}</h4>
                         <p>${n.message}</p>
                         <span class="db-time-ago">${timeStr}</span>
                     </div>
@@ -485,7 +449,6 @@ async function fetchNotifications(markAsRead = false) {
         console.error("Error fetching notifications:", err);
     }
 }
-
 function db_toggleNotifications() {
     const notifDropdown = document.getElementById('db-notification-menu');
     const notifBtn = document.querySelector('.db-notif-trigger-btn');
@@ -500,7 +463,7 @@ function db_toggleNotifications() {
         // This now correctly triggers the 'mark_read=true' path in your Django view
         fetchNotifications(true); 
         
-        if (badge) badge.style.display = "none";
+        if (badge) badge.classList.remove("has-unread");
     }
 
     notifDropdown.classList.toggle('db-show-menu');

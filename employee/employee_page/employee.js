@@ -193,24 +193,41 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // --- UPDATED: ONLY SHOW UPCOMING (NEXT 10) ---
+    // --- UPDATED: FILTER BY NEXT 10 DAYS ONLY ---
     window.openAllBirthdaysModal = function () {
         const listContainer = document.getElementById("bdayListContainer");
+        const today = new Date();
         
-        // Filter: Only Upcoming, Limit to 10
-        const displayList = upcomingBirthdays.slice(0, 10);
-        
+        // Define the time window: Tomorrow to 10 days from now
+        const tomorrow = new Date();
+        tomorrow.setDate(today.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+
+        const tenDaysLater = new Date();
+        tenDaysLater.setDate(today.getDate() + 11); // +11 to include the full 10th day
+        tenDaysLater.setHours(23, 59, 59, 999);
+
+        // Filter the upcomingBirthdays array
+        const next10DaysList = upcomingBirthdays.filter(p => {
+            // Convert string "28 May" to a real Date object for this year
+            const bdayThisYear = new Date(`${p.dob} ${today.getFullYear()}`);
+            
+            // Check if it falls within our 10-day window
+            return bdayThisYear >= tomorrow && bdayThisYear <= tenDaysLater;
+        });
+
         if (listContainer) {
-            if(displayList.length === 0) {
-                listContainer.innerHTML = `<p style="text-align:center; padding:20px; color:#888;">No upcoming birthdays soon.</p>`;
+            if(next10DaysList.length === 0) {
+                listContainer.innerHTML = `<p style="text-align:center; padding:20px; color:#888;">No birthdays in the next 10 days.</p>`;
             } else {
-                listContainer.innerHTML = displayList.map(p => {
+                listContainer.innerHTML = next10DaysList.map(p => {
                     let miniAvatar = "";
                     if (p.profile_pic) {
                         miniAvatar = `<img src="${API_BASE}${p.profile_pic}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">`;
                     } else {
                         const parts = p.name.split(" ");
                         const initials = (parts[0].charAt(0) + (parts[1] ? parts[1].charAt(0) : "")).toUpperCase();
-                        miniAvatar = `<div class="avatar-initials-gen" style="width:40px; height:40px; font-size:14px;">${initials}</div>`;
+                        miniAvatar = `<div class="avatar-initials-gen" style="width:40px; height:40px; font-size:14px; margin:0; display:flex; align-items:center; justify-content:center; background:#ff5b1e; color:white; border-radius:50%;">${initials}</div>`;
                     }
 
                     return `
