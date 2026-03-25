@@ -234,84 +234,105 @@ document.addEventListener("DOMContentLoaded", function () {
     // --- 3. PROFILE & IMAGE UPLOAD ---
     // ==========================================
     const uploadInput = document.getElementById("imageUpload");
-    const profileImage = document.getElementById("profileImage");
+const profileImage = document.getElementById("profileImage");
+const profileContainer = document.querySelector(".profile-left");
 
-    window.openImageUpload = function () {
-        if (uploadInput) uploadInput.click();
-    };
+// --- Helper: Show Success Toast ---
+function showSuccessToast() {
+    const toast = document.getElementById("successToast");
+    toast.classList.add("show");
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
+}
 
-    fetch(`${API_BASE}/api/employee/dashboard/${emp_id}/`)
+window.openImageUpload = function () {
+    if (uploadInput) uploadInput.click();
+};
+
+// 1. FETCH INITIAL DATA
+fetch(`${API_BASE}/api/employee/dashboard/${emp_id}/`)
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("name").innerText = data.name;
+        document.getElementById("role").innerText = data.role;
+        document.getElementById("p_name").innerText = data.name;
+        document.getElementById("p_role").innerText = data.role;
+        document.getElementById("email").innerText = data.email;
+        if (data.other_details && data.other_details.length > 0) {
+            document.getElementById("mobile").innerText = data.other_details[0].mobile;
+        }
+
+        if (data.profile_pic) {
+            profileImage.src = `${API_BASE}${data.profile_pic}`;
+            profileImage.style.display = "block";
+            // Remove initials if they exist
+            const oldInit = profileContainer.querySelector(".avatar-initials-gen");
+            if (oldInit) oldInit.remove();
+        } else {
+            // Hide image, show initials
+            profileImage.style.display = "none";
+            const parts = data.name.split(" ");
+            const initials = (parts[0].charAt(0) + (parts[1] ? parts[1].charAt(0) : "")).toUpperCase();
+
+            if (!profileContainer.querySelector(".avatar-initials-gen")) {
+                const initialsDiv = document.createElement("div");
+                initialsDiv.className = "avatar-initials-gen main-profile-avatar";
+                initialsDiv.innerText = initials;
+                profileContainer.prepend(initialsDiv);
+            }
+        }
+    });
+
+// 2. HANDLE UPLOAD
+if (uploadInput && profileImage) {
+    uploadInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("profile_pic", file);
+
+        fetch(`${API_BASE}/api/upload-profile-pic/${emp_id}/`, {
+            method: "PATCH",
+            body: formData
+        })
         .then(res => res.json())
         .then(data => {
-            document.getElementById("name").innerText = data.name;
-            document.getElementById("role").innerText = data.role;
-            document.getElementById("p_name").innerText = data.name;
-            document.getElementById("p_role").innerText = data.role;
-            document.getElementById("email").innerText = data.email;
-            if (data.other_details && data.other_details.length > 0) {
-                document.getElementById("mobile").innerText = data.other_details[0].mobile;
-            }
+            if (data.profile_pic_url) {
+                const fullUrl = `${API_BASE}${data.profile_pic_url}`;
+                
+                // Update Image Immediately
+                profileImage.src = fullUrl;
+                profileImage.style.display = "block";
 
-            const profileContainer = document.querySelector(".profile-left");
-            const imgEl = document.getElementById("profileImage");
+                // Remove Initials div if present
+                const initialsDiv = profileContainer.querySelector(".avatar-initials-gen");
+                if (initialsDiv) {
+                    initialsDiv.remove();
+                }
 
-            if (data.profile_pic) {
-                imgEl.src = `${API_BASE}${data.profile_pic}`;
-                imgEl.style.display = "block";
-                // Remove any existing initials div
-                const oldInit = profileContainer.querySelector(".avatar-initials-gen");
-                if (oldInit) oldInit.remove();
-            } else {
-                // Hide the image element
-                imgEl.style.display = "none";
+                // Call Notification Function
+                showSuccessToast();
 
-                // Generate initials
-                const parts = data.name.split(" ");
-                const initials = (parts[0].charAt(0) + (parts[1] ? parts[1].charAt(0) : "")).toUpperCase();
-
-                // Create initials div if it doesn't exist
-                if (!profileContainer.querySelector(".avatar-initials-gen")) {
-                    const initialsDiv = document.createElement("div");
-                    initialsDiv.className = "avatar-initials-gen main-profile-avatar";
-                    initialsDiv.innerText = initials;
-                    profileContainer.prepend(initialsDiv); // Add to the left side
+                // Optional: Update header logic if exists
+                if (typeof loadUserProfile === "function") {
+                    const currentName = document.getElementById("p_name").innerText;
+                    const parts = currentName.split(" ");
+                    loadUserProfile({
+                        firstName: parts[0],
+                        lastName: parts.length > 1 ? parts.slice(1).join(" ") : "",
+                        empId: emp_id,
+                        profilePic: fullUrl
+                    });
                 }
             }
-        });
-
-    if (uploadInput && profileImage) {
-        uploadInput.addEventListener("change", function () {
-            const file = this.files[0];
-            if (!file) return;
-
-            const formData = new FormData();
-            formData.append("profile_pic", file);
-
-            fetch(`${API_BASE}/api/upload-profile-pic/${emp_id}/`, {
-                method: "PATCH",
-                body: formData
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.profile_pic_url) {
-                        const fullUrl = `${API_BASE}${data.profile_pic_url}`;
-                        profileImage.src = fullUrl;
-                        if (typeof loadUserProfile === "function") {
-                            const currentName = document.getElementById("p_name").innerText;
-                            const parts = currentName.split(" ");
-                            loadUserProfile({
-                                firstName: parts[0],
-                                lastName: parts.length > 1 ? parts.slice(1).join(" ") : "",
-                                empId: emp_id,
-                                profilePic: fullUrl
-                            });
-                        }
-                        alert("Profile picture saved to server!");
-                    }
-                })
-                .catch(err => console.error("Server upload failed:", err));
-        });
-    }
+        })
+        .catch(err => console.error("Server upload failed:", err));
+    });
+}
 
     // ==========================================
     // --- 4. SIDEBAR & GLOBAL CLICKS ---
