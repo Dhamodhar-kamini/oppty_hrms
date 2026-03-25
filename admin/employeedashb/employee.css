@@ -1226,3 +1226,155 @@
     justify-content: space-between; /* Spread icons out */
   }
 }
+
+
+/* all media queries */
+/* ==========================================================================
+   ENHANCED RESPONSIVE ENGINE
+   ========================================================================== */
+
+/* --- Large Tablets & Small Laptops (Max: 1200px) --- */
+@media (max-width: 1200px) {
+    .emp-stats-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for stats */
+    }
+}
+
+/* --- Tablets & Mobile View (Max: 992px) --- */
+@media (max-width: 992px) {
+
+    /* --- SIDEBAR TRANSFORMATION --- */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%; 
+        height: 100vh;
+        z-index: 9999;
+        width: 280px; 
+        transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+    }
+
+    .sidebar.mobile-active {
+        left: 0;
+    }
+
+    /* Show Mobile Controls */
+    .hamburger-menu-icon, .sidebar-close-btn, .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* --- LAYOUT & HEADER --- */
+    .main-content {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .top-bar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 10px 15px;
+    }
+
+    .search-box {
+        width: 100%;
+        order: 2;
+        margin-top: 10px;
+    }
+
+    .header-icons {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 15px;
+        order: 1;
+    }
+
+    /* --- GRID & TABLE CONTROLS --- */
+    .emp-stats-grid {
+        grid-template-columns: 1fr; /* Single column stats */
+    }
+
+    .table-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box {
+        width: 100% !important;
+    }
+
+    .filter-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* --- MODAL BOXES --- */
+    .emp-modal-box, .modal-card {
+        width: 95%;
+        margin: 10px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr; /* Stack form inputs */
+    }
+}
+
+/* --- Standard Mobile (Max: 768px) --- */
+@media (max-width: 768px) {
+    /* Handle Table Overflow */
+    .table-responsive {
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+    }
+
+    .emp-table {
+        min-width: 700px; /* Allow horizontal scroll for readability */
+    }
+
+    /* Hide less critical info on smaller screens to save space */
+    .user-email, .showing-text {
+        display: none;
+    }
+}
+
+/* --- Extra Small Phones (Max: 500px) --- */
+@media (max-width: 500px) {
+    .sidebar {
+        width: 85%;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    /* Mobile Pagination */
+    .table-footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .hdr-modal-content, .delete-card {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .modal-actions button {
+        width: 100%;
+    }
+}

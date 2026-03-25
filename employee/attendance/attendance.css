@@ -1305,3 +1305,125 @@
   border-bottom: 1px dashed var(--border);
   color: var(--text-primary);
 }
+
+/* all media queries */
+/* ==========================================================================
+   OPTIMIZED RESPONSIVE FIXES
+   ========================================================================== */
+
+/* --- 1. Fix for Desktop & Large Tablets (Ensure things don't break early) --- */
+@media (max-width: 1200px) {
+  .grid-attend {
+    gap: 15px;
+  }
+  .attendance-card {
+    flex: 0 0 300px; /* Slightly narrower sidebar on medium screens */
+  }
+}
+
+/* --- 2. Tablet & Medium Screens (Stacking Point) --- */
+@media (max-width: 992px) {
+  .grid-attend {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Force cards to take full available width without exceeding it */
+  .attendance-card, 
+  .calendar-card, 
+  .timeline-panel, 
+  .log-panel, 
+  .metrics-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 per row */
+  }
+}
+
+/* --- 3. Mobile Landscape & Portrait --- */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  /* Modal Specific Fixes */
+  .att-modal-box {
+    width: 98%;
+    margin: 10px;
+    max-height: 95vh;
+  }
+
+  /* Ensure the table doesn't force the modal to expand */
+  .att-table-wrapper {
+    overflow-x: auto;
+    display: block;
+    width: 100%;
+  }
+
+  .att-table {
+    min-width: 550px; /* Minimum width to keep columns readable while scrolling */
+  }
+
+  /* Center the timer visually on mobile */
+  .bm-timer-circle-wrap {
+    padding: 10px 0;
+  }
+}
+
+/* --- 4. Small Mobile Portrait (Max: 480px) --- */
+@media (max-width: 480px) {
+  /* Metrics into 1 column */
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Calendar Adjustments */
+  .calendar-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .custom-cal-nav {
+    width: 100%;
+    justify-content: space-between;
+    padding: 5px;
+  }
+
+  .day-cell {
+    height: 32px;
+    font-size: 11px;
+  }
+
+  /* Activity Timeline Labels Fix */
+  .time-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+  }
+  .time-axis span {
+    position: static !important; /* Remove the absolute positioning math for small screens */
+    transform: none !important;
+  }
+
+  /* Adjust Logo/Header padding */
+  .att-modal-header {
+    padding: 12px;
+  }
+  
+  .att-modal-header h3 {
+    font-size: 16px;
+  }
+
+  /* Fix the Log Table font size */
+  .log-table {
+    font-size: 11px;
+  }
+  
+  .log-table td, .log-table th {
+    padding: 8px 4px;
+  }
+}

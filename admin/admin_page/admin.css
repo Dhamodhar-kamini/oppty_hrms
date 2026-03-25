@@ -3871,3 +3871,132 @@ textarea#wishMessage:focus {
     justify-content: space-between; /* Spread icons out */
   }
 }
+
+
+
+
+
+/* ==========================================================================
+   ENHANCED RESPONSIVE ENGINE - PERFECT ALIGNMENT
+   ========================================================================== */
+
+/* --- Desktop & Large Tablets (Max: 1200px) --- */
+@media (max-width: 1200px) {
+    .grid-row-2-3, 
+    .grid-row-4, 
+    .grid-row-5,
+    .main-grid-row {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    /* Reset all dashboard spans */
+    #employees-dept, #attendance-overview, #clock-inout, 
+    #sales-overview, #employee-status, .quarter-card, .invoices-card {
+        grid-column: span 1 !important;
+    }
+
+    /* Bottom Policy Section: Maintain side-by-side but with better scaling */
+    .bottom-policy-container { 
+        display: flex;
+        gap: 20px;
+    }
+    
+    .leave-card, .holiday-card, .hra-holiday-card {
+        flex: 1; /* Equal width */
+        width: auto !important; 
+    }
+}
+
+/* --- Tablets (Max: 992px) --- */
+@media (max-width: 992px) {
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        width: 280px;
+        z-index: 9999;
+        transition: left 0.4s ease;
+    }
+
+    .sidebar.mobile-active { left: 0; }
+
+    .main-content {
+        width: 100%;
+        padding: 15px;
+    }
+
+    /* POLICY CARDS: Full width stack for HR Policy & Holiday */
+    .bottom-policy-container {
+        flex-direction: column;
+    }
+
+    .leave-card, 
+    .holiday-card,
+    .hra-holiday-card {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+
+    .stats-grid-1 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .da-dashboard-wrapper { flex-direction: column; }
+    .da-stat-box { flex: 1 1 45%; }
+}
+
+/* --- Mobile (Max: 768px) --- */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .action-buttons {
+        width: 100%;
+        flex-direction: row; /* Buttons side by side */
+    }
+
+    .calendar-wrapper, .emp-add-btn {
+        flex: 1;
+    }
+
+    .top-bar {
+        padding: 15px;
+        height: auto;
+        gap: 10px;
+    }
+
+    /* Force all grids to 1 column */
+    .stats-grid-1 { grid-template-columns: 1fr; }
+    
+    .welcome-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Content inside policy cards centers on mobile */
+    .leave-card, .holiday-card {
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* --- Small Phones (Max: 480px) --- */
+@media (max-width: 480px) {
+    .sidebar { width: 85%; }
+
+    .action-buttons {
+        flex-direction: column; /* Buttons stack on tiny screens */
+    }
+
+    .da-stat-box { flex: 1 1 100%; }
+
+    /* Hide non-essential table data */
+    .employee-table th:nth-child(n+3), 
+    .employee-table td:nth-child(n+3) {
+        display: none;
+    }
+}
