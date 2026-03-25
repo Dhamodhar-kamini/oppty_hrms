@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(res => res.json())
                 .then(data => {
                     if (data.message || data.profile) {
-                        alert("Profile updated successfully!");
+                        // alert("Profile updated successfully!");
                         closeProfileModalFunc();
                         showToast();
                         window.location.reload();
@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
                 .then(res => res.json())
                 .then(data => {
-                    alert("Other Information updated successfully!");
+                    // alert("Other Information updated successfully!");
                     closeOtherModalFunc();
                     showToast();
                     window.location.reload();
