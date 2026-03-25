@@ -169,6 +169,31 @@ align-items:center;
 box-shadow:0 8px 20px rgba(0,0,0,0.1);
 
 }
+.leave-card1{
+
+background:#96364d;
+color:white;
+padding:22px 25px;
+border-radius:16px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
+
+}
+.leave-card2{
+
+background:#ce6917;
+color:white;
+padding:22px 25px;
+border-radius:16px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
+
+}
+
 
 .leave-left h3{
 
