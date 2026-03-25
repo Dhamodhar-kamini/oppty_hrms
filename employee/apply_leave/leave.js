@@ -50,18 +50,38 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(err => console.error("Dashboard Error:", err));
     }
 
-    function fetchLeaveStatus() {
-        fetch(`${API_BASE}/leaves/${emp_id}/`)
-            .then(res => res.json())
-            .then(data => {
-                if(document.getElementById('taken')) document.getElementById('taken').innerText = data.taken || 0;
-                if(document.getElementById('casual')) document.getElementById('casual').innerText = data.casual_taken || 0;
-                if(document.getElementById('sick')) document.getElementById('sick').innerText = data.sick_taken || 0;
-                if(document.getElementById('lop')) document.getElementById('lop').innerText = data.lop || 0;
-                if(document.getElementById('remaining')) document.getElementById('remaining').innerText = data.remaining || 0;
-            })
-            .catch(err => console.error("Leaves Error:", err));
-    }
+    // Replace your current fetchLeaveStatus with this:
+function fetchLeaveStatus() {
+    // We fetch the FULL list of leaves instead of the summary API
+    fetch(`${API_BASE}/apply-leave/${emp_id}/`)
+        .then(res => res.json())
+        .then(leaves => {
+            let totalTaken = 0;
+            let casualTaken = 0;
+            let sickTaken = 0;
+            let lopTaken = 0;
+
+            // Manually loop and sum the days in Frontend
+            leaves.forEach(leave => {
+                if (leave.status.toLowerCase() === "approved") {
+                    const days = parseInt(leave.number_of_days) || 0;
+                    totalTaken += days;
+
+                    if (leave.leave_type === "casual") casualTaken += days;
+                    if (leave.leave_type === "medical") sickTaken += days;
+                    if (leave.leave_type === "nopay") lopTaken += days;
+                }
+            });
+
+            // Update UI manually
+            document.getElementById('taken').innerText = totalTaken;
+            document.getElementById('casual').innerText = casualTaken;
+            document.getElementById('sick').innerText = sickTaken;
+            document.getElementById('lop').innerText = lopTaken;
+            document.getElementById('remaining').innerText = 24 - totalTaken;
+        })
+        .catch(err => console.error("Frontend Calculation Error:", err));
+}
 
     // Initial Calls
     fetchDashboardData();
@@ -101,30 +121,44 @@ document.addEventListener("DOMContentLoaded", function () {
     // =============================
     // 5. DATE CALCULATION
     // =============================
-    function calculateDays() {
-        if (!fromDateIn.value || !toDateIn.value) {
-            numDaysIn.value = 0;
-            return;
-        }
+    // =============================
+// 5. DATE CALCULATION (FIXED)
+// =============================
+function calculateDays() {
+    const fromDate = fromDateIn.value;
+    const toDate = toDateIn.value;
 
-        const start = new Date(fromDateIn.value);
-        const end = new Date(toDateIn.value);
-
-        if (end < start) {
-            alert("To Date cannot be before From Date");
-            toDateIn.value = "";
-            numDaysIn.value = 0;
-            return;
-        }
-
-        // Difference in ms -> days
-        const diffTime = Math.abs(end - start);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include start day
-        numDaysIn.value = diffDays;
+    if (!fromDate || !toDate) {
+        numDaysIn.value = 0;
+        return;
     }
 
-    fromDateIn.addEventListener("change", calculateDays);
-    toDateIn.addEventListener("change", calculateDays);
+    const start = new Date(fromDate);
+    const end = new Date(toDate);
+
+    // Reset hours to ensure we only compare dates
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+
+    if (end < start) {
+        alert("To Date cannot be before From Date");
+        toDateIn.value = "";
+        numDaysIn.value = 0;
+        return;
+    }
+
+    // Calculate difference in milliseconds
+    const diffTime = end - start;
+    // Convert to days and add 1 to include the start day
+    // Example: March 24 to March 24 = 0ms diff. (0 / 86400000) + 1 = 1 day.
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+    
+    numDaysIn.value = diffDays;
+}
+
+// Ensure listeners are attached
+fromDateIn.addEventListener("input", calculateDays);
+toDateIn.addEventListener("input", calculateDays);
 
     // =============================
     // 6. SUBMIT FORM (APPLY LEAVE)
