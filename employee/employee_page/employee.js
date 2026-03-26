@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Logic: check if profile_pic is not null and not an empty string
                 if (p.profile_pic && p.profile_pic !== "" && p.profile_pic !== "null") {
                     // Ensure the URL is formed correctly
-                    const fullImgUrl = p.profile_pic.startsWith('http') ? p.profile_pic : `${API_BASE_URL}${p.profile_pic}`;
+                    const fullImgUrl = p.profile_pic.startsWith('http') ? p.profile_pic : `${API_BASE}${p.profile_pic}`;
                     miniAvatar = `<img src="${fullImgUrl}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border: 1px solid #eee;">`;
                 } else {
                     const parts = p.name.split(" ");

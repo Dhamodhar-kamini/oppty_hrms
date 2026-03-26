@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (document.getElementById("display_other_gender")) document.getElementById("display_other_gender").innerText = od.Gender;
                 if (document.getElementById("display_other_dob")) document.getElementById("display_other_dob").innerText = od.dob;
             }
-
+            
             // D. UPDATE DASHBOARD BANK DETAILS
             if (data.bank_details && data.bank_details.length > 0) {
                 const bd = data.bank_details[0];
@@ -72,6 +72,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (document.getElementById("number")) document.getElementById("number").innerText = bd.mobile;
                 if (document.getElementById("branch")) document.getElementById("branch").innerText = bd.branch;
             }
+            if (data.statutory_details && data.statutory_details.length > 0) {
+                const od = data.statutory_details[0];
+                if (document.getElementById("pan")) document.getElementById("pan").innerText = od.pan;
+                if (document.getElementById("uan")) document.getElementById("uan").innerText = od.pf_uan;
+                if (document.getElementById("tax")) document.getElementById("tax").innerText = od.profesional_tax;
+                if (document.getElementById("lwf_status")) document.getElementById("lwf_status").innerText = od.lwf_status;
+                if (document.getElementById("esic")) document.getElementById("esic").innerText = od.esic_status;
+                if (document.getElementById("ip_number")) document.getElementById("ip_number").innerText = od.esic_ip_number;
+                
+            }
+
 
             // E. PASS DATA TO HEADER AVATAR DROPDOWN
             let fName = data.name || "Employee";
