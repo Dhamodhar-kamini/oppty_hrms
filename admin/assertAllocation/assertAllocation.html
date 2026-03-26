@@ -224,23 +224,19 @@
             </div>
             <form id="hraAssetForm">
                 <div class="hra-form-group">
-                <label>Employee ID</label>
-                <input
-                  type="text"
-                  id="hraEmpId"
-                  placeholder="Enter employee ID"
-                  required
-                />
-              </div>
-              <div class="hra-form-group">
-                <label>Employee Name</label>
-                <input
-                  type="text"
-                  id="hraEmpName"
-                  placeholder="Enter employee name"
-                  required
-                />
-              </div>
+    <label>Select Employee</label>
+    <select id="hraEmpSelect" required>
+      <option value="">Select Employee</option>
+      </select>
+  </div>
+
+  <div class="hra-form-group" style="display: none;"> <label>System ID</label>
+    <input type="text" id="hraEmpId" readonly />
+  </div>
+  <input type="hidden" id="hraEmpName">
+
+  
+  
               <div class="hra-form-group">
                 <label>Employee Email</label>
                 <input

@@ -5,7 +5,9 @@
 const API_BASE_URL = "https://api.theoppty.com";
 
 // Get User Data from LocalStorage
-const EMP_ID = localStorage.getItem("employee_id");
+const DB_PK = localStorage.getItem("employee_id"); 
+const WORK_ID = localStorage.getItem("work_id");
+const EMP_ID = DB_PK;
 let EMP_NAME = localStorage.getItem("emp_name") || "Employee";
 let EMP_ROLE = localStorage.getItem("emp_role") || "Associate Software Engineer";
 
@@ -30,8 +32,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateUserInterface(EMP_NAME, EMP_ROLE, EMP_ID);
 
     // 3. Fetch Data from Backend
-    await fetchEmployeeProfile(EMP_ID);
-    await loadEmployeeAssets(EMP_ID);
+    // await fetchEmployeeProfile(EMP_ID);
+    // await loadEmployeeAssets(EMP_ID);
+    await fetchEmployeeProfile(DB_PK); // Stays 11 to get Balaji's name/role
+    await loadEmployeeAssets(WORK_ID);
 
     // 4. Setup Mobile Sidebar (if element exists)
     const mobileBtn = document.getElementById('mobile-menu-btn'); // Adjust ID if needed
@@ -72,22 +76,34 @@ async function fetchEmployeeProfile(id) {
 /**
  * Fetch and Render Assets
  */
+/**
+ * Fetch and Filter Assets Locally
+ */
 async function loadEmployeeAssets(id) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/employee-assets/${id}/`);
+        // 1. Fetch ALL assets from the general assets endpoint
+        // This avoids the "109" vs "11" URL error because we aren't putting the ID in the URL path
+        const response = await fetch(`${API_BASE_URL}/api/assets/`);
 
         if (!response.ok) throw new Error("Failed to fetch assets");
 
-        const data = await response.json();
+        const allAssets = await response.json();
         
-        // Render Chart & Table
-        renderAssetChart(data);
-        renderAssetTable(data);
+        // 2. Filter the list in JavaScript to only show 109
+        // We use WORK_ID (109) here to match the 'emp_id' column in the Asset model
+        const myWorkId = localStorage.getItem("work_id");
+        const filteredData = allAssets.filter(asset => asset.emp_id == myWorkId);
+        
+        console.log(`Filtered ${allAssets.length} assets down to ${filteredData.length} for ID: ${myWorkId}`);
+
+        // 3. Render only YOUR assets
+        renderAssetChart(filteredData);
+        renderAssetTable(filteredData);
 
     } catch (error) {
         console.error("Error loading assets:", error);
         const tableBody = document.getElementById("ast-table-body");
-        if(tableBody) tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:20px; color:red;">Error loading data</td></tr>`;
+        if(tableBody) tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:20px; color:red;">No assets found for ID 109</td></tr>`;
     }
 }
 
@@ -96,16 +112,16 @@ async function loadEmployeeAssets(id) {
 // ==========================================
 
 function updateUserInterface(name, role, id) {
-    // Update Name elements
     document.querySelectorAll("#name").forEach(el => el.innerText = name);
     
-    // Update Role
     const roleEl = document.getElementById("role");
     if (roleEl) roleEl.innerText = role;
 
-    // Update ID display
     const idEl = document.getElementById("employee_id");
-    if (idEl) idEl.innerText = id;
+    if (idEl) {
+        // Change this line to show the WORK_ID (109)
+        idEl.innerText = WORK_ID || id; 
+    }
 }
 
 function renderAssetTable(assets) {
@@ -215,9 +231,9 @@ function submitAssetRequest() {
     }
 
     const payload = {
-        emp_id: EMP_ID,
-        employee_name: EMP_NAME,
-        asset_category: category, // Ensure backend expects this key
+        emp_id: localStorage.getItem("work_id"),
+        employee_name: localStorage.getItem("emp_name"), // Pull directly from storage
+        asset_category: category,
         model_detail: description,
         location: location,
         status: "Pending"
@@ -228,21 +244,20 @@ function submitAssetRequest() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
     })
-    .then(res => {
-        if (!res.ok) throw new Error("Request failed");
+    .then(async res => {
+        if (!res.ok) {
+            const errorDetail = await res.json(); // Get the actual error from Django
+            throw new Error(JSON.stringify(errorDetail));
+        }
         return res.json();
     })
     .then(data => {
         showToast("success", "Asset request sent successfully");
         closeAssetRequest();
-        // Clear Form
-        document.getElementById("AssetCategory").value = "";
-        document.getElementById("assetDes").value = "";
-        document.getElementById("assetLocation").value = "";
     })
     .catch(err => {
-        console.error(err);
-        showToast("error", "Failed to send request");
+        console.error("Full Error:", err.message);
+        alert("Submission Error: " + err.message); // This will tell us the field name
     });
 }
 
@@ -271,7 +286,7 @@ function submitAssetReturn() {
     }
 
     const payload = {
-        emp_id: EMP_ID,
+        emp_id: localStorage.getItem("work_id"),
         employee_name: EMP_NAME,
         asset_type: asset,
         condition: condition,

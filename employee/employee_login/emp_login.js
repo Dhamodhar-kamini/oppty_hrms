@@ -25,13 +25,22 @@ document.addEventListener("DOMContentLoaded", function() {
             return res.json();
         })
         .then(data => {
-            if(data.status === "success"){
-                localStorage.setItem("employee_id", data.employee_data.id);
-                window.location.href = "../dashboard/dashboard.html"; 
-            } else {
-                throw new Error(data.message || "Incorrect credentials");
-            }
-        })
+    if(data.status === "success"){
+        // 1. Save the Database PK (e.g., 11) for API calls
+        localStorage.setItem("employee_id", data.employee_data.id);
+        
+        // 2. Save the Custom Work ID (e.g., 109) for Asset Allocation/Forms
+        localStorage.setItem("work_id", data.employee_data.employee_id);
+        
+        // 3. (Optional) Save name and role to avoid extra API calls later
+        localStorage.setItem("emp_name", data.employee_data.name);
+        localStorage.setItem("emp_role", data.employee_data.role);
+
+        window.location.href = "../dashboard/dashboard.html"; 
+    } else {
+        throw new Error(data.message || "Incorrect credentials");
+    }
+})
         .catch(err => {
             errorEl.innerText = err.message;
             errorEl.style.display = "block";

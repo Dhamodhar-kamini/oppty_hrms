@@ -226,6 +226,16 @@ function hraOpenModalForEdit(asset) {
 
     if (hraModalTitle) hraModalTitle.textContent = 'Edit Asset Details';
     if (hraModalSubmitBtn) hraModalSubmitBtn.textContent = 'Save Changes';
+    const select = document.getElementById('hraEmpSelect');
+    if (select) {
+        for (let i = 0; i < select.options.length; i++) {
+            // Match by the '109' style ID
+            if (select.options[i].getAttribute('data-custom-id') == asset.emp_id) {
+                select.selectedIndex = i;
+                break;
+            }
+        }
+    }
 
     document.getElementById('hraEmpId').value = asset.emp_id || '';
     document.getElementById('hraEmpName').value = asset.employee;
@@ -364,12 +374,7 @@ function hraCloseReturnModalFunc() {
 // ==========================================
 // 5. NOTIFICATIONS LOGIC
 // ==========================================
-let notifications = [
-    { id: 1, text: "<strong>Dhamodhar</strong> applied for the UX Designer position.", time: "2 mins ago", icon: "👩‍💼", read: false },
-    { id: 2, text: "Meeting with <strong>Dev Team</strong> starts in 15 minutes.", time: "15 mins ago", icon: "📅", read: false },
-    { id: 3, text: "New system update available.", time: "1 hour ago", icon: "⚙️", read: true },
-    { id: 4, text: "<strong>Arjun</strong> accepted the offer.", time: "3 hours ago", icon: "✅", read: true }
-];
+let assetNotifications = [ ];
 
 function ntRenderList() {
     if (!ntListContainer) return;
@@ -417,6 +422,7 @@ function ntRenderList() {
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Load Data
     loadAssets();
+    loadEmployeesForAssets()
     loadReturnAssets();
     
     // 2. Initialize Notifications
@@ -434,52 +440,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Asset Form Submit (Save/Update)
-    if (hraAssetForm) {
+    // Asset Form Submit (Save/Update)
+if (hraAssetForm) {
     hraAssetForm.addEventListener('submit', async (e) => {
-
         e.preventDefault();
+
+        const empSelect = document.getElementById('hraEmpSelect');
+        const empIdField = document.getElementById('hraEmpId');
+
+        if (!empSelect || empSelect.value === "") {
+            alert("Please select an employee first!");
+            return;
+        }
+
+        const fullText = empSelect.options[empSelect.selectedIndex].text;
+        const cleanName = fullText.split('(')[0].trim();
 
         const assetData = {
             asset_id: document.getElementById('hraAssetId').value,
-            emp_id: document.getElementById('hraEmpId').value,
-            employee: document.getElementById('hraEmpName').value,
-            email: document.getElementById('hraEmpEmail').value,
+            emp_id: empIdField.value,
+            employee: cleanName,
+            email: document.getElementById('hraEmpEmail').value || null, // Sends null if empty
             asset_type: document.getElementById('hraAssetType').value,
             model_details: document.getElementById('hraModelDetails').value,
             assigned_date: document.getElementById('hraAssignDate').value,
             status: "assigned"
         };
 
+        console.log("Payload being sent:", assetData);
+
         try {
+            let url = currentEditingDatabaseId 
+                ? `https://api.theoppty.com/api/assets/${currentEditingDatabaseId}/` 
+                : "https://api.theoppty.com/api/assets/save/";
+            
+            let method = currentEditingDatabaseId ? "PATCH" : "POST";
 
-            let url = "https://api.theoppty.com/api/assets/save/";
-            let method = "POST";
-
-            // If editing → update instead of create
-            if(currentEditingDatabaseId){
-                    url = `https://api.theoppty.com/api/assets/${currentEditingDatabaseId}/`;
-                    method = "PATCH";
-                }
-
-            const response = await fetch(url,{
+            const response = await fetch(url, {
                 method: method,
-                headers: {"Content-Type":"application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(assetData)
             });
 
-            if(response.ok){
-                loadAssets();
+            if (response.ok) {
+                await loadAssets();
                 hraCloseModal();
                 showSuccessPopup();
+            } else {
+                const errorData = await response.json();
+                console.error("Backend Error Details:", errorData);
+                alert("Save Failed: " + JSON.stringify(errorData));
             }
-            else {
-                    alert("Failed to save asset. Check console.");
-
-        }}
-         catch(error){
-            console.error(error);
+        } catch (error) {
+            console.error("Network Error:", error);
         }
-
     });
 }
     // Asset Table Actions (Edit/Delete)
@@ -700,3 +714,40 @@ window.onclick = function (event) {
     hdr_hideLogoutModal();
   }
 };
+// Function to load employees into the dropdown (Reuse Payslip logic)
+async function loadEmployeesForAssets() {
+    try {
+        const response = await fetch("https://api.theoppty.com/api/employees/");
+        const data = await response.json();
+        const select = document.getElementById("hraEmpSelect");
+        
+        if (!select) return;
+
+        select.innerHTML = '<option value="">Select Employee</option>';
+        data.forEach(emp => {
+            const option = document.createElement("option");
+            option.value = emp.id; // Database ID (11)
+            // Store the custom employee_id (109) and name in data attributes
+            option.setAttribute('data-custom-id', emp.employee_id);
+            option.setAttribute('data-name', emp.name);
+            option.textContent = `${emp.name} (${emp.employee_id})`;
+            select.appendChild(option);
+        });
+    } catch (err) {
+        console.error("Error loading employees:", err);
+    }
+}
+// assertAllocation.js around line 752
+document.getElementById('hraEmpSelect').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const nameField = document.getElementById('hraEmpName'); // Ensure this ID exists in HTML
+    const idField = document.getElementById('hraEmpId');
+
+    if (selectedOption.value !== "") {
+        // Add null checks to prevent the crash
+        if (nameField) nameField.value = selectedOption.getAttribute('data-name');
+        if (idField) idField.value = selectedOption.getAttribute('data-custom-id');
+        
+        console.log("Set emp_id to:", selectedOption.getAttribute('data-custom-id'));
+    }
+});
