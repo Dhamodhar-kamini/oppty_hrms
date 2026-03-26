@@ -83,6 +83,24 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(err => console.error("Error fetching main data:", err));
   }
 
+function fetchLeaveStatus() {
+    // We fetch the FULL list of leaves instead of the summary API
+    fetch(`${API_BASE_URL}/api/employee/leaves/${emp_id}/`)
+        .then(res => res.json())
+        .then(leaves => {
+      
+            // Manually loop and sum the days in Frontend
+            // Update UI manually
+           
+            document.getElementById('p_sick_leave').innerText = leaves.casual_remaining;
+            document.getElementById('p_casual_leave').innerText = leaves.sick_remaining;
+            
+            document.getElementById('p_remaining_leaves').innerText = leaves.remaining ;
+        })
+        .catch(err => console.error("Frontend Calculation Error:", err));
+}
+fetchLeaveStatus()
+
   // ==================================================
   // 3. FETCH LEAVES, ATTENDANCE, PAYROLL, DOCUMENTS
   // ==================================================

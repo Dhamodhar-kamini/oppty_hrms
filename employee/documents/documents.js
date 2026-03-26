@@ -84,24 +84,53 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- 4. Delete Logic ---
-    window.openDeleteModal = function(id) {
-        documentIdToDelete = id;
-        document.getElementById('deleteConfirmModal').classList.add('show');
-    }
-    window.closeDeleteModal = () => document.getElementById('deleteConfirmModal').classList.remove('show');
-    window.confirmDelete = function() {
-        if(!documentIdToDelete) return;
-        fetch(`https://api.theoppty.com/api/delete-document/${documentIdToDelete}/`, { method: 'DELETE' })
-        .then(res => {
-            closeDeleteModal();
-            if(res.ok) {
-                document.getElementById('deleteSuccessPopup').classList.add('show');
-                documents_table();
-            } else { alert("Delete failed on server."); }
-        });
-    }
-    window.closeDeleteSuccess = () => document.getElementById('deleteSuccessPopup').classList.remove('show');
+window.openDeleteModal = function(id) {
+    documentIdToDelete = id;  // ✅ store id correctly
+    document.getElementById('deleteConfirmModal').classList.add('show');
+}
 
+window.closeDeleteModal = function() {
+    document.getElementById('deleteConfirmModal').classList.remove('show');
+}
+
+window.confirmDelete = function() {
+    if (!documentIdToDelete) return;
+
+    fetch('https://api.theoppty.com/api/document-delete/', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            doc_id: documentIdToDelete,   // ✅ correct id
+            employee_id: emp_id
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+
+        // Close modal
+        closeDeleteModal();
+
+        // Show success popup
+        document.getElementById('deleteSuccessPopup').classList.add('show');
+
+        // Refresh table
+        documents_table();
+
+        // Reset id
+        documentIdToDelete = null;
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Delete failed");
+    });
+}
+
+window.closeDeleteSuccess = function() {
+    document.getElementById('deleteSuccessPopup').classList.remove('show');
+}
     // --- 5. Upload Logic & Popup Fix ---
     const docForm = document.getElementById('docUniqueUploadForm');
     const docInput = document.getElementById('docFileInput');
