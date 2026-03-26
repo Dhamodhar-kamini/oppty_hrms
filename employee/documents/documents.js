@@ -1,14 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const emp_id = localStorage.getItem('employee_id','123')
-    console.log(emp_id)
-   fetch(`https://api.theoppty.com/api/employee/dashboard/${emp_id}/`)
+    const emp_id = localStorage.getItem('employee_id') || '123';
+    let documentIdToDelete = null;
+
+    // --- 1. Fetch Basic Info ---
+    fetch(`https://api.theoppty.com/api/employee/dashboard/${emp_id}/`)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
-            document.getElementById("name").innerText = data.name;
-            document.getElementById("role").innerText = data.role;})
+            if(document.getElementById("name")) document.getElementById("name").innerText = data.name;
+            if(document.getElementById("role")) document.getElementById("role").innerText = data.role;
+        });
 
-    // Required documents list
     const requiredDocs = [
         { key: 'bank_details', label: 'Bank Details', icon: 'fa-university' },
         { key: 'pan', label: 'PAN', icon: 'fa-id-card' },
@@ -19,203 +20,142 @@ document.addEventListener('DOMContentLoaded', function() {
         { key: 'aadhar', label: 'Aadhar', icon: 'fa-id-card' }
     ];
 
-    // Function to update progress bar
+    // --- 2. Progress Bar Logic ---
     function updateProgressBar(uploadedDocs) {
-        const uploadedTypes = uploadedDocs.map(d => d.doc_type.toLowerCase());
-        const uploadedSet = new Set(uploadedTypes);
-        
+        const uploadedSet = new Set(uploadedDocs.map(d => d.doc_type.toLowerCase()));
         let count = 0;
+        const requiredList = document.getElementById('docRequiredList');
+        if (requiredList) requiredList.innerHTML = '';
+
         requiredDocs.forEach(doc => {
-            if (uploadedSet.has(doc.key)) {
-                count++;
+            const isUploaded = uploadedSet.has(doc.key.toLowerCase());
+            if (isUploaded) count++;
+
+            if (requiredList) {
+                const item = document.createElement('div');
+                item.className = 'doc-doc-item' + (isUploaded ? ' uploaded' : '');
+                item.innerHTML = `<i class="fa-solid ${doc.icon}"></i> ${doc.label} ${isUploaded ? '<i class="fa-solid fa-circle-check" style="float:right; color:#27ae60"></i>' : ''}`;
+                requiredList.appendChild(item);
             }
         });
 
         const percentage = Math.round((count / requiredDocs.length) * 100);
-        
-        // Update progress bar
         const progressBar = document.getElementById('docProgressBar');
         const progressPercent = document.getElementById('docProgressPercent');
         const progressText = document.getElementById('docProgressText');
-        const requiredList = document.getElementById('docRequiredList');
 
-        if (progressBar) {
-            progressBar.style.width = percentage + '%';
-        }
-        if (progressPercent) {
-            progressPercent.textContent = percentage + '%';
-        }
-        if (progressText) {
-            progressText.textContent = count + ' of ' + requiredDocs.length + ' documents uploaded';
-        }
-
-        // Update required documents list
-        if (requiredList) {
-            requiredList.innerHTML = '';
-            requiredDocs.forEach(doc => {
-                const isUploaded = uploadedSet.has(doc.key);
-                const item = document.createElement('div');
-                item.className = 'doc-doc-item' + (isUploaded ? ' uploaded' : '');
-                item.innerHTML = `<i class="fa-solid ${doc.icon}"></i> ${doc.label}`;
-                requiredList.appendChild(item);
-            });
-        }
+        if (progressBar) progressBar.style.width = percentage + '%';
+        if (progressPercent) progressPercent.textContent = percentage + '%';
+        if (progressText) progressText.textContent = `${count} of ${requiredDocs.length} documents uploaded`;
     }
 
-    function documents_table(){
-    function formatDate(isoString) {
-    const date = new Date(isoString); // Convert ISO string to Date object
-    const options = { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        // second: '2-digit',
-        hour12: true 
-    };
-    return date.toLocaleString('en-IN', options); // Format according to locale
-}
+    // --- 3. Table Rendering ---
+    window.documents_table = function() {
+        const documentstable = document.getElementById('table-documents');
+        fetch(`https://api.theoppty.com/api/employee-documents/${emp_id}/`)
+            .then(res => res.json())
+            .then(data => {
+                if(!documentstable) return;
+                documentstable.innerHTML = "";
+                if (!data || data.length === 0) {
+                    documentstable.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">No documents found</td></tr>`;
+                    updateProgressBar([]);
+                    return;
+                }
 
+                updateProgressBar(data);
 
-        
-    
-    const documentstable = document.getElementById('table-documents')
-    fetch(`https://api.theoppty.com/api/employee-documents/${emp_id}/`)
-        .then(res => res.json())
-        .then(data => {
-            documentstable.innerHTML = "";
-            console.log(data)
-            if (!data || data.length === 0) {
-                documnets.innerHTML = `<tr><td colspan="4">No documnets found</td></tr>`;
-                return;
-            }
-
-            // Update progress bar with uploaded documents
-            updateProgressBar(data);
-
-            data.forEach(p => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${formatDate(p.uploaded_at)}</td>
-                    <td>${p.doc_type}</td>
-                    <td>${p.description}</td>
-                    <td> <a href="https://api.theoppty.com${p.file}" target="_blank">View
-                    </a></td>
-                `;
-                documentstable.appendChild(row);
+                data.forEach(p => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${new Date(p.uploaded_at).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'})}</td>
+                        <td style="text-transform: capitalize;">${p.doc_type.replace(/_/g, ' ')}</td>
+                        <td>${p.description || '-'}</td>
+                        <td><a href="https://api.theoppty.com${p.file}" target="_blank" style="color:#ff6b00; font-weight:600; text-decoration:none;">View</a></td>
+                        <td>
+                            <button onclick="openDeleteModal(${p.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    `;
+                    documentstable.appendChild(row);
+                });
             });
-        })}
-setInterval(documents_table,1000)
-        // .catch(err => {
-        //     console.error("Error fetching payslips:", err);
-        //     payslipTableBody.innerHTML = `<tr><td colspan="4">Error loading documents</td></tr>`;
-        // });
+    }
 
-    // Select elements using the NEW UNIQUE IDs
-    const docInput = document.getElementById('docFileInput');
-    const docArea = document.getElementById('docDropArea');
-    const docText = document.getElementById('docFileName');
+    // --- 4. Delete Logic ---
+    window.openDeleteModal = function(id) {
+        documentIdToDelete = id;
+        document.getElementById('deleteConfirmModal').classList.add('show');
+    }
+    window.closeDeleteModal = () => document.getElementById('deleteConfirmModal').classList.remove('show');
+    window.confirmDelete = function() {
+        if(!documentIdToDelete) return;
+        fetch(`https://api.theoppty.com/api/delete-document/${documentIdToDelete}/`, { method: 'DELETE' })
+        .then(res => {
+            closeDeleteModal();
+            if(res.ok) {
+                document.getElementById('deleteSuccessPopup').classList.add('show');
+                documents_table();
+            } else { alert("Delete failed on server."); }
+        });
+    }
+    window.closeDeleteSuccess = () => document.getElementById('deleteSuccessPopup').classList.remove('show');
+
+    // --- 5. Upload Logic & Popup Fix ---
     const docForm = document.getElementById('docUniqueUploadForm');
+    const docInput = document.getElementById('docFileInput');
+    const docText = document.getElementById('docFileName');
 
-    // 1. Handle file selection via Click
-    if(docInput) {
-        docInput.addEventListener('change', function() {
-            handleDocFiles(this.files);
-        });
-    }
-
-    // 2. Handle Drag and Drop Visuals
-    if(docArea) {
-        // Drag Over
-        docArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            docArea.style.borderColor = '#ff6b00';
-            docArea.style.backgroundColor = '#fff8f0';
-        });
-
-        // Drag Leave
-        docArea.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            docArea.style.borderColor = '#e0e0e0';
-            docArea.style.backgroundColor = '#fafafa';
-        });
-
-        // Drop
-        docArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            docArea.style.borderColor = '#e0e0e0';
-            docArea.style.backgroundColor = '#fafafa';
-            
-            // Transfer files to input
-            if(docInput) {
-                docInput.files = e.dataTransfer.files;
-                handleDocFiles(docInput.files);
-            }
-        });
-    }
-
-    // 3. Update Text Helper
-    function handleDocFiles(files) {
-        if (files.length > 0) {
-            if (files.length === 1) {
-                docText.textContent = files[0].name;
-                docText.style.color = '#2c3e50'; // Dark text
-            } else {
-                docText.textContent = `${files.length} files ready to upload`;
-                docText.style.color = '#2c3e50';
-            }
-        } else {
-            docText.innerHTML = 'Click to browse';
-            docText.style.color = '#ff6b00'; // Orange
-        }
-    }
-
-    // 4. Form Submit Demo
     if (docForm) {
-    docForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+        docForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const file = docInput.files[0];
+            if(!file) { alert("Please select a file."); return; }
 
-        const formData = new FormData();
+            const formData = new FormData();
+            formData.append("doc_type", document.getElementById("docTypeSelect").value);
+            formData.append("description", document.getElementById("docDescInput").value);
+            formData.append("file", file);
 
-        formData.append("doc_type", document.getElementById("docTypeSelect").value);
-        formData.append("description", document.getElementById("docDescInput").value);
-        formData.append("file", document.getElementById("docFileInput").files[0]);
-
-        console.log(document.getElementById("docFileInput").files[0]);
-
-        fetch(`https://api.theoppty.com/api/upload-documents/${emp_id}/`, {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json().then(data => ({status: response.status, body: data})))
-        .then(result => {
-
-            console.log("Response status:", result.status);
-            console.log("Response body:", result.body);
-
-            const popup = document.getElementById('uploadSuccessPopup');
-
-            if(result.status === 201 || result.status === 200){
-                if (popup) popup.classList.add('show');
-            } else {
-                alert("Upload failed: " + JSON.stringify(result.body));
-            }
-
-        })
-        .catch(error => {
-            console.error("Error:", error);
+            fetch(`https://api.theoppty.com/api/upload-documents/${emp_id}/`, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => {
+                if(res.ok) {
+                    // Show Popup
+                    document.getElementById('uploadSuccessPopup').classList.add('show');
+                    // Reset Form and UI Text
+                    docForm.reset();
+                    if(docText) docText.innerHTML = 'Click to browse';
+                    // Refresh table & progress bar
+                    documents_table(); 
+                } else {
+                    alert("Upload failed.");
+                }
+            });
         });
+    }
 
-    });
-}
+    // Fix for the OK button on Success Popup
+    const uploadPopupClose = document.getElementById('uploadPopupClose');
+    if (uploadPopupClose) {
+        uploadPopupClose.addEventListener('click', function() {
+            document.getElementById('uploadSuccessPopup').classList.remove('show');
+        });
+    }
 
-const popupCloseBtn = document.getElementById('uploadPopupClose');
+    // --- 6. Visual File Name Handling ---
+    if(docInput && docText) {
+        docInput.addEventListener('change', function() {
+            if(this.files.length > 0) {
+                docText.textContent = this.files[0].name;
+                docText.style.color = "#2c3e50"; // Visual feedback for selected file
+            }
+        });
+    }
 
-if (popupCloseBtn) {
-    popupCloseBtn.addEventListener('click', function() {
-        const popup = document.getElementById('uploadSuccessPopup');
-        if (popup) popup.classList.remove('show');
-    });
-}
+    // Initial Load
+    documents_table();
 });
