@@ -1,97 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OPPTY EMPLOYEE LOGIN</title>
     <!-- Font Awesome for the icon -->
-     <link rel="icon" type="image/png" href="../assets/opptylogo2.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Link to external CSS -->
-    <link rel="stylesheet" href="emp_login.css">
-</head>
-<body>
+    <link rel="icon" type="image/png" href="../assets/opptylogo2.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="emp_login.css" />
+  </head>
+  <body>
     <div class="login-wrapper">
-    <div class="login-box">
-        <div style="margin-bottom: 30px;">
-            <img src="../assets/opptylogo.png" alt="Logo" style="width: 150px; height: 40px;">
+      <div class="login-box">
+        <div style="margin-bottom: 30px">
+          <img
+            src="../assets/opptylogo.png"
+            alt="Logo"
+            style="width: 150px; height: 40px"
+          />
         </div>
         <h2>Welcome to Oppty</h2>
-        <p class="text-muted" style="margin-bottom: 30px;">Please login to your account</p>
+        <p class="text-muted" style="margin-bottom: 30px">
+          Please login to your account
+        </p>
 
         <form id="loginForm">
-            <div class="form-group">
-                <label>Email Address</label>
-                <input id="email" type="email" class="form-control" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input id="password" type="password" class="form-control" placeholder="Enter your password" required>
-            </div>
-            <div class="flex justify-between items-center" style="margin-bottom: 20px;">
-                <label style="font-size: 12px; cursor: pointer;">
-                    <input type="checkbox"> Remember me
-                </label>
-                <!-- Updated Link with ID -->
-                <a href="#" id="forgotPasswordLink" style="font-size: 12px; color: #FF5B1E; text-decoration: none;">Forgot Password?</a>
-            </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input
+              id="email"
+              type="email"
+              class="form-control"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              id="password"
+              type="password"
+              class="form-control"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <div
+            class="flex justify-between items-center"
+            style="margin-bottom: 20px"
+          >
+            <label style="font-size: 12px; cursor: pointer">
+              <input type="checkbox" /> Remember me
+            </label>
+            <!-- Updated Link with ID -->
+            <a
+              href="#"
+              id="forgotPasswordLink"
+              style="font-size: 12px; color: #ff5b1e; text-decoration: none"
+              >Forgot Password?</a
+            >
+          </div>
 
-            <button type="submit" class="btn btn-primary login-btn">Sign In</button>
-            <p id="loginError" style="display: none; color: red; text-align: center; margin: 10px 0; font-size: 14px;"></p>
+          <button type="submit" class="btn btn-primary login-btn">
+            Sign In
+          </button>
+          <p
+            id="loginError"
+            style="
+              display: none;
+              color: red;
+              text-align: center;
+              margin: 10px 0;
+              font-size: 14px;
+            "
+          ></p>
         </form>
+      </div>
     </div>
-</div>
 
-<!-- ============================ -->
-<!-- FORGOT PASSWORD MODAL START  -->
-<!-- ============================ -->
-<div id="fpModal" class="fp-modal-overlay">
-    <div class="fp-modal-content">
+    <!-- ============================ -->
+    <!-- FORGOT PASSWORD MODAL START  -->
+    <!-- ============================ -->
+    <div id="fpModal" class="fp-modal-overlay">
+      <div class="fp-modal-content">
         <span class="fp-close-btn">&times;</span>
-        
-        <!-- Icon -->
+
         <div class="fp-icon-box">
-            <i class="fa-solid fa-lock"></i> 
+          <i class="fa-solid fa-lock"></i>
         </div>
 
         <h3 id="fpTitle">Reset Password</h3>
-        <p id="fpDesc" class="text-muted">Enter your email address to check if your account exists.</p>
+        <p id="fpDesc" class="text-muted">
+          Enter your email address to check if your account exists.
+        </p>
 
-        <!-- STEP 1: Verify Email -->
         <div id="fpStep1">
-            <div class="form-group">
-                <input type="email" id="fpEmail" class="form-control" placeholder="Enter your registered email">
-            </div>
-            <p id="fpError1" class="fp-error-msg"></p>
-            <button id="btnVerifyEmail" class="btn btn-primary login-btn">Verify Email</button>
+          <div class="form-group">
+            <input
+              type="email"
+              id="fpEmail"
+              class="form-control"
+              placeholder="Enter your registered email"
+            />
+          </div>
+          <p id="fpError1" class="fp-error-msg"></p>
+          <button id="btnVerifyEmail" class="btn btn-primary login-btn">
+            Verify Email
+          </button>
         </div>
 
-        <!-- STEP 2: Change Password (Hidden initially) -->
-        <div id="fpStep2" style="display: none;">
-            <div class="form-group">
-                <input type="password" id="fpNewPass" class="form-control" placeholder="New Password">
-            </div>
-            <div class="form-group">
-                <input type="password" id="fpConfirmPass" class="form-control" placeholder="Confirm Password">
-            </div>
-            <p id="fpError2" class="fp-error-msg"></p>
-            <button id="btnUpdatePass" class="btn btn-primary login-btn">Update Password</button>
+        <div id="fpStepOTP" style="display: none">
+          <div class="form-group">
+            <input
+              type="text"
+              id="fpOTP"
+              class="form-control"
+              placeholder="Enter 6-digit OTP"
+              maxlength="6"
+            />
+          </div>
+          <div
+            style="text-align: right; margin-top: -10px; margin-bottom: 15px"
+          >
+            <a
+              href="#"
+              id="btnResendOTP"
+              style="
+                font-size: 12px;
+                color: #ff5b1e;
+                text-decoration: none;
+                font-weight: 600;
+              "
+              >Resend OTP</a
+            >
+          </div>
+          <p id="fpErrorOTP" class="fp-error-msg"></p>
+          <button id="btnVerifyOTP" class="btn btn-primary login-btn">
+            Verify OTP
+          </button>
         </div>
 
-        <!-- SUCCESS STATE (Hidden initially) -->
-        <div id="fpSuccess" style="display: none; text-align: center;">
-            <div style="color: #28a745; font-size: 50px; margin-bottom: 15px;">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <h4 style="margin-bottom: 10px;">Success!</h4>
-            <p class="text-muted">Your password has been updated successfully.</p>
+        <div id="fpStep2" style="display: none">
+          <div class="form-group">
+            <input
+              type="password"
+              id="fpNewPass"
+              class="form-control"
+              placeholder="New Password"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              id="fpConfirmPass"
+              class="form-control"
+              placeholder="Confirm Password"
+            />
+          </div>
+          <p id="fpError2" class="fp-error-msg"></p>
+          <button id="btnUpdatePass" class="btn btn-primary login-btn">
+            Update Password
+          </button>
         </div>
+
+        <div id="fpSuccess" style="display: none; text-align: center">
+          <div style="color: #28a745; font-size: 50px; margin-bottom: 15px">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <h4 style="margin-bottom: 10px">Success!</h4>
+          <p class="text-muted">Your password has been updated successfully.</p>
+        </div>
+      </div>
     </div>
-</div>
 
     <!-- Link to external JavaScript -->
     <script src="emp_login.js"></script>
-</body>
+  </body>
 </html>
