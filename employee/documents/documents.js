@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (requiredList) {
                 const item = document.createElement('div');
                 item.className = 'doc-doc-item' + (isUploaded ? ' uploaded' : '');
-                item.innerHTML = `<i class="fa-solid ${doc.icon}"></i> ${doc.label} ${isUploaded ? '<i class="fa-solid fa-circle-check" style="float:right; color:#27ae60"></i>' : ''}`;
+                item.innerHTML = `<i class="fa-solid ${doc.icon}"></i> ${doc.label} ${isUploaded ? '<i class="fa-solid fa-circle-check" style="float:right; margin-left:30px; color:#27ae60"></i>' : ''}`;
                 requiredList.appendChild(item);
             }
         });
