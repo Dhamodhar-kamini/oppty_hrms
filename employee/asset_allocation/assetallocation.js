@@ -169,36 +169,31 @@ function renderAssetChart(assets) {
     const ctx = document.getElementById("ast-main-chart");
     if (!ctx) return;
 
-    // 1. Define the Master List (The categories you want to show)
     const defaultCategories = ["Laptop", "Keyboard", "Mouse", "Headset", "Charger", "Monitor"];
-    
-    // 2. Initialize counts to 0
     const assetCount = {};
-    defaultCategories.forEach(cat => {
-        assetCount[cat] = 0;
-    });
+    defaultCategories.forEach(cat => assetCount[cat] = 0);
 
-    // 3. Process Assets with "All" Logic
     assets.forEach(asset => {
-        const type = (asset.asset_type || "").trim();
-        const typeLower = type.toLowerCase();
-
-        if (typeLower === "all") {
-            // If the type is "All", increment every single category by 1
-            defaultCategories.forEach(cat => {
-                assetCount[cat]++;
-            });
-        } else {
-            // Otherwise, find the specific matching category
-            const match = defaultCategories.find(cat => 
-                cat.toLowerCase() === typeLower.replace(/\s/g, "")
-            );
+        // --- NEW STATUS FILTER ---
+        // Only count assets if the status is exactly 'assigned'
+        // This will ignore 'returned' or 'pending' statuses in the graph
+        if (asset.status && asset.status.toLowerCase() === "assigned") {
             
-            if (match) {
-                assetCount[match]++;
-            } else if (type !== "") {
-                // Dynamic category if not in our master list
-                assetCount[type] = (assetCount[type] || 0) + 1;
+            const type = (asset.asset_type || "").trim().toLowerCase();
+
+            if (type === "all") {
+                // Bulk increment for 'all' bundle
+                defaultCategories.forEach(cat => {
+                    assetCount[cat]++;
+                });
+            } else {
+                // Find specific match
+                const match = defaultCategories.find(cat => 
+                    cat.toLowerCase() === type.replace(/\s/g, "")
+                );
+                if (match) {
+                    assetCount[match]++;
+                }
             }
         }
     });
@@ -213,7 +208,7 @@ function renderAssetChart(assets) {
         data: {
             labels: labels,
             datasets: [{
-                label: "Quantity",
+                label: "Currently Assigned",
                 data: values,
                 backgroundColor: ["#FF5B1E", "#164E63", "#FCD34D", "#10B981", "#6366F1", "#8B5CF6"],
                 borderRadius: 6,
