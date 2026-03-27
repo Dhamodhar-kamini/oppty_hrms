@@ -126,6 +126,7 @@ document.addEventListener("DOMContentLoaded", function() {
         fetch("https://api.theoppty.com/api/employee/verify-email/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: 'include',
             body: JSON.stringify({ email: email })
         })
         .then(res => {
@@ -176,9 +177,10 @@ document.addEventListener("DOMContentLoaded", function() {
         btnVerifyOTP.disabled = true;
         errOTP.style.display = "none";
 
-        fetch("https://api.theoppty.com/api/employee/verify-otp/", {
+        fetch("https://api.theoppty.com/api/verify-otp/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: 'include',
             body: JSON.stringify({ email: validEmail, otp: otpVal })
         })
         .then(res => {
