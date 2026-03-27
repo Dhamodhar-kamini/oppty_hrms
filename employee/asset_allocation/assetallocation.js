@@ -137,22 +137,26 @@ function renderAssetTable(assets) {
 
     assets.forEach(asset => {
         let badgeClass = "ast-badge-active"; 
-        if (asset.status && asset.status.toLowerCase() === "returned") badgeClass = "ast-badge-returned"; 
+        if (asset.status && asset.status.toLowerCase() === "returned") {
+            badgeClass = "ast-badge-returned";
+        }
+
+        // Use your helper function to get the correct icon string
+        const iconName = getAssetIcon(asset.asset_type);
 
         const row = `
         <tr>
             <td>
                 <div class="ast-row-info">
                     <div class="ast-icon-box">
-                        <i class="fa-solid fa-laptop"></i>
+                        <i class="fa-solid ${iconName}"></i>
                     </div>
                     <div>
                         <strong>${asset.asset_type}</strong>
-                        <span>${asset.model_details || 'N/A'}</span>
                     </div>
                 </div>
             </td>
-            <td>${asset.asset_id}</td>
+            <td>${asset.model_details || 'N/A'}</td>
             <td>${asset.assigned_date}</td>
             <td><span class="ast-badge ${badgeClass}">${asset.status}</span></td>
         </tr>
@@ -163,35 +167,57 @@ function renderAssetTable(assets) {
 
 function renderAssetChart(assets) {
     const ctx = document.getElementById("ast-main-chart");
-    if (!ctx) return; 
+    if (!ctx) return;
 
-    // Calculate Data
-    const assetTypes = ["Laptop", "Monitor", "Keyboard", "Mouse", "Phone"];
-    const assetCount = { Laptop: 0, Monitor: 0, Keyboard: 0, Mouse: 0, Phone: 0 };
-
-    assets.forEach(asset => {
-        // Normalize casing logic
-        const type = Object.keys(assetCount).find(key => key.toLowerCase() === (asset.asset_type || "").toLowerCase());
-        if (type) assetCount[type]++;
+    // 1. Define the Master List (The categories you want to show)
+    const defaultCategories = ["Laptop", "Keyboard", "Mouse", "Headset", "Charger", "Monitor"];
+    
+    // 2. Initialize counts to 0
+    const assetCount = {};
+    defaultCategories.forEach(cat => {
+        assetCount[cat] = 0;
     });
 
-    const values = assetTypes.map(type => assetCount[type]);
-    const maxValue = Math.max(...values);
-    const chartMax = maxValue > 0 ? Math.ceil(maxValue / 5) * 5 : 5; 
+    // 3. Process Assets with "All" Logic
+    assets.forEach(asset => {
+        const type = (asset.asset_type || "").trim();
+        const typeLower = type.toLowerCase();
 
-    // Destroy previous instance to prevent glitches
+        if (typeLower === "all") {
+            // If the type is "All", increment every single category by 1
+            defaultCategories.forEach(cat => {
+                assetCount[cat]++;
+            });
+        } else {
+            // Otherwise, find the specific matching category
+            const match = defaultCategories.find(cat => 
+                cat.toLowerCase() === typeLower.replace(/\s/g, "")
+            );
+            
+            if (match) {
+                assetCount[match]++;
+            } else if (type !== "") {
+                // Dynamic category if not in our master list
+                assetCount[type] = (assetCount[type] || 0) + 1;
+            }
+        }
+    });
+
+    const labels = Object.keys(assetCount);
+    const values = Object.values(assetCount);
+
     if (assetChart) assetChart.destroy();
 
     assetChart = new Chart(ctx, {
         type: "bar",
         data: {
-            labels: assetTypes,
+            labels: labels,
             datasets: [{
-                label: "Assets",
+                label: "Quantity",
                 data: values,
-                backgroundColor: ["#FF5B1E", "#164E63", "#FCD34D", "#10B981", "#6366F1"],
+                backgroundColor: ["#FF5B1E", "#164E63", "#FCD34D", "#10B981", "#6366F1", "#8B5CF6"],
                 borderRadius: 6,
-                barThickness: 30
+                barThickness: 25
             }]
         },
         options: {
@@ -199,12 +225,37 @@ function renderAssetChart(assets) {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { beginAtZero: true, max: chartMax, grid: { color: "#f3f4f6" } },
+                y: { 
+                    beginAtZero: true, 
+                    suggestedMax: 5,
+                    ticks: { stepSize: 1, precision: 0 },
+                    grid: { color: "#f3f4f6" } 
+                },
                 x: { grid: { display: false } }
             }
         }
     });
 }
+// Add this helper function
+function getAssetIcon(type) {
+    const t = (type || "").toLowerCase().replace(/\s/g, "");
+    switch (t) {
+        case "all": 
+            return "fa-boxes-stacked"; // Represents a bundle/set
+        case "laptop": return "fa-laptop";
+        case "monitor": return "fa-desktop";
+        case "mouse": return "fa-computer-mouse";
+        case "keyboard": return "fa-keyboard";
+        case "charger": return "fa-plug";
+        case "idcard": return "fa-id-card";
+        case "headset": return "fa-headphones";
+        default: return "fa-box";
+    }
+}
+
+// Update your renderAssetTable loop line:
+// Replace <i class="fa-solid fa-laptop"></i> with:
+// <i class="fa-solid ${getAssetIcon(asset.asset_type)}"></i>
 
 // ==========================================
 // 5. ASSET REQUEST (POST)
