@@ -345,11 +345,11 @@
   object-fit: cover;
 }
 
-.db-profile-trigger-btn:hover,
+/* .db-profile-trigger-btn:hover,
 .db-profile-trigger-btn.db-active-state {
   border-color: #ff5b1e;
   transform: scale(1.05);
-}
+} */
 
 /* Online Dot */
 .db-online-dot {
