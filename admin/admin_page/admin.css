@@ -4039,4 +4039,21 @@ textarea#wishMessage:focus {
     .employee-table td:nth-child(n+3) {
         display: none;
     }
+    
+}
+
+
+#policy{
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+}
+
+/* Small devices */
+@media (max-width: 600px){
+  #policy{
+    flex-direction: column;
+    gap: 16px;          /* optional: reduce spacing */
+    align-items: center; /* keeps items centered */
+  }
 }
