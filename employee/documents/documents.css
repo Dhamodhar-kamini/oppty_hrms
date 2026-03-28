@@ -381,3 +381,6 @@ body {
 }
 .custom-modal.show { display: flex; }
 .modal-content { background: white; padding: 30px; border-radius: 15px; text-align: center; width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+
+

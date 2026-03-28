@@ -1581,3 +1581,58 @@
     }
 }
 
+
+
+/* ===========================
+   POPUP ALIGNMENT PATCH
+   (Append at end of your CSS)
+   =========================== */
+
+/* Prevent clipping */
+.db-top-header-section,
+.db-widget-wrapper {
+  overflow: visible !important;
+}
+
+/* Make sure wrapper is the anchor */
+.db-widget-wrapper {
+  position: relative;
+}
+
+/* Keep your same card look, but make it responsive and safe */
+.db-dropdown-card {
+  box-sizing: border-box;
+  max-width: calc(100vw - 24px); /* never exceed viewport */
+  z-index: 10002;               /* above header/sidebar overlay */
+  overflow: hidden;             /* keep rounded corners clean */
+}
+
+/* Support BOTH show classes used in your CSS */
+.db-dropdown-card.db-show-menu,
+.db-dropdown-card.show {
+  display: block;
+}
+
+/* Better default vertical alignment (instead of fixed 55/60px assumptions) */
+.db-widget-wrapper .db-dropdown-card {
+  top: calc(100% + 12px) !important;
+}
+
+/* Mobile fallback (works even without JS): center under the trigger */
+@media (max-width: 768px) {
+  .db-widget-wrapper .db-dropdown-card {
+    right: auto !important;
+    left: 150% !important;
+    transform: translateX(-50%);
+  }
+}
+
+/* Very small screens: full-width dropdown with side padding */
+@media (max-width: 420px) {
+  .db-widget-wrapper .db-dropdown-card {
+    left: 20px !important;
+    right: 12px !important;
+    width: auto !important;
+    transform: none !important;
+  }
+}
