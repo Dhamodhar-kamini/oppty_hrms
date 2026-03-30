@@ -181,6 +181,15 @@
 .filter-actions {
   display: flex;
   gap: 10px;
+  align-items: center;
+}
+.date-input {
+  min-width: 170px;
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: none;
+  background: #f4f7fe;
+  color: var(--text-grey);
 }
 .dash-select-clean {
   border: none;

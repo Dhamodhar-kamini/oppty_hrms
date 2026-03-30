@@ -70,7 +70,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const deptFilter = document.getElementById("deptFilter");
     const statusFilter = document.getElementById("statusFilter");
     const empFilter = document.getElementById("empFilter"); // Type filter
+    const dateFilter = document.getElementById("dateFilter"); // Month/Year
     const downloadBtn = document.getElementById("downloadBtn"); 
+
+    // Auto-select the current date for dateFilter
+    if (dateFilter) {
+        const now = new Date();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const year = now.getFullYear();
+        dateFilter.value = `${year}-${month}-${day}`;
+    }
     
     // Stats Elements (Using the IDs you added to the HTML)
     const statTotal = document.getElementById("stat-total");
@@ -252,6 +262,7 @@ function loadDataFromAPI() {
         const deptValue = deptFilter ? deptFilter.value : "all";
         const statusValue = statusFilter ? statusFilter.value : "all";
         const typeValue = empFilter ? empFilter.value : "all"; 
+        const dateValue = dateFilter ? dateFilter.value : ""; // YYYY-MM-DD
 
         const filtered = employees.filter(emp => {
             // Check Search Term
@@ -267,8 +278,9 @@ function loadDataFromAPI() {
             
             // Type dropdown is tricky because your HTML says "Internship", but DB might say "Intern"
             const matchesType = (typeValue === "all") || (emp.type.toLowerCase().includes(typeValue.toLowerCase().replace('ship', '')));
+            const matchesDate = (!dateValue) || (emp.joinDate && emp.joinDate.startsWith(dateValue));
 
-            return matchesSearch && matchesDept && matchesStatus && matchesType;
+            return matchesSearch && matchesDept && matchesStatus && matchesType && matchesDate;
         });
 
         renderTable(filtered);
@@ -279,6 +291,7 @@ function loadDataFromAPI() {
     if(deptFilter) deptFilter.addEventListener("change", applyFilters);
     if(statusFilter) statusFilter.addEventListener("change", applyFilters);
     if(empFilter) empFilter.addEventListener("change", applyFilters); 
+    if(dateFilter) dateFilter.addEventListener("change", applyFilters);
 
     // --- 7. EVENT DELEGATION (View Profile, Edit, Delete) ---
     if(tableBody) {
