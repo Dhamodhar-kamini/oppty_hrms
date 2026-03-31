@@ -11,40 +11,89 @@
 <body>
 
     <div class="login-container">
-        <div class="login-card">
-            <!-- Ensure your logo image is named 'logo.png' and in the same folder -->
-            <div class="logo-wrapper">
-                <img src="../assets/opptylogo.png" alt="Oppty Logo" class="logo">
+    <div class="login-card">
+        <div class="logo-wrapper">
+            <img src="../assets/opptylogo.png" alt="Oppty Logo" class="logo">
+        </div>
+        
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Enter your credentials to access the admin panel.</p>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
             </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="form-footer">
+                <label class="remember-me">
+                    <input type="checkbox"> Remember me
+                </label>
+                <a href="#" id="forgotPasswordLink" class="forgot-pass">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn-login">Sign In</button>
             
-            <h2>Welcome Back</h2>
-            <p class="subtitle">Enter your credentials to access the admin panel.</p>
+            <p id="errorMsg" class="error-msg" style="display: none;"></p>
+        </form>
+    </div>
+</div>
 
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" placeholder="Enter your email" required>
-                </div>
+<div id="fpModal" class="fp-modal-overlay">
+    <div class="fp-modal-content">
+        <span class="fp-close-btn">&times;</span>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
-                </div>
+        <div class="fp-icon-box">
+            <i class="fa-solid fa-lock"></i>
+        </div>
 
-                <div class="form-footer">
-                    <label class="remember-me">
-                        <input type="checkbox"> Remember me
-                    </label>
-                    <a href="#" class="forgot-pass">Forgot Password?</a>
-                </div>
+        <h3 id="fpTitle">Reset Admin Password</h3>
+        <p id="fpDesc" class="text-muted">Enter your admin email to check if your account exists.</p>
 
-                <button type="submit" class="btn-login">Sign In</button>
-                
-                <!-- Hidden error message -->
-                <p id="errorMsg" class="error-msg">Invalid email or password. Please try again.</p>
-            </form>
+        <div id="fpStep1">
+            <div class="form-group">
+                <input type="email" id="fpEmail" class="form-control" placeholder="Enter admin email" />
+            </div>
+            <p id="fpError1" class="fp-error-msg"></p>
+            <button id="btnVerifyEmail" class="btn-login">Verify Email</button>
+        </div>
+
+        <div id="fpStepOTP" style="display: none">
+            <div class="form-group">
+                <input type="text" id="fpOTP" class="form-control" placeholder="Enter 6-digit OTP" maxlength="6" />
+            </div>
+            <div style="text-align: right; margin-top: -10px; margin-bottom: 15px">
+                <a href="#" id="btnResendOTP" style="font-size: 12px; color: #ff5b1e; text-decoration: none; font-weight: 600;">Resend OTP</a>
+            </div>
+            <p id="fpErrorOTP" class="fp-error-msg"></p>
+            <button id="btnVerifyOTP" class="btn-login">Verify OTP</button>
+        </div>
+
+        <div id="fpStep2" style="display: none">
+            <div class="form-group">
+                <input type="password" id="fpNewPass" class="form-control" placeholder="New Password" />
+            </div>
+            <div class="form-group">
+                <input type="password" id="fpConfirmPass" class="form-control" placeholder="Confirm Password" />
+            </div>
+            <p id="fpError2" class="fp-error-msg"></p>
+            <button id="btnUpdatePass" class="btn-login">Update Password</button>
+        </div>
+
+        <div id="fpSuccess" style="display: none; text-align: center">
+            <div style="color: #28a745; font-size: 50px; margin-bottom: 15px">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h4 style="margin-bottom: 10px">Success!</h4>
+            <p class="text-muted">Admin password updated successfully.</p>
         </div>
     </div>
+</div>
 
     <!-- Link to the separate JS file -->
     <script src="adminlogin.js"></script>

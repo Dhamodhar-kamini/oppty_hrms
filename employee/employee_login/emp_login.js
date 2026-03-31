@@ -129,6 +129,7 @@ document.addEventListener("DOMContentLoaded", function() {
             credentials: 'include',
             body: JSON.stringify({ email: email })
         })
+       
         .then(res => {
             if (!res.ok) throw new Error("Email not found in our records.");
             return res.json();
@@ -183,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function() {
             credentials: 'include',
             body: JSON.stringify({ email: validEmail, otp: otpVal })
         })
+        
         .then(res => {
             if (!res.ok) throw new Error("Invalid or expired OTP.");
             return res.json();
