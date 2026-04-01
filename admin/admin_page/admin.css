@@ -4908,7 +4908,7 @@ textarea#wishMessage:focus {
     height: 42px !important;
     min-height: 42px !important;
   }
-}
+
 
 /* Small mobile */
 @media (max-width: 480px) {
@@ -4933,3 +4933,136 @@ textarea#wishMessage:focus {
 }
 
 
+/* =========================================================
+   CALENDAR + ADD EMPLOYEE BUTTON FINAL FIX
+   ========================================================= */
+
+/* Desktop / large screens */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.action-buttons {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  flex-wrap: wrap;
+  width: auto !important;
+}
+
+.calendar-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  flex: 0 0 auto !important;
+}
+
+.btn-icon,
+.emp-add-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 8px;
+  height: 44px !important;
+  min-height: 44px !important;
+  line-height: 1 !important;
+  padding: 0 18px !important;
+  border-radius: 8px;
+  width: auto !important;
+  max-width: max-content !important;
+  min-width: 180px;
+  flex: 0 0 auto !important;
+  white-space: nowrap;
+  margin: 0 !important;
+}
+
+.btn-icon i,
+.emp-add-btn i,
+.btn-icon svg,
+.emp-add-btn svg {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+.btn-icon span,
+.emp-add-btn span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .action-buttons {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .calendar-wrapper,
+  .emp-add-btn {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .calendar-wrapper {
+    display: flex;
+  }
+
+  .btn-icon,
+  .emp-add-btn {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0 14px !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .action-buttons {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .calendar-wrapper,
+  .emp-add-btn {
+    width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+
+  .btn-icon,
+  .emp-add-btn {
+    width: 100% !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-width: none !important;
+    padding: 0 14px !important;
+    font-size: 12px !important;
+  }
+}
