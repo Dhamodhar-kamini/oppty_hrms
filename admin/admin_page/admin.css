@@ -84,6 +84,7 @@ body {
   justify-content: center;
 }
 
+
 /* --- SPINNER RINGS --- */
 .loader-circle {
   width: 80px;
@@ -1234,14 +1235,27 @@ body {
 }
 
 .stat-card {
-  padding: 15px;
-  background: var(--card-bg);
-  border-radius: 8px;
-  box-shadow: var(--shadow-light);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 25%;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    border: 1px solid #f1f3f9;
+}
+.stat-card .icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px; /* Squircle Icons */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
 }
 .stat-card p {
   font-size: 0.8rem;
@@ -1303,25 +1317,24 @@ body {
   --da-col-late: #46c5f2;
   --da-col-ontime: #ffc42e;
   --da-col-absent: #ff756c;
-
-  font-family: "Poppins", sans-serif;
-  display: flex;
-  gap: 30px;
-  width: 100%;
-  max-width: 1200px;
-  align-items: stretch;
-  margin: 20px auto;
+}
+.da-dashboard-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 30px;
+    align-items: stretch;
 }
 
 /* --- CHART SECTION --- */
 .da-main-chart-card {
-  flex: 3;
-  background: var(--da-card-bg);
-  border-radius: 20px;
-  padding: 25px 30px;
-  box-shadow: 0 20px 50px rgba(112, 144, 176, 0.08);
-  display: flex;
-  flex-direction: column;
+    flex: 0 0 75%;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    min-width: 0;
 }
 
 .da-card-top-bar {
@@ -1522,10 +1535,10 @@ body {
 
 /* --- STATS SIDEBAR --- */
 .da-stats-sidebar {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    flex: 0 0 23%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .da-stat-box {
@@ -1539,12 +1552,25 @@ body {
   flex-direction: column;
   justify-content: center;
 }
+.da-text-green { color: #28a745; }
+.bg-icon-green { background: #e6f6ec; color: #28a745; }
+
+.da-text-blue  { color: #46c5f2; }
+.bg-icon-blue  { background: #e6f8ff; color: #46c5f2; }
+
+.da-text-red   { color: #ff756c; }
+.bg-icon-red   { background: #fff1f0; color: #ff756c; }
+
+/* Graph Bar for Late (Match Sidebar Blue) */
+.da-bg-late { background-color: #46c5f2 !important; }
+.da-bg-ontime { background-color: #28a745 !important; }
+.da-bg-absent { background-color: #ff756c !important; }
 
 .da-stat-number {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--da-text-dark);
-  margin-bottom: 5px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 5px 0;
+    pointer-events: none; /* Disable click on numbers */
 }
 .da-stat-label {
   font-size: 0.85rem;
@@ -1571,16 +1597,23 @@ body {
 }
 
 /* --- Main Content Grid Layouts --- */
-.main-grid-row {
+.main-grid-row.grid-row-2-3 {
+    display: flex;             /* Use Flex for better height control */
+    gap: 25px;
+    margin-bottom: 30px;
+    align-items: stretch;      /* MAGIC LINE: Makes both cards same height */
+    width: 100%;
+}
+/* .main-grid-row {
   display: grid;
   gap: 30px;
   margin-bottom: 20px;
   align-items: center;
-}
+} */
 /* Define structure for readability */
-.grid-row-2-3 {
+/* .grid-row-2-3 {
   grid-template-columns: repeat(2, 1fr);
-}
+} */
 .grid-row-4 {
   grid-template-columns: repeat(4, 1fr);
 }
@@ -1628,15 +1661,12 @@ body {
   padding: 20px;
 }
 .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  margin-top: 10px;
+    margin-bottom: 15px;
 }
 .card-header h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
+    font-size: 1.2rem !important;
+    font-weight: 700;
+    color: #2b3674;
 }
 .header-controls select {
   padding: 5px;
@@ -1645,11 +1675,14 @@ body {
   font-size: 0.8rem;
 }
 .view-details-link {
-  color: var(--color-blue);
-  text-decoration: none;
-  font-size: 0.8rem;
-  text-align: left;
-  margin-top: 5px;
+    background-color: #FF9F43;
+    color: white !important;
+    padding: 6px 15px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 5px;
 }
 .employee-trigger {
   border: 1px solid orange;
@@ -1965,6 +1998,7 @@ thead th {
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     margin-top: 20px;
 }
+
 .birthday-card h2 {
     font-size: 20px;
     margin-bottom: 25px;
@@ -2471,17 +2505,18 @@ textarea#wishMessage:focus {
 
 /* Leave */
 
-.leave-card {
-  background: #1f5664;
-  color: white;
-  padding: 22px 30px;
-  border-radius: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  width: 50%;
+.leave-card, .hra-holiday-card {
+    flex: 1;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-light);
+    margin-top:20px ;
 }
+.leave-card { background: #1f5664; color: white; }
 
 .leave-left h3 {
   margin: 0;
@@ -3186,16 +3221,27 @@ textarea#wishMessage:focus {
 
 /* 1. LAYOUT CONTAINER */
 .dd-widget-card {
-  background: var(--dd-bg-color);
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-  display: flex;
-  align-items: center;
-  gap: 50px;
-  max-width: 800px;
-  width: 90%;
-  margin: 20px auto; /* Centered for demo */
+    flex: 1.2;                 /* Slightly wider than status card */
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;       /* Centers donut and legend vertically */
+    gap: 30px;
+    border: 1px solid var(--border-color);
+}
+#employee-status.card {
+    flex: 1;                   /* Standard width */
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Spreads content top to bottom */
+    border: 1px solid var(--border-color);
+    margin-bottom: 0;          /* Remove bottom margin to align bottom */
 }
 
 /* 2. CHART SECTION (Left) */
@@ -4043,10 +4089,11 @@ textarea#wishMessage:focus {
 }
 
 
-#policy{
-  display: flex;
-  gap: 40px;
-  justify-content: center;
+#policy {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 30px;
 }
 
 /* Small devices */

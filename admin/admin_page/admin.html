@@ -5,994 +5,363 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OPPTY HRMS</title>
     <link rel="stylesheet" href="admin.css" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="../assets/opptylogo2.png"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/opptylogo2.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   </head>
   <body>
     <div class="dashboard-container">
-      <!-- PRELOADER START -->
       <div id="page-preloader">
         <div class="loader-content">
-          <!-- Spinning Rings -->
           <div class="loader-circle"></div>
           <div class="loader-circle-inner"></div>
-
-          <!-- Branding Text -->
           <div class="loader-text">
-            <span class="brand-dark"
-              ><img
-                src="../assets/opptylogo.png"
-                alt="logo"
-                style="height: 50px" /></span
-            ><span class="brand-orange">HRMS</span>
+            <span class="brand-dark"><img src="../assets/opptylogo.png" alt="logo" style="height: 50px" /></span>
+            <span class="brand-orange">HRMS</span>
           </div>
         </div>
       </div>
-      <!-- PRELOADER END -->
+
       <aside class="sidebar" id="sidebar">
-        <!-- Close Button (Visible only on mobile) -->
-        <div class="sidebar-close-btn" id="sidebarCloseBtn">
-          <i class="fas fa-times"></i>
-        </div>
-
+        <div class="sidebar-close-btn" id="sidebarCloseBtn"><i class="fas fa-times"></i></div>
         <div class="logo">
-          <img
-            class="opptyLogo"
-            src="../assets/opptylogo.png"
-            alt="OPPTY HRMS Logo"
-          />
+          <img class="opptyLogo" src="../assets/opptylogo.png" alt="OPPTY HRMS Logo" />
         </div>
-
         <div class="sidebar-content">
           <div class="menu-section main-menu">
             <p class="menu-header">MAIN MENU</p>
-
-            <!-- Dashboard Parent -->
             <div class="menu-item-wrapper">
-              <a
-                href="javascript:void(0)"
-                class="menu-item has-submenu"
-                id="dashboardMenu"
-              >
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
+              <a href="javascript:void(0)" class="menu-item has-submenu" id="dashboardMenu">
+                <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
               </a>
-
-              <!-- Submenu Items -->
               <div class="submenu" id="dashboardSubmenu">
-                <a href="../admin_page/admin.html" class="menu-item active">
-                  <i class="fas fa-user-tie"></i><span>Admin Dashboard</span>
-                </a>
-                <a href="../employeedashb/employee.html" class="menu-item">
-                  <i class="fas fa-user"></i><span>Employee Dashboard</span>
-                </a>
-                <a href="../approval/approval.html" class="menu-item">
-                  <i class="fas fa-check-circle"></i><span>Approval</span>
-                </a>
-                <a href="../payslip/payslip.html" class="menu-item">
-                  <i class="fas fa-money-bill-wave"></i
-                  ><span>Payroll Dashboard</span>
-                </a>
-                <!-- <a href="../recruitment/recruitment.html" class="menu-item">
-                  <i class="fas fa-search"></i
-                  ><span>Recruitment Dashboard</span>
-                </a> -->
-                <a
-                  href="../assertAllocation/assertAllocation.html"
-                  class="menu-item"
-                >
-                  <i class="fas fa-boxes"></i><span>Asset Allocation</span>
-                </a>
+                <a href="../admin_page/admin.html" class="menu-item active"><i class="fas fa-user-tie"></i><span>Admin Dashboard</span></a>
+                <a href="../employeedashb/employee.html" class="menu-item"><i class="fas fa-user"></i><span>Employee Dashboard</span></a>
+                <a href="../approval/approval.html" class="menu-item"><i class="fas fa-check-circle"></i><span>Approval</span></a>
+                <a href="../payslip/payslip.html" class="menu-item"><i class="fas fa-money-bill-wave"></i><span>Payroll Dashboard</span></a>
+                <a href="../assertAllocation/assertAllocation.html" class="menu-item"><i class="fas fa-boxes"></i><span>Asset Allocation</span></a>
               </div>
             </div>
           </div>
         </div>
       </aside>
 
-      <!-- Overlay for mobile background dimming -->
       <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-      <!-- 2. Main Content Area -->
       <main class="main-content">
-        <!-- Top Bar -->
         <header class="top-bar">
           <div class="search-bar">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search in HRMS" />
             <span>CTRL + /</span>
           </div>
-
           <div class="header-icons">
-            <!--hambargar section-->
-            <div class="hamburger-menu-icon" id="hamburgerMenu">
-              <i class="fas fa-bars"></i>
-            </div>
-
-            <!-- MODIFIED PROFILE SECTION -->
-            <!-- Profile Wrapper (Existing) -->
+            <div class="hamburger-menu-icon" id="hamburgerMenu"><i class="fas fa-bars"></i></div>
             <div class="hdr-profile-wrapper">
-              <!-- Profile Image (Clickable) -->
               <div class="user-profile" onclick="hdr_toggleProfilePopup()">
-                <!-- Update src to your actual image path -->
-                <!-- <img src="../assets/profiledp.jpeg" alt="User Avatar" /> -->
                 <div class="profile-avatar-text">AD</div>
               </div>
-
-              <!-- The Popup Menu -->
               <div class="hdr-popup-menu" id="hdrProfileDropdown">
-                <!-- Optional Header info -->
                 <div class="hdr-popup-header">
                   <p><strong>Admin Profile</strong></p>
                   <span class="hdr-email-text">prince@oppty.in</span>
                 </div>
-
-                <!-- Logout Button (Triggers Popup) -->
-                <button class="hdr-logout-btn" onclick="hdr_showLogoutModal()">
-                  <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+                <button class="hdr-logout-btn" onclick="hdr_showLogoutModal()"><i class="fas fa-sign-out-alt"></i> Logout</button>
               </div>
             </div>
-
-            <!-- ========================================= -->
-            <!-- NEW: Logout Confirmation Modal Structure -->
-            <!-- ========================================= -->
             <div id="hdrLogoutModal" class="hdr-modal-overlay">
               <div class="hdr-modal-content">
-                <div class="hdr-modal-icon">
-                  <i class="fas fa-sign-out-alt"></i>
-                </div>
+                <div class="hdr-modal-icon"><i class="fas fa-sign-out-alt"></i></div>
                 <h3>Confirm Logout</h3>
                 <p>Are you sure you want to log out of your account?</p>
                 <div class="hdr-modal-actions">
-                  <button
-                    class="hdr-btn-cancel"
-                    onclick="hdr_hideLogoutModal()"
-                  >
-                    Cancel
-                  </button>
-                  <button class="hdr-btn-confirm" onclick="hdr_confirmLogout()">
-                    Logout
-                  </button>
+                  <button class="hdr-btn-cancel" onclick="hdr_hideLogoutModal()">Cancel</button>
+                  <button class="hdr-btn-confirm" onclick="hdr_confirmLogout()">Logout</button>
                 </div>
               </div>
             </div>
           </div>
         </header>
 
-        <!-- Dashboard Header -->
-        <div
-          class="dashboard-header"
-          style="margin-top: 50px; margin-left: 25px"
-        >
+        <div class="dashboard-header" style="margin-top: 50px; margin-left: 25px">
           <h1 style="font-size: 30px; font-weight: 700">Admin Dashboard</h1>
           <div class="breadcrumbs">
             <i class="fas fa-home"></i>
             <i class="fa-solid fa-chevron-right"></i>
-            <span
-              ><a href="../admin_page/admin.html"
-                >Dashboard <i class="fa-solid fa-chevron-right"></i></a
-            ></span>
+            <span><a href="../admin_page/admin.html">Dashboard <i class="fa-solid fa-chevron-right"></i></a></span>
             <span><a href="../admin_page/admin.html">Admin Dashboard</a></span>
           </div>
           <div class="action-buttons">
             <div class="calendar-wrapper">
-              <!-- Visible Button -->
               <button class="btn-icon" id="dateTriggerBtn">
-                <i class="far fa-calendar-alt"></i>
-                <span id="dateDisplay">Loading...</span>
+                <i class="far fa-calendar-alt"></i><span id="dateDisplay">Loading...</span>
               </button>
-
-              <!-- Hidden Input for Browser Native Picker -->
               <input type="date" id="nativeDatePicker" />
             </div>
-            <button class="btn-primary emp-add-btn" id="empOpenBtn">
-              <i class="fas fa-calendar-plus"></i>
-              Add Employee
-            </button>
-
-            <!-- Modal Overlay -->
-            <!-- Modal Overlay -->
+            <button class="btn-primary emp-add-btn" id="empOpenBtn"><i class="fas fa-calendar-plus"></i> Add Employee</button>
             <div class="emp-modal-overlay" id="empModal">
               <div class="emp-modal-box">
                 <span class="emp-close-btn" id="empCloseBtn">&times;</span>
-
                 <h2 class="emp-title">Add Employee</h2>
-
                 <form id="empForm" novalidate>
-                  <!-- Employee Type Radio Buttons (From Image) -->
                   <div class="emp-group">
                     <label>Is this an employee or Intern?</label>
                     <div class="radio-group">
-                      <label class="radio-label">
-                        <input
-                          type="radio"
-                          name="empType"
-                          value="employee"
-                          checked
-                        />
-                        <span>Employee</span>
-                      </label>
-                      <label class="radio-label">
-                        <input type="radio" name="empType" value="contractor" />
-                        <span>Intern</span>
-                      </label>
+                      <label class="radio-label"><input type="radio" name="empType" value="employee" checked /><span>Employee</span></label>
+                      <label class="radio-label"><input type="radio" name="empType" value="contractor" /><span>Intern</span></label>
                     </div>
                   </div>
-
-                  <!-- Full Name -->
                   <div class="emp-group">
                     <label>Name <span>*</span></label>
-                    <input
-                      type="text"
-                      id="nameInput"
-                      placeholder="Enter name"
-                      required
-                    />
+                    <input type="text" id="nameInput" placeholder="Enter name" required />
                     <small class="error-msg"></small>
                   </div>
                   <div class="emp-group">
                     <label>Emp ID <span>*</span></label>
-                    <input
-                      type="text"
-                      id="empIdInput"
-                      placeholder="Enter employee ID"
-                      required
-                    />
+                    <input type="text" id="empIdInput" placeholder="Enter employee ID" required />
                     <small class="error-msg"></small>
                   </div>
-
-                  <!-- Email -->
                   <div class="emp-group">
                     <label>Email <span>*</span></label>
-                    <input
-                      type="email"
-                      id="emailInput"
-                      placeholder="Enter email address"
-                      required
-                    />
-                    <small class="helper-text"
-                      >The email they will use to log into the system.</small
-                    >
+                    <input type="email" id="emailInput" placeholder="Enter email address" required />
+                    <small class="helper-text">The email they will use to log into the system.</small>
                     <small class="error-msg"></small>
                   </div>
-
-                  <!-- Password (Requested Addition) -->
                   <div class="emp-group">
                     <label>Password <span>*</span></label>
-                    <input
-                      type="password"
-                      id="passwordInput"
-                      placeholder="Create a temporary password"
-                      required
-                    />
+                    <input type="password" id="passwordInput" placeholder="Create a temporary password" required />
                     <small class="error-msg"></small>
                   </div>
-
-                  <!-- Hire Date -->
                   <div class="emp-group">
                     <label>Hire Date <span>*</span></label>
                     <input type="date" id="dateInput" required />
-                    <small class="helper-text"
-                      >The first day of employment for this person.</small
-                    >
                     <small class="error-msg"></small>
                   </div>
-
-                  <!-- Job Title & Department Row -->
                   <div class="emp-row">
-                    <div class="emp-group">
-                      <label>Job Title</label>
-                      <input
-                        type="text"
-                        id="jobInput"
-                        placeholder="Enter Job Title"
-                      />
-                    </div>
-                    <div class="emp-group">
-                      <label>Department</label>
-                      <input
-                        type="text"
-                        id="deptInput"
-                        placeholder="Enter Department"
-                      />
-                    </div>
+                    <div class="emp-group"><label>Job Title</label><input type="text" id="jobInput" placeholder="Enter Job Title" /></div>
+                    <div class="emp-group"><label>Department</label><input type="text" id="deptInput" placeholder="Enter Department" /></div>
                   </div>
-
                   <div class="emp-group">
                     <label>Employment Status Type <span>*</span></label>
-                    <select
-                      id="typeInput"
-                      style="
-                        width: 100%;
-                        height: 40px;
-                        border: 1px solid #ccc;
-                        border-radius: 5px;
-                        padding: 0 10px;
-                      "
-                    >
-                      <!-- <option value="Fulltime">Full Time</option> -->
-                      <option value="WFO">Work From Office (WFO)</option>
-                      <option value="WFH">Work From Home (WFH)</option>
-                      <option value="Internship">Internship</option>
-                    </select>
+                    <select id="typeInput"><option value="WFO">WFO</option><option value="WFH">WFH</option><option value="Internship">Internship</option></select>
                   </div>
-
-                  <!-- Manager -->
-                  <div class="emp-group">
-                    <label>Manager</label>
-                    <select id="managerInput">
-                      <option value="">Please select manager</option>
-                      <option value="Narala Prasad Reddy">
-                        Narala Prasad Reddy
-                      </option>
-                    </select>
-                  </div>
-
-                  <!-- Salary -->
-                  <div class="emp-group">
-                    <label>Annual Salary</label>
-                    <input type="number" id="salaryInput" placeholder="0" />
-                    <small class="helper-text"
-                      >Annual salary is the current CTC. If monthly, multiply by
-                      12.</small
-                    >
-                    <small class="error-msg"></small>
-                  </div>
-
-                  <!-- Location -->
-                  <div class="emp-group">
-                    <label>Location</label>
-                    <input
-                      type="text"
-                      id="locationInput"
-                      placeholder="Enter work location"
-                    />
-                  </div>
-
+                  <div class="emp-group"><label>Manager</label><select id="managerInput"><option value="">Please select manager</option><option value="Narala Prasad Reddy">Narala Prasad Reddy</option></select></div>
+                  <div class="emp-group"><label>Annual Salary</label><input type="number" id="salaryInput" placeholder="0" /><small class="error-msg"></small></div>
+                  <div class="emp-group"><label>Location</label><input type="text" id="locationInput" placeholder="Enter work location" /></div>
                   <div class="emp-actions">
-                    <button
-                      type="button"
-                      class="emp-cancel-btn"
-                      id="empCancelBtn"
-                    >
-                      Cancel
-                    </button>
-                    <button type="submit" class="emp-submit-btn">
-                      Add Employee
-                    </button>
-                    <!-- Success Modal -->
+                    <button type="button" class="emp-cancel-btn" id="empCancelBtn">Cancel</button>
+                    <button type="submit" class="emp-submit-btn">Add Employee</button>
                   </div>
                 </form>
               </div>
             </div>
           </div>
         </div>
+
         <div class="success-modal-overlay" id="successModal">
           <div class="success-box">
-            <div class="success-icon-circle">
-              <i class="fas fa-check"></i>
-            </div>
+            <div class="success-icon-circle"><i class="fas fa-check"></i></div>
             <h2>Success!</h2>
             <p>The new employee has been added successfully.</p>
             <button class="success-btn" id="successOkBtn">Continue</button>
           </div>
         </div>
 
-        <!-- Welcome Card -->
         <div class="welcome-card">
-          <!-- <img class="profile-lg" src="../assets/opptylogo2.png" alt="Avatar" /> -->
           <h2>Welcome Back, Admin</h2>
-          <p>
-            You have
-            <span class="highlight-pending" id="pendingApprovalsCount">
-              <a href="../approval/approval.html" class="highlight-pending">
-                --Pending Approvals</a
-              ></span
-            >
-            <!-- &
-            <span class="highlight-leave">14 Leave Requests</span> -->
-          </p>
+          <p>You have <span class="highlight-pending" id="pendingApprovalsCount"><a href="../approval/approval.html" class="highlight-pending">--Pending Approvals</a></span></p>
         </div>
 
-        <!-- Stat Cards Row 1 -->
-
-        <!-- Main Content Grid (Rows 2 & 3 - 3 Columns Structure) -->
         <div class="main-grid-row grid-row-2-3">
-          <!-- Employees By Department (Span 2) -->
           <div class="dd-widget-card">
-            <!-- Left: Visualization -->
             <div class="dd-viz-container">
-              <svg class="dd-donut-svg" viewBox="0 0 100 100">
-                <!-- Base Circle -->
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  stroke="#eee"
-                  stroke-width="20"
-                  fill="none"
-                ></circle>
-                <!-- Segments injected via JS -->
-              </svg>
-
+              <svg class="dd-donut-svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="#eee" stroke-width="20" fill="none"></circle></svg>
               <div class="dd-center-content">
                 <span class="dd-total-number" id="ddTotalDisplay">0</span>
                 <span class="dd-total-label">Total</span>
               </div>
             </div>
-
-            <!-- Right: Data Details -->
             <div class="dd-legend-section">
-              <div class="dd-legend-header">
-                <h3>Workforce Distribution</h3>
-                <p>Active employees by department</p>
-              </div>
-
-              <ul class="dd-legend-list" id="ddLegendList">
-                <!-- List items injected via JS -->
-              </ul>
+              <div class="dd-legend-header"><h3>Workforce Distribution</h3><p>Active employees by department</p></div>
+              <ul class="dd-legend-list" id="ddLegendList"></ul>
             </div>
           </div>
 
-          <!-- Clock In/Out (Span 1) -->
-
-          <!-- Employee Status (Span 1) -->
           <div class="card medium-card" id="employee-status">
-            <div class="card-header">
-              <h3 style="font-size: 28px; font-weight: 700">Employee Status</h3>
-            </div>
+            <div class="card-header"><h3 style="font-size: 28px; font-weight: 700">Employee Status</h3></div>
             <div class="card-body" style="padding: 20px">
-              <div class="total-employee">
-                <p style="font-size: 20px; font-weight: 700">Total Employee</p>
-                <!-- Added ID here -->
-                <span class="count" id="totalEmpCount" style="font-size: 40px"
-                  >0</span
-                >
-              </div>
+              <div class="total-employee"><p style="font-size: 20px; font-weight: 700">Total Employee</p><span class="count" id="totalEmpCount" style="font-size: 40px">0</span></div>
               <div class="status-bars" style="margin-top: 20px">
-                <!-- Fulltime -->
-
-                <!-- WFO -->
-                <div class="bar-row" style="text-align: left">
-                  <span class="dot color-red"></span>
-                  <div
-                    class="bar-fill"
-                    id="bar-wfo"
-                    style="width: 0%; background-color: var(--color-red)"
-                  ></div>
-                  <span
-                    class="label"
-                    id="label-wfo"
-                    style="font-size: 20px; font-weight: 400"
-                    >WFO (0%)</span
-                  >
-                  <span class="value" id="val-wfo" style="font-size: 20px"
-                    >0</span
-                  >
-                </div>
-
-                <!-- WFH -->
-                <div class="bar-row">
-                  <span class="dot color-blue"></span>
-                  <div
-                    class="bar-fill"
-                    id="bar-wfh"
-                    style="width: 0%; background-color: var(--color-blue)"
-                  ></div>
-                  <span
-                    class="label"
-                    id="label-wfh"
-                    style="font-size: 20px; font-weight: 400"
-                    >WFH (0%)</span
-                  >
-                  <span class="value" id="val-wfh" style="font-size: 20px"
-                    >0</span
-                  >
-                </div>
-
-                <!-- Internship -->
-                <div class="bar-row" style="margin-bottom: 40px">
-                  <!-- <span class="dot color-pink"></span> -->
-                  <div
-                    class="bar-fill"
-                    id="bar-intern"
-                    style="width: 0%; background-color: var(--color-pink)"
-                  ></div>
-                  <span
-                    class="label"
-                    id="label-intern"
-                    style="font-size: 20px; font-weight: 400"
-                    >Internship (0%)</span
-                  >
-                  <span class="value" id="val-intern" style="font-size: 20px"
-                    >0</span
-                  >
-                </div>
+                <div class="bar-row"><span class="dot color-red"></span><div class="bar-fill" id="bar-wfo" style="width: 0%; background-color: var(--color-red)"></div><span class="label" id="label-wfo" style="font-size: 20px; font-weight: 400">WFO (0%)</span><span class="value" id="val-wfo" style="font-size: 20px">0</span></div>
+                <div class="bar-row"><span class="dot color-blue"></span><div class="bar-fill" id="bar-wfh" style="width: 0%; background-color: var(--color-blue)"></div><span class="label" id="label-wfh" style="font-size: 20px; font-weight: 400">WFH (0%)</span><span class="value" id="val-wfh" style="font-size: 20px">0</span></div>
+                <div class="bar-row" style="margin-bottom: 40px"><div class="bar-fill" id="bar-intern" style="width: 0%; background-color: var(--color-pink)"></div><span class="label" id="label-intern" style="font-size: 20px; font-weight: 400">Internship (0%)</span><span class="value" id="val-intern" style="font-size: 20px">0</span></div>
               </div>
-
-              <a href="#" class="view-details-link employee-trigger"
-                >View All Employees</a
-              >
+              <a href="#" class="view-details-link employee-trigger">View All Employees</a>
             </div>
           </div>
-          <!-- UPDATE YOUR EXISTING CARD LINK -->
 
-          <!-- ADD THIS MODAL MARKUP TO YOUR PAGE BODY -->
           <div id="employeeModal" class="modal">
             <div class="modal-content large-modal">
-              <div class="modal-header custom-header">
-                <h2>Employee Details</h2>
-
-                
-
-                
-
-                <span class="close-employee-btn"> &times;</span>
-              </div>
-
+              <div class="modal-header custom-header"><h2>Employee Details</h2><span class="close-employee-btn">&times;</span></div>
               <div class="modal-body">
                 <table class="employee-table">
-                  <thead>
-                    <tr>
-                      <th>Emp Id</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Position</th>
-                      <th>Salary</th>
-                    </tr>
-                  </thead>
-                  <tbody id="employeeTableBody">
-                    <!-- Javascript will populate rows here -->
-                  </tbody>
+                  <thead><tr><th>Emp Id</th><th>Name</th><th>Email</th><th>Position</th><th>Salary</th></tr></thead>
+                  <tbody id="employeeTableBody"></tbody>
                 </table>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- attendance overview card -->
-        <!-- <div class="stats-grid-1">
-          <div class="stat-card">
-            <div class="icon-circle bg-icon-orange">
-              <i class="fas fa-user-clock"></i>
-            </div>
-            <p>Attendance Overview</p>
-            <h3>120/154</h3>
-            <a href="#" class="view-details-link attendance-trigger"
-              >View Details</a
-            >
-          </div> -->
-
-        <!-- MODAL POPUP (Styled like the Permission Request Table) -->
-        <!-- <div id="detailModal" class="modal">
-            <div class="modal-content modal-table-view">
-              <div class="modal-header">
-                <h2 id="modalTitle">Attendance Detail Log</h2>
-                <span class="close-btn">&times;</span>
-              </div>
-              <div class="modal-body">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Employee</th>
-                      <th>Date</th>
-                      <th>Check In/Out</th>
-                      <th>Duration</th>
-                    </tr>
-                  </thead>
-                  <tbody id="modalTableBody"> -->
-        <!-- Rows populated by JS -->
-        <!-- </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-        </div> -->
-
         <div class="da-dashboard-wrapper">
-          <!-- CHART CARD -->
           <div class="da-main-chart-card">
             <div class="da-card-top-bar">
-              <div class="da-header-text">
-                <h3>Daily Attendance</h3>
-                <p>Shift: 10:00 AM - 07:00 PM</p>
-              </div>
+              <div class="da-header-text"><h3>Daily Attendance</h3><p>Shift: 10:00 AM - 07:00 PM</p></div>
               <div class="da-controls-area">
-                <!-- Legend -->
                 <div class="da-legend-group">
                   <span><span class="da-dot da-bg-late"></span>Late</span>
                   <span><span class="da-dot da-bg-ontime"></span>On Time</span>
                   <span><span class="da-dot da-bg-absent"></span>Absent</span>
                 </div>
-
-                <!-- Dynamic Employee Count Input -->
-                <div class="da-input-wrapper">
-                  <span class="da-label-small">Staff:</span>
-                  <input
-                    type="number"
-                    id="daStaffCountInput"
-                    class="da-num-field"
-                    value="50"
-                    min="1"
-                  />
-                </div>
-
-                <!-- Month Select -->
+                <div class="da-input-wrapper"><span class="da-label-small">Staff:</span><input type="number" id="daStaffCountInput" class="da-num-field" value="50" /></div>
                 <select class="da-month-dropdown" id="daMonthSelect">
-                  <option value="0">January</option>
-                  <option value="1">February</option>
-                  <option value="2">March</option>
-                  <option value="3">April</option>
-                  <option value="4">May</option>
-                  <option value="5">June</option>
-                  <option value="6">July</option>
-                  <option value="7">August</option>
-                  <option value="8">September</option>
-                  <option value="9">October</option>
-                  <option value="10">November</option>
-                  <option value="11">December</option>
+                  <option value="0">January</option><option value="1">February</option><option value="2">March</option>
+                  <option value="3">April</option><option value="4">May</option><option value="5">June</option>
+                  <option value="6">July</option><option value="7">August</option><option value="8">September</option>
+                  <option value="9">October</option><option value="10">November</option><option value="11">December</option>
                 </select>
               </div>
             </div>
-
             <div class="da-chart-visual-area">
-              <!-- Y-Axis (Dynamic) -->
-              <div class="da-y-axis-labels" id="daYAxisContainer">
-                <!-- Injected via JS -->
-              </div>
-              <!-- Grid -->
-              <div class="da-grid-lines-bg">
-                <div class="da-grid-line"></div>
-                <div class="da-grid-line"></div>
-                <div class="da-grid-line"></div>
-                <div class="da-grid-line"></div>
-                <div class="da-grid-line"></div>
-                <div class="da-grid-line"></div>
-              </div>
-
-              <!-- BARS -->
-              <div class="da-bars-wrapper" id="daBarsContainer">
-                <!-- Injected via JS -->
-              </div>
-
-              <!-- X-Axis (Dates) -->
-              <div class="da-x-axis-labels" id="daXLabelsContainer">
-                <!-- Injected via JS -->
-              </div>
+              <div class="da-y-axis-labels" id="daYAxisContainer"></div>
+              <div class="da-grid-lines-bg"><div class="da-grid-line"></div><div class="da-grid-line"></div><div class="da-grid-line"></div><div class="da-grid-line"></div><div class="da-grid-line"></div><div class="da-grid-line"></div></div>
+              <div class="da-bars-wrapper" id="daBarsContainer"></div>
+              <div class="da-x-axis-labels" id="daXLabelsContainer"></div>
             </div>
           </div>
 
-          <!-- STATS SIDEBAR -->
           <div class="da-stats-sidebar">
-            <!-- <div class="da-stat-box">
-                <div class="da-stat-number da-text-yellow" id="daAvgOntimeDisplay">0</div>
-                <div class="da-stat-label">Avg Present / Day</div>
-            </div> -->
+            <div class="stat-card">
+              <p>Total Present</p><span class="da-stat-number da-text-green" id="attendanceOverviewCount">--/--</span>
+              <a href="#" class="view-details-link" id="attendanceTrigger">View Details</a>
+            </div>
+            <div class="stat-card">
+              <p>Total Late</p><span class="da-stat-number da-text-blue" id="daAvgLateDisplay">--/--</span>
+              <a href="#" class="view-details-link" id="lateTrigger">View Details</a>
+            </div>
+            <div class="stat-card">
+              <p>Total Absent</p><span class="da-stat-number da-text-red" id="daAvgAbsentDisplay">--/--</span>
+              <a href="#" class="view-details-link" id="absentTrigger">View Details</a>
+            </div>
+          </div>
+        </div>
 
-            <div class="stat-card" style="width: 100%">
-              <div class="icon-circle bg-icon-orange">
-                <i class="fas fa-user-clock"></i>
-              </div>
-              <p>Attendance Overview</p>
-              <span id="attendanceOverviewCount"
-                >10/<span id="total_employees">100</span></span
-              >
-              <a
-                href="#"
-                class="view-details-link attendance-trigger"
-                id="attendanceTrigger"
-                >View Details</a
-              >
-            </div>
-
-            <!-- MODAL POPUP (Styled like the Permission Request Table) -->
-            <div id="detailModal" class="modal">
-              <div class="modal-content modal-table-view">
-                <div class="modal-header">
-                  <h2 id="modalTitle">Attendance Detail Log</h2>
-                  <span class="close-btn">&times;</span>
-                </div>
-                <div class="modal-body">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Employee</th>
-                        <th>Date</th>
-                        <th>Check In/Out</th>
-                        <th>Duration</th>
-                      </tr>
-                    </thead>
-                    <tbody id="modalTableBody">
-                      <!-- Rows populated by JS -->
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <div class="da-stat-box">
-              <div class="da-stat-number da-text-blue" id="daAvgLateDisplay">
-                0
-              </div>
-              <div class="da-stat-label">Total Late</div>
-            </div>
-            <div class="da-stat-box">
-              <div class="da-stat-number da-text-red" id="daAvgAbsentDisplay">
-                0
-              </div>
-              <div class="da-stat-label">Total Absent</div>
-            </div>
+        <div id="detailModal" class="modal">
+          <div class="modal-content modal-table-view">
+            <div class="modal-header"><h2>Attendance Detail Log</h2><span class="close-btn" onclick="closeAttendanceModal()">&times;</span></div>
+            <div class="modal-body"><table><thead><tr><th>ID</th><th>Employee</th><th>Date</th><th>Check In</th><th>Check Out</th></tr></thead><tbody id="modalTableBody"></tbody></table></div>
+          </div>
+        </div>
+        <div id="lateModal" class="modal">
+          <div class="modal-content modal-table-view">
+            <div class="modal-header"><h2>Late Attendance List</h2><span class="close-btn" onclick="closeLateModal()">&times;</span></div>
+            <div class="modal-body"><table><thead><tr><th>ID</th><th>Employee</th><th>Check In</th><th>Status</th></tr></thead><tbody id="lateTableBody"></tbody></table></div>
+          </div>
+        </div>
+        <div id="absentModal" class="modal">
+          <div class="modal-content modal-table-view">
+            <div class="modal-header"><h2>Absent List (Today)</h2><span class="close-btn" onclick="closeAbsentModal()">&times;</span></div>
+            <div class="modal-body"><table><thead><tr><th>ID</th><th>Employee</th><th>Role</th><th>Status</th></tr></thead><tbody id="absentTableBody"></tbody></table></div>
           </div>
         </div>
 
         <div class="main-grid-row grid-row-5">
-          <!-- Birthdays (Span 1) -->
-
-          <!-- 1. MAIN BIRTHDAY CARD (CAROUSEL) -->
           <div class="birthday-card">
             <div class="bday-header">
               <h2>Team Birthday</h2>
               <div class="bday-controls">
-                <button id="prevBdayBtn" class="nav-arrow">
-                  <i class="fas fa-chevron-left"></i>
-                </button>
-                <button id="nextBdayBtn" class="nav-arrow">
-                  <i class="fas fa-chevron-right"></i>
-                </button>
+                <button id="prevBdayBtn" class="nav-arrow"><i class="fas fa-chevron-left"></i></button>
+                <button id="nextBdayBtn" class="nav-arrow"><i class="fas fa-chevron-right"></i></button>
               </div>
             </div>
-
-            <!-- Dynamic Content Area -->
             <div class="birthday-carousel">
               <div class="birthday-profile fade-in" id="bdayProfileContainer">
-                <img
-                  id="bdayImg"
-                  src=""
-                  alt="Profile"
-                  style="display: none;"
-                />
-                <h3 id="bdayName">Loading..</h3>
-                <p id="bdayRole"></p>
-                <span id="bdayDate" class="bday-date-badge"></span>
+                <img id="bdayImg" src="" alt="Profile" style="display: none;" />
+                <h3 id="bdayName">Loading..</h3><p id="bdayRole"></p><span id="bdayDate" class="bday-date-badge"></span>
               </div>
             </div>
-
             <div class="birthday-actions">
-              <!-- Passes 'current' to JS to know who is visible -->
-              <button class="wish-btn" onclick="openWishModal('current')">
-                Send Wishes
-              </button>
-              <button class="view-btn" onclick="openAllBirthdaysModal()">
-                View All
-              </button>
+              <button class="wish-btn" onclick="openWishModal('current')">Send Wishes</button>
+              <button class="view-btn" onclick="openAllBirthdaysModal()">View All</button>
             </div>
           </div>
 
-          <!-- ========================================= -->
-          <!-- 2. POPUP: SEND WISHES (Celebration Theme) -->
-          <!-- ========================================= -->
           <div id="wishModal" class="modal-overlay">
             <div class="modal-card wish-card">
-              <span class="close-modal" onclick="closeWishModal()"
-                >&times;</span
-              >
-
-              <div class="wish-header-icon">
-                <i class="fa-solid fa-cake-candles"></i>
-              </div>
-
+              <span class="close-modal" onclick="closeWishModal()">&times;</span>
+              <div class="wish-header-icon"><i class="fa-solid fa-cake-candles"></i></div>
               <h3>Happy Birthday!</h3>
-              <p>
-                Send your best wishes to
-                <span id="wishTargetName" class="highlight-name">DD</span>
-              </p>
-
-              <textarea
-                id="wishMessage"
-                placeholder="Write a warm message... (e.g. Have a fantastic year ahead!)"
-              ></textarea>
-
-              <button class="btn-send-wish" onclick="submitWish()">
-                <i class="fa-regular fa-paper-plane"></i> Send Wish
-              </button>
+              <p>Send your best wishes to <span id="wishTargetName" class="highlight-name">DD</span></p>
+              <textarea id="wishMessage" placeholder="Write a warm message..."></textarea>
+              <button class="btn-send-wish" onclick="submitWish()"><i class="fa-regular fa-paper-plane"></i> Send Wish</button>
             </div>
           </div>
 
-          <!-- ========================================= -->
-          <!-- 3. POPUP: VIEW ALL BIRTHDAYS (List View)  -->
-          <!-- ========================================= -->
           <div id="allBirthdaysModal" class="modal-overlay">
             <div class="modal-card list-card">
-              <div class="modal-header">
-                <h2>Upcoming Birthdays</h2>
-                <span class="close-modal" onclick="closeAllBirthdaysModal()"
-                  >&times;</span
-                >
-              </div>
-
-              <div class="bday-list-container" id="bdayListContainer">
-                <!-- List items will be injected by JS -->
-              </div>
+              <div class="modal-header"><h2>Upcoming Birthdays</h2><span class="close-modal" onclick="closeAllBirthdaysModal()">&times;</span></div>
+              <div class="bday-list-container" id="bdayListContainer"></div>
             </div>
           </div>
 
-          <!-- 4. POPUP: WISHES SENT SUCCESS (New)       -->
-          <!-- ========================================= -->
           <div id="successWishModal" class="modal-overlay">
             <div class="modal-card success-card">
-              <!-- Animated Icon Circle -->
-              <div class="success-icon-container">
-                <i class="fa-solid fa-check"></i>
-                <div class="confetti-piece"></div>
-                <div class="confetti-piece"></div>
-                <div class="confetti-piece"></div>
-              </div>
-
+              <div class="success-icon-container"><i class="fa-solid fa-check"></i><div class="confetti-piece"></div><div class="confetti-piece"></div><div class="confetti-piece"></div></div>
               <h3>Wishes Sent Successfully!</h3>
-              <p>
-                Your warm wishes have been delivered to <br /><span
-                  id="successName"
-                  class="highlight-name"
-                  >DD</span
-                >.
-              </p>
-
-              <button
-                class="btn-success-close"
-                onclick="closeSuccessWishModal()"
-              >
-                Awesome!
-              </button>
+              <p>Your warm wishes have been delivered to <br /><span id="successName" class="highlight-name">DD</span>.</p>
+              <button class="btn-success-close" onclick="closeSuccessWishModal()">Awesome!</button>
             </div>
           </div>
 
-          <!-- LEAVE POLICY -->
-          <div id="policy" style="display: flex; gap: 40px; justify-content: center; ">
+          <div id="policy">
             <div class="leave-card">
-              <div class="leave-left">
-                <h3>HR Policy</h3>
-
-                <p>Last Updated: Today</p>
-              </div>
-
-              <button class="small-btn">
-                <a
-                  href="../assets/hr policy.pdf"
-                  target="_blank"
-                  style="text-decoration: none; color: rgb(34, 32, 32)"
-                  >View All</a
-                >
-              </button>
+              <div class="leave-left"><h3>HR Policy</h3><p>Upto Date</p></div>
+              <button class="small-btn"><a href="../assets/hr policy.pdf" target="_blank" style="text-decoration: none; color: inherit">View All</a></button>
             </div>
-
-            <!-- HOLIDAY CARD -->
 
             <div class="hra-holiday-card">
               <div class="hra-holiday-left">
-                <div class="hra-icon-bg">
-                  <i class="fa-solid fa-calendar-day"></i>
-                </div>
-                <div class="hra-info-text">
-                  <h3>Next Holiday</h3>
-                  <p id="hraNextHolidayText">Loading...</p>
-                </div>
+                <div class="hra-icon-bg"><i class="fa-solid fa-calendar-day"></i></div>
+                <div class="hra-info-text"><h3>Next Holiday</h3><p id="hraNextHolidayText">Loading...</p></div>
               </div>
-              <button class="hra-small-btn" id="hraViewHolidayBtn">
-                View All
-              </button>
+              <button class="hra-small-btn" id="hraViewHolidayBtn">View All</button>
             </div>
 
-            <!-- 2. MODAL: VIEW ALL HOLIDAYS (List) -->
             <div class="hra-modal-overlay" id="hraHolidayListModal">
               <div class="hra-modal-content hra-modal-large">
-                <div class="hra-modal-header">
-                  <h3>
-                    <i class="fa-solid fa-calendar-check"></i> Holiday Calendar
-                    2025
-                  </h3>
-                  <span class="hra-close-btn" id="hraCloseHolidayList"
-                    >&times;</span
-                  >
-                </div>
-
-                <div class="hra-list-container">
-                  <table class="hra-table">
-                    <thead>
-                      <tr>
-                        <th>Date</th>
-                        <th>Day</th>
-                        <th>Occasion</th>
-                        <th>Type</th>
-                      </tr>
-                    </thead>
-                    <tbody id="hraHolidayTableBody">
-                      <!-- JS will populate rows here -->
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="hra-modal-footer">
-                  <button class="hra-btn-primary" id="hraOpenAddHolidayBtn">
-                    <i class="fa-solid fa-plus"></i> Add New Holiday
-                  </button>
-                </div>
+                <div class="hra-modal-header"><h3><i class="fa-solid fa-calendar-check"></i> Holiday Calendar 2025</h3><span class="hra-close-btn" id="hraCloseHolidayList">&times;</span></div>
+                <div class="hra-list-container"><table class="hra-table"><thead><tr><th>Date</th><th>Day</th><th>Occasion</th><th>Type</th></tr></thead><tbody id="hraHolidayTableBody"></tbody></table></div>
+                <div class="hra-modal-footer"><button class="hra-btn-primary" id="hraOpenAddHolidayBtn"><i class="fa-solid fa-plus"></i> Add New Holiday</button></div>
               </div>
             </div>
-
-            <!-- 3. MODAL: ADD NEW HOLIDAY (Form) -->
             <div class="hra-modal-overlay hra-z-high" id="hraAddHolidayModal">
               <div class="hra-modal-content">
-                <div class="hra-modal-header">
-                  <h3>Add New Holiday</h3>
-                  <span class="hra-close-btn" id="hraCloseAddHoliday"
-                    >&times;</span
-                  >
-                </div>
+                <div class="hra-modal-header"><h3>Add New Holiday</h3><span class="hra-close-btn" id="hraCloseAddHoliday">&times;</span></div>
                 <form id="hraHolidayForm">
-                  <div class="hra-form-group">
-                    <label>Occasion Name</label>
-                    <input
-                      type="text"
-                      id="hraHolidayName"
-                      placeholder="e.g. Diwali"
-                      required
-                    />
-                  </div>
-                  <div class="hra-form-group">
-                    <label>Date</label>
-                    <input type="date" id="hraHolidayDate" required />
-                  </div>
-                  <div class="hra-form-group">
-                    <label>Holiday Type</label>
-                    <select id="hraHolidayType">
-                      <option value="Public Holiday">Public Holiday</option>
-                      <option value="Optional Holiday">Optional Holiday</option>
-                      <option value="Weekend">Weekend</option>
-                    </select>
-                  </div>
-                  <button type="submit" class="hra-btn-primary hra-full-width">
-                    Save Holiday
-                  </button>
+                  <div class="hra-form-group"><label>Occasion Name</label><input type="text" id="hraHolidayName" required /></div>
+                  <div class="hra-form-group"><label>Date</label><input type="date" id="hraHolidayDate" required /></div>
+                  <div class="hra-form-group"><label>Holiday Type</label><select id="hraHolidayType"><option value="Public Holiday">Public Holiday</option><option value="Optional Holiday">Optional Holiday</option></select></div>
+                  <button type="submit" class="hra-btn-primary hra-full-width">Save Holiday</button>
                 </form>
               </div>
             </div>
-
-            <!-- 4. SUCCESS POPUP -->
-            <div class="hra-success-popup" id="hraSuccessPopup">
-              <div class="hra-popup-icon">
-                <i class="fa-solid fa-check"></i>
-              </div>
-              <div class="hra-popup-text">
-                <h4>Success!</h4>
-                <p>Holiday added to calendar successfully.</p>
-              </div>
-            </div>
+            <div class="hra-success-popup" id="hraSuccessPopup"><div class="hra-popup-icon"><i class="fa-solid fa-check"></i></div><div class="hra-popup-text"><h4>Success!</h4><p>Holiday added successfully.</p></div></div>
           </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="dashboard-footer">
-          <p>2025@oppty</p>
-          <p>Designed & Developed By Oppty</p>
-        </footer>
+        <footer class="dashboard-footer"><p>2025@oppty</p><p>Designed & Developed By Oppty</p></footer>
       </main>
     </div>
-
     <script src="admin.js"></script>
   </body>
 </html>

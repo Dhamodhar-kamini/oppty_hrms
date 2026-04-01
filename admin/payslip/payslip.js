@@ -221,8 +221,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if(inputs.empName) {
         inputs.empName.addEventListener('change', () => {
+            const employeeId = inputs.empName.value;
+            
+            // 1. Update Preview Name text immediately
             const selectedText = inputs.empName.options[inputs.empName.selectedIndex].text;
-            if(preview.name) preview.name.textContent = selectedText.split('(')[0].trim();
+            if(preview.name) {
+                // Extracts just the name part before the ID brackets
+                preview.name.textContent = selectedText.split('(')[0].trim();
+            }
+
+            if (!employeeId) return;
+
+            // 2. Fetch Employee Details from Backend
+            fetch(`${API_BASE_URL}/api/employee/dashboard/${employeeId}/`)
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to fetch employee salary");
+                return res.json();
+            })
+            .then(data => {
+                // Extract salary from the API response
+                if (data && data.salary !== undefined) {
+                    const dbSalary = parseFloat(data.salary) || 0;
+
+                    // 3. Logic: Decide where to put the salary based on Toggle
+                    if (toggle && toggle.checked) {
+                        // If Auto-Calculate (CTC) is active:
+                        // Assuming dbSalary is monthly, convert to Annual CTC for the ctcInput
+                        ctcInput.value = dbSalary  
+                    } else {
+                        // If Manual Entry is active:
+                        // Set the Basic Salary field directly
+                        inputs.basic.value = dbSalary.toFixed(2);
+                    }
+
+                    // 4. Trigger the local calculation function to update the Preview Ticket
+                    calculateSalary();
+                }
+            })
+            
         });
     }
 
@@ -260,12 +296,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const bas = Number(inputs.basic.value) || 0;
             const lop_A = Number(inputs.lopAmount.value) || 0;
             const pf_a = Number(inputs.pf.value) || 0;
-            const pt = Number(inputs.tax.value) || 0;
+            let pt = 0;
             const lop_d = Number(inputs.lopDays.value) || 0;
-
-            const gr = bas ;         
-            const n = gr -lop_A-pf_a-pt; 
-
+            
+            const gr = bas-lop_A ;    
+            if (gr <= 15000) {
+                pt = 0;
+            } else if (gr > 15000 && gr <= 20000) {
+                pt = 150;
+            } else {
+                // This handles everything above 20000
+                pt = 200;
+            }     
+            const n = gr -pf_a-pt 
+            
 
             const payload = {
                 month: monthText,

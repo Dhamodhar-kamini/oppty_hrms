@@ -1,4 +1,3 @@
-
 // --- PRELOADER LOGIC ---
 window.addEventListener("load", function () {
     const preloader = document.getElementById("page-preloader");
@@ -219,20 +218,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const row = document.createElement("tr");
 
-                row.innerHTML=`
-                <td>${emp.id}</td>
-                <td>
-                    <strong>${emp.name}</strong>
-                    <br>
-                    <small>${emp.role}</small>
-                </td>
-                <td>${emp.date}</td>
-                <td>
-                    In: ${formatTimeUTC(emp.checkin) || "--"} <br>
-                    Out: ${formatTimeUTC(emp.checkout) || "--"}
-                </td>
-                <td>${emp.duration || "--"}</td>
-                `;
+                // row.innerHTML=`
+                // <td>${emp.id}</td>
+                // <td>
+                //     <strong>${emp.name}</strong>
+                //     <br>
+                //     <small>${emp.role}</small>
+                // </td>
+                // <td>${emp.date}</td>
+                // <td>
+                //     In: ${formatTimeUTC(emp.checkin) || "--"} <br>
+                //     Out: ${formatTimeUTC(emp.checkout) || "--"}
+                // </td>
+                // <td>${emp.duration || "--"}</td>
+                // `;
 
                 modalTableBody.appendChild(row);
 
@@ -528,7 +527,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 fetch(`${API_BASE_URL}/api/create/`, {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(apiEmployee)
+                    body: JSON.stringify(apiEmployee),
+                    credentials: 'include'
                 })
                 .then(res => {
                     if(!res.ok) throw new Error("Network response was not ok");
@@ -698,6 +698,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const triggerBtn = document.querySelector(".attendance-trigger");
     const closeBtn = document.querySelector(".close-btn");
 
+    const attTrigger = document.getElementById("attendanceTrigger");
+    if (attTrigger) {
+        attTrigger.addEventListener("click", async (e) => {
+            e.preventDefault();
+            await loadTodayAttendanceModal(); 
+            document.getElementById("detailModal").style.display = "flex";
+        });
+    }
+
+    // 2. LATE MODAL TRIGGER
+    const lateTrigger = document.getElementById("lateTrigger");
+    if (lateTrigger) {
+        lateTrigger.addEventListener("click", (e) => {
+            e.preventDefault();
+            document.getElementById("lateModal").style.display = "flex";
+            loadLateList(); 
+        });
+    }
+    const lateTriggerBtn = document.getElementById("lateTrigger");
+if (lateTriggerBtn) {
+    lateTriggerBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const modal = document.getElementById("lateModal");
+        if (modal) {
+            modal.style.display = "flex"; // Use flex for centering
+            loadLateList();
+        }
+    });
+}
+
+    // 3. ABSENT MODAL TRIGGER
+    const absentTrigger = document.getElementById("absentTrigger");
+    if (absentTrigger) {
+        absentTrigger.addEventListener("click", (e) => {
+            e.preventDefault();
+            document.getElementById("absentModal").style.display = "flex";
+            loadAbsentList(); 
+        });
+    }
     // --- 2. ASYNC FUNCTION TO RENDER ALL DYNAMIC DATA ---
     async function da_runSimulation() {
         if (da_barsContainer) da_barsContainer.innerHTML = '<div class="loading-spinner"></div>';
@@ -763,7 +802,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const col = document.createElement('div');
                 col.className = 'da-bar-column';
                 col.setAttribute('data-tooltip', `Day ${dayData.day}\nOn Time: ${dayData.ontime}\nLate: ${dayData.late}\nAbsent: ${dayData.absent}`);
-
                 col.innerHTML = `
                     <div class="da-bar-segment da-bg-ontime" style="height: ${hOntime}%"></div>
                     <div class="da-bar-segment da-bg-late" style="height: ${hLate}%"></div>
@@ -789,6 +827,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Failed to load monthly chart data:", error);
             if (da_barsContainer) da_barsContainer.innerHTML = '<p class="error-text">Could not load chart data.</p>';
         }
+       
     }
 
     // --- 3. MODAL LOGIC (for "View Details") ---
@@ -810,16 +849,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${emp.id}</td>
-                    <td class="employee-cell">
-                        <strong>${emp.name}</strong><br>
-                        <small>${emp.role}</small>
-                    </td>
+                    <td><strong>${emp.name}</strong><br><small>${emp.role}</small></td>
                     <td>${emp.date}</td>
-                    <td>
-                        <div style="font-size: 13px;">In: ${formatTimeUTC(emp.checkin) || "--:--"}</div>
-                        <div style="font-size: 13px;">Out: ${formatTimeUTC(emp.checkout) || "--:--"}</div>
-                    </td>
-                    <td>${emp.duration || "N/A"}</td>
+                    <td style="color: #e18112; font-weight: bold;">${emp.checkin}</td>
+                    <td style="color: #dc3545; font-weight: bold;">${emp.checkout||" --  "}</td>
                 `;
                 modalTableBody.appendChild(row);
             });
@@ -860,11 +893,31 @@ document.addEventListener('DOMContentLoaded', () => {
             detailModal.style.display = "none";
         });
     }
+    const lateDisplay = document.getElementById("daAvgLateDisplay");
+    const absentDisplay = document.getElementById("daAvgAbsentDisplay");
+
+    if (lateDisplay) {
+        lateDisplay.addEventListener("click", () => {
+            document.getElementById("lateModal").style.display = "flex"; 
+            loadLateList();
+        });
+    }
+
+    if (absentDisplay) {
+        absentDisplay.addEventListener("click", () => {
+            document.getElementById("absentModal").style.display = "flex"; 
+            loadAbsentList();
+        });
+    }
 
     window.addEventListener("click", (e) => {
         if (e.target === detailModal) {
             detailModal.style.display = "none";
         }
+        const lateM = document.getElementById("lateModal");
+        const absentM = document.getElementById("absentModal");
+        if (e.target === lateM) lateM.style.display = "none";
+        if (e.target === absentM) absentM.style.display = "none";
     });
     
     da_runSimulation();
@@ -881,6 +934,7 @@ let todayBirthdays = [];
 let upcomingBirthdays = []; 
 let currentBdayIndex = 0;
 let bdayAutoInterval; // This is the variable used to stop/start auto-slide
+
 document.getElementById("nextBdayBtn")?.addEventListener("click", () => {
     // Stop auto-slide when user clicks manually
     clearInterval(bdayAutoInterval); 
@@ -893,6 +947,7 @@ document.getElementById("prevBdayBtn")?.addEventListener("click", () => {
     currentBdayIndex = (currentBdayIndex - 1 + todayBirthdays.length) % todayBirthdays.length;
     updateBdayCarousel(currentBdayIndex);
 });
+const bdayCard = document.querySelector(".birthday-card");
 async function loadBirthdayData() {
     try {
         const res = await fetch(`${API_BASE_URL}/api/birthdays/`);
@@ -1229,6 +1284,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     const closeHolidayListBtn = document.getElementById('hraCloseHolidayList');
     if (closeHolidayListBtn) {
         closeHolidayListBtn.addEventListener('click', () => {
@@ -1460,4 +1516,125 @@ window.addEventListener('click', function(event) {
     if (event.target === modal) {
         hdr_hideLogoutModal();
     }
-});
+});// --- LATE & ABSENT LIST LOGIC ---
+
+// // Helper to check if a time is late (Strictly > 10:00:00)
+// --- LATE LIST LOGIC ---
+
+// Helper: Matches Django backend logic (Strictly > 10:00:00 AM)
+function isLateCheck(timeStr) {
+    if (!timeStr) return false;
+
+    // 1. Handle AM/PM format (e.g., "10:05 AM" or "06:24 AM")
+    if (timeStr.includes("AM") || timeStr.includes("PM")) {
+        const [time, modifier] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':');
+        hours = parseInt(hours);
+        minutes = parseInt(minutes);
+
+        if (modifier === 'PM' && hours < 12) hours += 12;
+        if (modifier === 'AM' && hours === 12) hours = 0;
+
+        // LATE if hours > 10 OR (hours == 10 and minutes > 0)
+        return (hours > 10 || (hours === 10 && minutes > 0));
+    }
+
+    // 2. Fallback for ISO strings (e.g., "2026-03-30T10:05:00Z")
+    const dateObj = new Date(timeStr);
+    const h = dateObj.getUTCHours();
+    const m = dateObj.getUTCMinutes();
+    return (h > 10 || (h === 10 && m > 0));
+}
+
+async function loadLateList() {
+    const table = document.getElementById("lateTableBody");
+    if (!table) return;
+
+    table.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Loading...</td></tr>";
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/today-attendance/`);
+        const data = await res.json();
+
+        // Filter based on the logic above
+        const lateEmployees = data.filter(emp => isLateCheck(emp.checkin));
+
+        if (lateEmployees.length === 0) {
+            table.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No data found matching late criteria.</td></tr>";
+            return;
+        }
+
+        table.innerHTML = ""; // Clear loader
+        lateEmployees.forEach(emp => {
+            table.innerHTML += `
+                <tr>
+                    <td>${emp.id}</td>
+                    <td><strong>${emp.name}</strong><br><small>${emp.role}</small></td>
+                    <td style="color: #dc3545; font-weight: bold;">${emp.checkin}</td>
+                    <td><span class="status-badge rejected">Late</span></td>
+                </tr>`;
+        });
+    } catch (e) {
+        console.error("Late list error:", e);
+        table.innerHTML = "<tr><td colspan='4' style='text-align:center; color:red;'>Error loading data.</td></tr>";
+    }
+}
+
+async function loadAbsentList() {
+    const table = document.getElementById("absentTableBody");
+    table.innerHTML = "<tr><td colspan='4'>Loading...</td></tr>";
+    
+    try {
+        // Fetch ALL employees and TODAY'S attendance to compare
+        const [empRes, attRes] = await Promise.all([
+            fetch(`${API_BASE_URL}/api/employees/`),
+            fetch(`${API_BASE_URL}/api/today-attendance/`)
+        ]);
+        
+        const allEmployees = await empRes.json();
+        const presentData = await attRes.json();
+        const presentIds = presentData.map(p => String(p.id));
+
+        const absentList = allEmployees.filter(e => !presentIds.includes(String(e.employee_id || e.id)));
+
+        table.innerHTML = absentList.length ? "" : "<tr><td colspan='4'>Everyone is present!</td></tr>";
+        
+        absentList.forEach(emp => {
+            const row = `<tr>
+                <td>${emp.employee_id || emp.id}</td>
+                <td><strong>${emp.name}</strong></td>
+                <td>${emp.role || emp.department}</td>
+                <td><span class="status-badge rejected">Absent</span></td>
+            </tr>`;
+            table.innerHTML += row;
+        });
+    } catch (e) { console.error(e); }
+}
+
+// // UI Triggers (Add these to your DOMContentLoaded listeners)
+// document.getElementById("daAvgLateDisplay")?.addEventListener("click", () => {
+//     document.getElementById("lateModal").style.display = "block";
+//     loadLateList();
+// });
+
+// document.getElementById("daAvgAbsentDisplay")?.addEventListener("click", () => {
+//     document.getElementById("absentModal").style.display = "block";
+//     loadAbsentList();
+// });
+
+// // Close functions
+window.addEventListener("click", (e) => {
+        const modals = ["detailModal", "lateModal", "absentModal"];
+        modals.forEach(modalId => {
+            const modalElement = document.getElementById(modalId);
+            if (e.target === modalElement) {
+                modalElement.style.display = "none";
+            }
+        });
+    });
+
+
+// Explicit Close Functions for the 'X' buttons (Ensures onclick="closeLateModal()" works)
+window.closeAttendanceModal = () => document.getElementById("detailModal").style.display = "none";
+window.closeLateModal = () => document.getElementById("lateModal").style.display = "none";
+window.closeAbsentModal = () => document.getElementById("absentModal").style.display = "none";
