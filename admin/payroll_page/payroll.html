@@ -34,64 +34,55 @@
 </div>
 <!-- PRELOADER END -->
       <!-- 1. Sidebar Navigation (Detailed based on image) -->
-       <aside class="sidebar">
-        <div class="logo">
-          <!-- <i class="fas fa-chart-line"></i> -->
-          <!-- <span>OPPTY</span> -->
-          <img
-            class="opptyLogo"
-            src="../assets/opptylogo.png"
-            alt="OPPTY HRMS Logo"
-          />
+      <aside class="sidebar" id="sidebar">
+  <!-- Close Button (Visible only on mobile) -->
+  <div class="sidebar-close-btn" id="sidebarCloseBtn">
+    <i class="fas fa-times"></i>
+  </div>
+
+  <div class="logo">
+    <img class="opptyLogo" src="../assets/opptylogo.png" alt="OPPTY HRMS Logo" />
+  </div>
+
+  <div class="sidebar-content">
+    <div class="menu-section main-menu">
+      <p class="menu-header">MAIN MENU</p>
+      
+      <!-- Dashboard Parent -->
+      <div class="menu-item-wrapper">
+        <a href="javascript:void(0)" class="menu-item has-submenu" id="dashboardMenu">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <!-- Submenu Items -->
+        <div class="submenu" id="dashboardSubmenu">
+          <a href="../admin_page/admin.html" class="menu-item">
+            <i class="fas fa-user-tie"></i><span>Admin Dashboard</span>
+          </a>
+          <a href="../employeedashb/employee.html" class="menu-item">
+            <i class="fas fa-user"></i><span>Employee Dashboard</span>
+          </a>
+          <a href="../approval/approval.html" class="menu-item">
+            <i class="fas fa-check-circle"></i><span>Approval</span>
+          </a>
+          <a href="../payroll_page/payroll.html" class="menu-item active">
+            <i class="fas fa-money-bill-wave"></i><span>Payroll Dashboard</span>
+          </a>
+          <!-- <a href="../recruitment/recruitment.html" class="menu-item">
+            <i class="fas fa-search"></i><span>Recruitment Dashboard</span>
+          </a> -->
+          <a href="../assertAllocation/assertAllocation.html" class="menu-item">
+            <i class="fas fa-boxes"></i><span>Asset Allocation</span>
+          </a>
         </div>
+      </div>
+    </div>
+  </div>
+</aside>
 
-        <div class="sidebar-content">
-          <div class="menu-section main-menu">
-            <p class="menu-header">MAIN MENU</p>
-            <div class="menu-section main-menu">
-              <!-- Dashboard Parent -->
-              <a
-                href="javascript:void(0)"
-                class="menu-item has-submenu"
-                id="dashboardMenu"
-              >
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-              </a>
-
-              <!-- Submenu Items -->
-              <div class="submenu" id="dashboardSubmenu">
-                <a href="../admin_page/admin.html" class="menu-item"
-                  ><i class="fas fa-user-tie"></i><span>Admin Dashboard</span></a
-                >
-                <a href="../employeedashb/employee.html" class="menu-item"
-                  ><i class="fas fa-user"></i><span>Employee Dashboard</span></a
-                >
-                <a href="../approval/approval.html" class="menu-item"
-                  ><i class="fas fa-check-circle"></i><span>Approval</span></a
-                >
-                
-                
-                <a href="../payslip/payslip.html" class="menu-item active"
-                  ><i class="fas fa-money-bill-wave"></i
-                  ><span>Payroll Dashboard</span
-                  ></a
-                >
-                <!-- <a href="../recruitment/recruitment.html" class="menu-item"
-                  ><i class="fas fa-search"></i
-                  ><span>Recruitment Dashboard</span
-                  ></a
-                > -->
-                <a href="../assertAllocation/assertAllocation.html" class="menu-item"
-                  ><i class="fas fa-boxes"></i><span>Asset Allocation</span
-                  ></a
-                >
-                
-
-            </div>
-          </div>
-        </div>
-      </aside>
+<!-- Overlay for mobile background dimming -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
       <!-- 2. Main Content Area -->
       <main class="main-content">
@@ -103,10 +94,16 @@
             <span>CTRL + /</span>
           </div>
           <div class="header-icons">
-    <!-- Existing Icons -->
 
-    <!-- MODIFIED PROFILE SECTION -->
-    <!-- Profile Wrapper (Existing) -->
+            <!--hambargar section-->
+            <div class="hamburger-menu-icon" id="hamburgerMenu">
+              <i class="fas fa-bars"></i>
+            </div>
+            <!-- Existing Icons -->
+            
+            
+            <!-- MODIFIED PROFILE SECTION -->
+            <!-- Profile Wrapper (Existing) -->
 <div class="hdr-profile-wrapper">
   <!-- Profile Image (Clickable) -->
   <div class="user-profile" onclick="hdr_toggleProfilePopup()">
@@ -146,14 +143,10 @@
     </div>
   </div>
 </div>
-</div>
+          </div>
         </header>
 
-    
-    <!-- Main Container -->
     <div class="container" style="margin-top: 50px; margin-left: 30px;">
-        
-        <!-- Header -->
         <header class="header">
             <div class="header-left">
                 <h1 style="font-size: 28px;">Payroll Dashboard</h1>
@@ -165,73 +158,117 @@
                     <span class="active" style="color: #666;">Payroll Dashboard</span>
                 </div>
             </div>
-            <div class="header-right">
-                <button class="btn-white"><i class="fa-regular fa-file-lines"></i> Monthly Report <i class="fa-solid fa-chevron-down"></i></button>
-                <button class="btn-white"><i class="fa-regular fa-calendar"></i> Feb 2026</button>
-                <button class="btn-white icon-only"><i class="fa-solid fa-chevron-up"></i></button>
+            
+            <div class="header-right" style="display: flex; gap: 12px; align-items: center;">
+                <div class="calendar-filter">
+                    <input type="month" id="monthPicker" class="btn-white" 
+                           style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer;">
+                </div>
+                <a class="payslip_navg" href="../payslip/payslip.html" style="text-decoration: none;">
+                    <button class="btn-primary"><i class="fa-solid fa-bolt"></i> Run Payroll</button>
+                </a>
             </div>
         </header>
 
-        <!-- Status Bar -->
-        <div class="status-bar">
+        <div class="status-bar" style="margin-top: 20px;">
             <div class="status-info">
                 <span class="status-dot"></span>
                 <span class="label">Payroll Status:</span>
-                <!-- <span class="badge badge-success">Processing</span> -->
+                <span class="badge badge-success">Live</span>
                 <span class="divider">|</span>
-                <span class="label">Payroll Date: </span>
-                <span class="divider">|</span>
-                <span class="label">Payment Date: Dec 31, 2024</span>
+                <span id="monthlyLabel" class="label" style="font-weight: 600; color: #FF6B00;">Monthly Total</span>
             </div>
-            <a class="payslip_navg" href="../payslip/payslip.html"><button class="btn-primary"><i class="fa-solid fa-bolt"></i> Run Payroll</button></a>
-            
         </div>
 
-
-        <div class="dashboard-card">
-
-    <div class="card-header">
-    <div class="header-text">
-        <h2>Annual Salary Distribution</h2>
-        <p>Revenue breakdown per month for selected fiscal year</p>
+       <div class="stats-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 30px;">
+    
+    <div class="stat-item neat-card">
+        <span class="stat-label">Total Annual Payout</span>
+        <div class="main-val-container">
+            <div class="stat-value" id="totalAnnualNet">₹0</div>
+        </div>
+        <button id="viewYearlyDetails" class="details-btn">
+            <i class="fa-solid fa-eye"></i> View Details
+        </button>
     </div>
 
-    <!-- YEAR SELECTOR -->
-    <div class="year-selector-container">
-        <select id="yearPicker" class="custom-select">
-            <!-- JS will populate years -->
-        </select>
+    <div class="stat-item neat-card">
+        <span class="stat-label">Monthly Payout</span>
+        <div class="main-val-container">
+            <div class="stat-value" id="totalMonthlyNet">₹0</div>
+        </div>
+        <button id="viewMonthlyDetails" class="details-btn">
+            <i class="fa-solid fa-eye"></i> View Details
+        </button>
     </div>
 </div>
-
-    <div class="stats-grid">
-        <div class="stat-item">
-            <span class="stat-label">Total Annual Payout</span>
-            <div class="stat-value" id="totalPayout">₹0</div>
+<div class="content-card" style="margin-top: 30px; background: #fff; border-radius: 12px; border: 1px solid #eee; overflow: hidden; margin-bottom: 50px;">
+    <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+        <div>
+            <h3 style="font-size: 18px; font-weight: 700; color: #111;">Employee Payslip Records</h3>
+            <p style="font-size: 12px; color: #64748b; margin-top: 4px;" id="tableSubLabel">Records for Current Month</p>
         </div>
-
-        <div class="stat-item">
-            <span class="stat-label">Avg. Monthly Salary</span>
-            <div class="stat-value" id="avgPayout">₹0</div>
-        </div>
-    </div>
-
-    <div class="chart-container">
-        <canvas id="payrollChart"></canvas>
-    </div>
-
-    <div class="card-footer">
-        <div class="legend-item">
-            <span class="legend-dot"></span>
-            Salary Revenue (INR)
-        </div>
-    </div>
-
-</div>
-
-
         
-        </main>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <div class="search-box" style="position: relative;">
+                <i class="fas fa-search" style="position: absolute; left: 10px; top: 10px; color: #aaa; font-size: 12px;"></i>
+                <input type="text" id="employeeSearch" placeholder="Search name..." style="padding: 8px 12px 8px 30px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px; outline: none; width: 180px;">
+            </div>
+            <button id="downloadAllBtn" class="btn-primary" style="background: #111; color: white; padding: 8px 16px; border-radius: 8px; font-size: 13px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-file-zipper"></i> Download All
+            </button>
+        </div>
+    </div>
+    
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: #f8fafc; border-bottom: 1px solid #eee;">
+                    <th style="padding: 15px 20px; font-size: 13px; color: #64748b; font-weight: 600;">Employee</th>
+                    <th style="padding: 15px 20px; font-size: 13px; color: #64748b; font-weight: 600;">Package (CTC)</th>
+                    <th style="padding: 15px 20px; font-size: 13px; color: #64748b; font-weight: 600;">Loss of Pay</th>
+                    <th style="padding: 15px 20px; font-size: 13px; color: #64748b; font-weight: 600;">lop_amount</th>
+                    <th style="padding: 15px 20px; font-size: 13px; color: #64748b; font-weight: 600;">Month</th>
+                    <th style="padding: 15px 20px; font-size: 13px; color: #64748b; font-weight: 600;">Gross Salary</th>
+                    <th style="padding: 15px 20px; font-size: 13px; color: #64748b; font-weight: 600;">Net Salary</th>
+                    
+                </tr>
+            </thead>
+            <tbody id="payslipTableBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+
+    <div id="detailsModal" class="hdr-modal-overlay" style="display:none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center;">
+        <div class="hdr-modal-content" style="background: white; padding: 30px; border-radius: 15px; width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            <h3 id="modalTitle" style="margin-bottom: 20px; border-bottom: 2px solid #FF6B00; padding-bottom: 10px; color: #333;">Breakdown</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #666;">Gross Amount:</span>
+                    <span id="modalGross" style="font-weight: 700;">₹0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #666;">Company PF Paid:</span>
+                    <span id="modalPF" style="font-weight: 700;">₹0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #666;">Professional Tax (PT):</span>
+                    <span id="modalPT" style="font-weight: 700;">₹0</span>
+                </div>
+                <hr style="border: 0; border-top: 1px solid #eee;">
+                <div style="display: flex; justify-content: space-between; font-size: 18px;">
+                    <span style="font-weight: 600;">Net Payout:</span>
+                    <span id="modalNet" style="font-weight: 800; color: #FF6B00;">₹0</span>
+                </div>
+            </div>
+
+            <button onclick="closeModal()" style="margin-top: 25px; width: 100%; padding: 12px; background: #111; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Close Details</button>
+        </div>
+    </div>
+</main>
     </div>
 
     <!-- Chart Library -->

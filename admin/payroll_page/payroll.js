@@ -1,300 +1,239 @@
+
 // --- PRELOADER LOGIC ---
 window.addEventListener("load", function () {
     const preloader = document.getElementById("page-preloader");
     
-    // Minimum wait time of 800ms for a smooth experience
+    // Minimum wait time of 800ms for a smooth experience, 
+    // even if the page loads instantly.
     setTimeout(() => {
         if (preloader) {
             preloader.classList.add("loaded");
+            
+            // Optional: Remove it from DOM entirely after fade out ends
             setTimeout(() => {
                 preloader.style.display = "none";
-            }, 500);
+            }, 500); // Matches CSS transition time
         }
     }, 800);
 });
 
+
+//hambargar section
 document.addEventListener("DOMContentLoaded", function () {
+    const hamburgerBtn = document.getElementById("hamburgerMenu");
+    const sidebar = document.getElementById("sidebar");
+    const closeBtn = document.getElementById("sidebarCloseBtn");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    // Open Sidebar
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener("click", function () {
+        sidebar.classList.add("mobile-active");
+        overlay.classList.add("active");
+        // Optional: Prevent body scrolling when menu is open
+        document.body.style.overflow = "hidden";
+      });
+    }
+
+    // Close Sidebar (Function)
+    function closeSidebar() {
+      sidebar.classList.remove("mobile-active");
+      overlay.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    // Close on X button click
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeSidebar);
+    }
+
+    // Close on Overlay click
+    if (overlay) {
+      overlay.addEventListener("click", closeSidebar);
+    }
+  });
+
+// --- 1. GLOBAL HELPERS ---
+const formatINR = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0
+    }).format(amount || 0);
+};
+
+// Store table data globally so the CSV exporter can access it
+window.currentTableData = [];
+
+// --- 2. UPDATE TOP CARDS (Summary) ---
+function updateDashboard() {
+    const monthPicker = document.getElementById("monthPicker");
+    if (!monthPicker || !monthPicker.value) return;
+
+    const [year, month] = monthPicker.value.split('-');
     
-    // --- 1. SETUP YEAR PICKER ---
-    const yearPicker = document.getElementById("yearPicker");
-    const currentYear = new Date().getFullYear();
-    const currentMonthIndex = new Date().getMonth(); // 0 = Jan, 1 = Feb, 2 = Mar, etc.
-    
-    // Populate Dropdown (Current Year - 10 to Current Year + 5)
-    for (let y = currentYear - 10; y <= currentYear + 5; y++) {
-        const option = document.createElement("option");
-        option.value = y;
-        option.text = y;
-        if (y === currentYear) option.selected = true;
-        yearPicker.appendChild(option);
-    }
-
-    // --- 2. HELPERS ---
-    function formatRupee(number) {
-        return new Intl.NumberFormat("en-IN", {
-            style: "currency",
-            currency: "INR",
-            maximumFractionDigits: 0,
-        }).format(number);
-    }
-
-    function formatCompact(number) {
-        return new Intl.NumberFormat("en-IN", {
-            notation: "compact",
-            compactDisplay: "short",
-            style: "currency",
-            currency: "INR",
-        }).format(number);
-    }
-
-    // Mock Data Generator (Simulate backend response based on year)
-    function getDataForYear(year) {
-        const baseSalary = 800000 + (year - 2020) * 50000; 
-        let monthlyData = [];
-        for (let i = 0; i < 12; i++) {
-            let randomFactor = 0.8 + Math.random() * 0.4; 
-            monthlyData.push(Math.floor(baseSalary * randomFactor));
-        }
-        return monthlyData;
-    }
-
-    // --- 3. CHART INITIALIZATION ---
-    const ctx = document.getElementById("payrollChart").getContext("2d");
-    const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-    // Create Gradient
-    let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, "#FF6B00"); // Orange Start
-    gradient.addColorStop(1, "#FFB74D"); // Orange End
-
-    const payrollChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: [], // Injected dynamically
-            datasets: [
-                {
-                    label: "Total Salary",
-                    data: [], // Injected dynamically
-                    backgroundColor: gradient,
-                    borderRadius: 6,
-                    maxBarThickness: 30,
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function (context) {
-                            return formatRupee(context.raw);
-                        },
-                    },
-                },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function (value) {
-                            return formatCompact(value);
-                        },
-                        color: "#9ca3af"
-                    },
-                    grid: { color: "#f3f4f6" }
-                },
-                x: {
-                    grid: { display: false },
-                    ticks: { color: "#6b7280" }
-                },
-            },
-        },
-    });
-
-    // --- 4. UPDATE LOGIC (DYNAMIC CUTOFF) ---
-    function updateDashboard(year) {
-        let newData = getDataForYear(year);
-        let displayMonths = [...allMonths];
-
-        if (year === currentYear) {
-            // Cut off at the current month for the current year
-            newData = newData.slice(0, currentMonthIndex + 1);
-            displayMonths = displayMonths.slice(0, currentMonthIndex + 1);
-        } else if (year > currentYear) {
-            // Future years have no data
-            newData = [];
-            displayMonths = [];
-        }
-
-        // Update Chart
-        payrollChart.data.labels = displayMonths;
-        payrollChart.data.datasets[0].data = newData;
-        payrollChart.update();
-    }
-
-    // Initial Stats Load
-    updateDashboard(currentYear);
-    
-    // --- 5. API FETCH ---
-    fetch(`https://api.theoppty.com/api/salary`)
+    // Note: Ensure API_BASE_URL is defined somewhere in your global scope!
+    fetch(`${API_BASE_URL}/api/salary/?year=${year}&month=${month}`)  
         .then(res => res.json())
         .then(data => {
-            console.log('API Data:', data);
-            if (data.total_annual_salary) {
-                document.getElementById("totalPayout").innerText = formatRupee(data.total_annual_salary);
-            }
-            if (data.total_monthly_salary) {
-                document.getElementById("avgPayout").innerText = formatRupee(data.total_monthly_salary);
-            }
+            window.currentPayrollData = data; 
+            document.getElementById("totalAnnualNet").innerText = formatINR(data.total_annual_salary);
+            document.getElementById("totalMonthlyNet").innerText = formatINR(data.total_monthly_salary);
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById("monthlyLabel").innerText = `Total Payout for ${monthNames[parseInt(month)-1]} ${year}`;
         })
-        .catch(err => console.error("Error fetching salary API:", err));
+        .catch(err => console.error("Top Cards Load Failed:", err));
+}
 
-    // --- 6. EVENT LISTENER ---
-    yearPicker.addEventListener("change", (e) => {
-        updateDashboard(parseInt(e.target.value));
+// --- 3. LOAD TABLE RECORDS (Detailed List) ---
+function loadPayslipTable() {
+    const monthPicker = document.getElementById("monthPicker");
+    if (!monthPicker || !monthPicker.value) return;
+
+    const [year, month] = monthPicker.value.split('-'); 
+    const tableBody = document.getElementById("payslipTableBody");
+    
+    fetch(`${API_BASE_URL}/api/salary/list/?month=${month}&year=${year}`)
+        .then(res => res.json())
+        .then(data => {
+            window.currentTableData = data; // Save data for CSV export
+            tableBody.innerHTML = ""; 
+
+            if (!data || data.length === 0) {
+                // Fixed colspan from 6 to 5 to match your table columns
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px;">No records found.</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const row = document.createElement("tr");
+                row.className = "payslip-row"; 
+                row.style.borderBottom = "1px solid #f1f5f9";
+                row.innerHTML = `
+                    <td style="padding: 15px 20px;">
+                        <div class="emp-name" style="font-weight: 600; color: #1e293b;">${item.employee_name}</div>
+                        <div style="font-size: 11px; color: #64748b;">ID: ${item.employee_id}</div>
+                    </td>
+                    <td style="padding: 15px 20px; color: #475569;">${formatINR(item.annual_ctc || 0)}</td> 
+                     <td style="padding: 15px 20px; color: #475569;">${(item.loss_of_pay)}</td> 
+
+                      <td style="padding: 15px 20px; color: #475569;">${formatINR(item.lop_amount)}</td> 
+
+
+                    <td style="padding: 15px 20px; color: #475569;">${item.month}</td>
+                    <td style="padding: 15px 20px; color: #475569;">${formatINR(item.gross_salary)}</td>
+                    <td style="padding: 15px 20px; font-weight: 600; color: #10b981;">${formatINR(item.net_salary)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(err => console.error("Table Load Failed:", err));
+}
+
+// --- 4. CSV EXPORT LOGIC ---
+function exportTableToCSV(dataArray, filename) {
+    if (!dataArray || dataArray.length === 0) {
+        alert("No data to export!");
+        return;
+    }
+
+    let csvContent = [];
+    const headers = ["Name", "Month","lop_days","lop_amount" ,"Gross Salary", "Net Salary"];
+    csvContent.push(headers.join(","));
+
+    dataArray.forEach(item => {
+        // Fixed keys to match the API response shown in your table rendering
+        const row = [
+            `"${item.employee_name || ''}"`, 
+            `"${item.month || ''}"`, 
+            `"${item.loss_of_pay || 0}"`, 
+            `"${item.lop_amount || 0}"`,
+            `"${item.gross_salary || 0}"`,
+            `"${item.net_salary || 0}"`
+        ];
+        csvContent.push(row.join(","));
     });
 
-});
+    const csvString = csvContent.join("\n");
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
-// ==========================================
-// NOTIFICATION SECTION
-// ==========================================
-let notifications = [
-  {
-    id: 1,
-    text: "<strong>Dhamodhar</strong> applied for the UX Designer position.",
-    time: "2 mins ago",
-    icon: "👩‍💼", 
-    read: false,
-  },
-  {
-    id: 2,
-    text: "Meeting with <strong>Dev Team</strong> starts in 15 minutes.",
-    time: "15 mins ago",
-    icon: "📅",
-    read: false,
-  },
-  {
-    id: 3,
-    text: "New system update available.",
-    time: "1 hour ago",
-    icon: "⚙️",
-    read: true,
-  },
-  {
-    id: 4,
-    text: "<strong>Arjun</strong> accepted the offer.",
-    time: "3 hours ago",
-    icon: "✅",
-    read: true,
-  },
-];
+// --- 5. INITIALIZATION & EVENT LISTENERS ---
+document.addEventListener("DOMContentLoaded", function () {
+    const monthPicker = document.getElementById("monthPicker");
+    const modal = document.getElementById("detailsModal");
+    const employeeSearch = document.getElementById("employeeSearch"); 
+    const downloadAllBtn = document.getElementById("downloadAllBtn"); 
 
-document.addEventListener("DOMContentLoaded", () => {
-  const bellBtn = document.getElementById("ntBellBtn");
-  const dropdown = document.getElementById("ntDropdown");
-  const markReadBtn = document.getElementById("ntMarkAllRead");
+    // 1. Set default Date to current month
+    const now = new Date();
+    monthPicker.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
-  if (!bellBtn || !dropdown || !markReadBtn) return;
+    // 2. Modal Helper
+    window.closeModal = () => modal.style.display = 'none';
 
-  ntRenderList();
-
-  bellBtn.addEventListener("click", (e) => {
-    e.stopPropagation(); 
-    const isVisible = dropdown.style.display === "block";
-    dropdown.style.display = isVisible ? "none" : "block";
-  });
-
-  markReadBtn.addEventListener("click", () => {
-    notifications.forEach((n) => (n.read = true));
-    ntRenderList();
-  });
-
-  window.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target) && !bellBtn.contains(e.target)) {
-      dropdown.style.display = "none";
+    function modalFill(title, gross, pf, pt, net) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalGross").innerText = formatINR(gross);
+        document.getElementById("modalPF").innerText = formatINR(pf);
+        document.getElementById("modalPT").innerText = formatINR(pt);
+        document.getElementById("modalNet").innerText = formatINR(net);
+        modal.style.display = 'flex';
     }
-  });
-});
 
-function ntRenderList() {
-  const listContainer = document.getElementById("ntList");
-  const badge = document.getElementById("ntBadge");
+    // 3. Modal Click Events
+    document.getElementById("viewMonthlyDetails").onclick = () => {
+        const data = window.currentPayrollData;
+        if (data) modalFill("Monthly Breakdown", data.total_monthly_gross, data.total_monthly_pf, data.total_monthly_pt, data.total_monthly_salary);
+    };
 
-  if (!listContainer || !badge) return;
+    document.getElementById("viewYearlyDetails").onclick = () => {
+        const data = window.currentPayrollData;
+        if (data) modalFill("Annual Breakdown", data.total_annual_gross, data.total_annual_pf, data.total_annual_pt, data.total_annual_salary);
+    };
 
-  listContainer.innerHTML = "";
-  const unreadCount = notifications.filter((n) => !n.read).length;
+    // 4. Calendar Change Listener
+    monthPicker.onchange = () => {
+        updateDashboard();
+        loadPayslipTable();
+    };
 
-  if (unreadCount > 0) {
-    badge.style.display = "flex";
-    badge.textContent = unreadCount > 9 ? "9+" : unreadCount;
-  } else {
-    badge.style.display = "none";
-  }
+    // 5. Search Filter Logic
+    if (employeeSearch) {
+        employeeSearch.addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase().trim();
+            const rows = document.querySelectorAll(".payslip-row");
 
-  if (notifications.length === 0) {
-    listContainer.innerHTML = '<div class="nt-empty">No notifications</div>';
-    return;
-  }
-
-  notifications.forEach((item) => {
-    const itemDiv = document.createElement("div");
-    itemDiv.className = `nt-item ${!item.read ? "nt-unread" : ""}`;
-    itemDiv.innerHTML = `
-            <div class="nt-avatar">${item.icon}</div>
-            <div class="nt-content">
-                <p class="nt-text">${item.text}</p>
-                <span class="nt-time">${item.time}</span>
-            </div>
-        `;
-    itemDiv.addEventListener("click", () => {
-      item.read = true;
-      ntRenderList();
-    });
-    listContainer.appendChild(itemDiv);
-  });
-}
-
-// ==========================================
-// LOGOUT SECTION
-// ==========================================
-function hdr_toggleProfilePopup() {
-  const dropdown = document.getElementById("hdrProfileDropdown");
-  if (dropdown) dropdown.classList.toggle("show");
-}
-
-function hdr_showLogoutModal() {
-  const dropdown = document.getElementById("hdrProfileDropdown");
-  if (dropdown) dropdown.classList.remove("show");
-
-  const modal = document.getElementById("hdrLogoutModal");
-  if (modal) modal.classList.add("show-modal");
-}
-
-function hdr_hideLogoutModal() {
-  const modal = document.getElementById("hdrLogoutModal");
-  if (modal) modal.classList.remove("show-modal");
-}
-
-function hdr_confirmLogout() {
-  sessionStorage.clear();
-  localStorage.clear();
-  window.location.href = "../../index.html";
-}
-
-window.onclick = function (event) {
-  if (!event.target.closest(".hdr-profile-wrapper")) {
-    const dropdown = document.getElementById("hdrProfileDropdown");
-    if (dropdown && dropdown.classList.contains("show")) {
-      dropdown.classList.remove("show");
+            rows.forEach(row => {
+                const nameText = row.querySelector(".emp-name").textContent.toLowerCase();
+                if (nameText.includes(searchTerm) || row.innerText.toLowerCase().includes(searchTerm)) {
+                    row.style.display = ""; 
+                } else {
+                    row.style.display = "none"; 
+                }
+            });
+        });
     }
-  }
 
-  const modal = document.getElementById("hdrLogoutModal");
-  if (event.target === modal) {
-    hdr_hideLogoutModal();
-  }
-};
+    // 6. Download All Excel/CSV Logic
+    if(downloadAllBtn) {
+        downloadAllBtn.addEventListener("click", function() {
+            // Note: If you want to export ONLY the searched/filtered rows, 
+            // you will need to filter `window.currentTableData` based on the search input here.
+            exportTableToCSV(window.currentTableData, "all_employees.csv");
+        });
+    }
+
+    // 7. Initial Load (Moved inside DOMContentLoaded so elements exist when called)
+    updateDashboard();
+    loadPayslipTable();
+});
