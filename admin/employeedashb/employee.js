@@ -513,12 +513,12 @@ function loadDataFromAPI() {
         }
 
         let csvContent = [];
-        const headers = ["ID", "Name", "Email", "Phone", "Department", "Role", "Type", "Status", "Join Date", "Salary", "Location"];
+        const headers = ["EMPLOYEE_ID", "Name", "Email", "Phone", "Department", "Role", "Type", "Status", "Join Date", "Salary", "Location"];
         csvContent.push(headers.join(","));
 
         dataArray.forEach(item => {
             const row = [
-                `"${item.id}"`, `"${item.name}"`, `"${item.email}"`, `"${item.phone || ''}"`,
+                `"${item.idd}"`, `"${item.name}"`, `"${item.email}"`, `"${item.phone || ''}"`,
                 `"${item.dept}"`, `"${item.role}"`, `"${item.type}"`, `"${item.status}"`,
                 `"${item.joinDate || ''}"`, `"${item.salary || ''}"`, `"${item.location || ''}"`
             ];
